@@ -112,7 +112,7 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   margin-top: 28px;
 }
 
-.primary-action, .hero-actions a, .filters button {
+.primary-action, .hero-actions button, .hero-actions a, .filters button {
   border: 3px solid var(--ink);
   border-radius: 999px;
   background: var(--yellow);
@@ -124,9 +124,9 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
-.primary-action, .hero-actions a { padding: 13px 18px; }
+.primary-action, .hero-actions button, .hero-actions a { padding: 13px 18px; }
 
-.primary-action:hover, .hero-actions a:hover, .filters button:hover, .filters button.active {
+.primary-action:hover, .hero-actions button:hover, .hero-actions a:hover, .filters button:hover, .filters button.active {
   transform: translateY(2px);
   box-shadow: 0 3px 0 var(--ink);
   background: var(--pink);
@@ -338,8 +338,25 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 .boost-rule span:empty { display: none; }
 
 .card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   margin-top: 8px;
   text-align: center;
+}
+
+.card-footer strong {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  background: #fffdf6;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.3rem;
+  line-height: 1;
 }
 
 .detail-card {
@@ -362,6 +379,47 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 .detail-copy p { margin: 6px 0 0; line-height: 1.45; }
 
 .print-area { display: none; }
+
+.icon-rules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.icon-rules span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  background: #fffdf6;
+  font-weight: 900;
+}
+
+.icon {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+}
+
+.life-icon { color: #e63946; }
+.attack-icon { color: #fb8500; }
+.defense-icon { color: #277da1; }
+
+.combat-examples {
+  margin-top: 18px;
+  padding: 18px;
+  border: 3px solid var(--ink);
+  border-radius: 24px;
+  background: #fffdf6;
+}
+
+.combat-examples p { margin: 8px 0 0; }
 
 @media (max-width: 980px) {
   .hero, .workspace { grid-template-columns: 1fr; }
@@ -397,19 +455,25 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
   .app-shell { display: none; }
   .print-area { display: block; }
+  .print-cards, .print-boards, .print-rules, .print-tokens { display: none; }
 
-  .print-page {
+  body[data-print-mode="cards"] .print-cards,
+  body[data-print-mode="boards"] .print-boards,
+  body[data-print-mode="rules"] .print-rules,
+  body[data-print-mode="tokens"] .print-tokens { display: block; }
+
+  .card-print-page {
     display: grid;
     width: 285mm;
     height: 198mm;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 3mm;
+    gap: 0;
     page-break-after: always;
     break-after: page;
   }
 
-  .print-page:last-child { page-break-after: auto; break-after: auto; }
+  .card-print-page:last-child { page-break-after: auto; break-after: auto; }
 
   .game-card, .card-button {
     width: 100%;
@@ -420,7 +484,7 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   .card-button {
     padding: 2.2mm;
     border: 0.8mm solid #2f2522;
-    border-radius: 4mm;
+    border-radius: 0;
     box-shadow: none;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -435,6 +499,13 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
   .card-header strong { font-size: 10pt; }
   .card-kind, .card-footer { font-size: 5.6pt; }
+  .card-footer { gap: 1.4mm; margin-top: 1mm; }
+  .card-footer strong {
+    width: 6.8mm;
+    height: 6.8mm;
+    border-width: 0.55mm;
+    font-size: 13pt;
+  }
 
   .art-frame {
     min-height: 28mm;
@@ -464,5 +535,130 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
     font-size: 9pt;
   }
 
-  .card-footer { margin-top: 1.4mm; }
+  .board-page, .rules-page, .tokens-page {
+    width: 285mm;
+    min-height: 198mm;
+    page-break-after: always;
+    break-after: page;
+    color: #2f2522;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .board-page:last-child, .rules-page:last-child, .tokens-page:last-child { page-break-after: auto; break-after: auto; }
+
+  .board-page {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 7mm;
+    padding: 4mm;
+    border: 1.2mm solid #2f2522;
+    background: #fff7e5;
+  }
+
+  .board-page header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    border-bottom: 1mm solid #2f2522;
+    padding-bottom: 3mm;
+  }
+
+  .board-page header span { font-size: 18pt; font-weight: 900; text-transform: uppercase; }
+  .board-page header strong { font-family: Georgia, "Times New Roman", serif; font-size: 42pt; line-height: 1; }
+
+  .board-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr 0.8fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 5mm;
+  }
+
+  .board-zone {
+    display: grid;
+    place-items: center;
+    border: 1mm dashed #2f2522;
+    border-radius: 5mm;
+    background: #fffdf6;
+    font-size: 20pt;
+    font-weight: 900;
+    text-align: center;
+  }
+
+  .active-zone { grid-row: span 2; font-size: 28pt; background: #ffd6a5; }
+  .deck-zone { background: #cdefff; }
+  .discard-zone { background: #ffc8dd; }
+  .points-zone { grid-column: span 2; background: #d8f3dc; }
+
+  .board-page footer {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 3mm;
+  }
+
+  .board-page footer span {
+    padding: 3mm;
+    border: 0.8mm solid #2f2522;
+    border-radius: 4mm;
+    background: #fffdf6;
+    font-size: 12pt;
+    font-weight: 900;
+    text-align: center;
+  }
+
+  .rules-page {
+    padding: 7mm;
+    background: #fffdf6;
+    border: 1mm solid #2f2522;
+    columns: 2;
+    column-gap: 10mm;
+  }
+
+  .rules-page h1 {
+    column-span: all;
+    margin: 0 0 5mm;
+    border-bottom: 1mm solid #2f2522;
+    padding-bottom: 3mm;
+    font-size: 34pt;
+    letter-spacing: -0.04em;
+  }
+
+  .rules-page h2 { font-size: 18pt; margin: 0 0 2mm; }
+  .rules-page p, .rules-page li { font-size: 11.5pt; line-height: 1.35; }
+  .rules-page section { break-inside: avoid; margin-bottom: 4mm; }
+  .rules-page ol { padding-left: 6mm; margin: 0; }
+
+  .print-combat-examples {
+    padding: 3mm;
+    border: 0.8mm solid #2f2522;
+    border-radius: 4mm;
+    background: #f8ecd4;
+  }
+
+  .tokens-page {
+    padding: 6mm;
+    background: #fffdf6;
+  }
+
+  .tokens-page h1 { font-size: 30pt; margin: 0 0 1mm; }
+  .tokens-page p { margin: 0 0 4mm; font-size: 13pt; font-weight: 900; }
+
+  .tokens-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 0;
+    border-top: 0.6mm solid #2f2522;
+    border-left: 0.6mm solid #2f2522;
+  }
+
+  .life-token {
+    display: grid;
+    place-items: center;
+    height: 17mm;
+    border-right: 0.6mm solid #2f2522;
+    border-bottom: 0.6mm solid #2f2522;
+    color: #e63946;
+    font-size: 22pt;
+    font-weight: 900;
+  }
 }

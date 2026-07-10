@@ -40,7 +40,10 @@ export function CardFace({ card, selected = false, onSelect }: CardFaceProps) {
           </div>
         )}
 
-        <footer className="card-footer">Mazo {card.deck}</footer>
+        <footer className="card-footer" aria-label={`Equipo ${card.deck}`}>
+          <span>Equipo</span>
+          <strong>{card.deck}</strong>
+        </footer>
       </button>
     </article>
   );

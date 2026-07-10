@@ -5,6 +5,7 @@ import { PrintArea } from "./components/PrintArea";
 import { RulesPanel } from "./components/RulesPanel";
 import { cardCounts, cards, deckOne, deckTwo } from "./data/deck";
 import type { Card } from "./types/cards";
+import type { PrintMode } from "./types/print";
 
 const getInitialCard = (): Card => {
   const firstCard = cards[0];
@@ -20,7 +21,10 @@ export function App() {
   const [selectedCard, setSelectedCard] = useState<Card>(getInitialCard);
   const [filter, setFilter] = useState<Filter>("all");
 
-  const handlePrint = () => window.print();
+  const handlePrint = (mode: PrintMode) => {
+    document.body.dataset.printMode = mode;
+    window.setTimeout(() => window.print(), 0);
+  };
   const cardsDownloadHref = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(cards, null, 2))}`;
 
   return (
@@ -34,15 +38,18 @@ export function App() {
               Un juego de cartas tipo Pokemon/Magic, simplificado para chicos: monstruos tiernos, mejoras grandes y reglas con numeros faciles de contar.
             </p>
             <div className="hero-actions">
-              <button className="primary-action" type="button" onClick={handlePrint}>Imprimir PDF A4</button>
+              <button className="primary-action" type="button" onClick={() => handlePrint("cards")}>Imprimir cartas</button>
+              <button type="button" onClick={() => handlePrint("boards")}>Imprimir tablero</button>
+              <button type="button" onClick={() => handlePrint("rules")}>Imprimir reglas</button>
+              <button type="button" onClick={() => handlePrint("tokens")}>Imprimir corazones</button>
               <a href={cardsDownloadHref} download="monstruitos-batalla-cards.json">Descargar JSON</a>
             </div>
           </div>
           <div className="deck-summary" aria-label="Resumen del mazo">
             <div><strong>{cardCounts.total}</strong><span>cartas</span></div>
             <div><strong>{cardCounts.monsters}</strong><span>monstruos</span></div>
-            <div><strong>{deckOne.length}</strong><span>mazo 1</span></div>
-            <div><strong>{deckTwo.length}</strong><span>mazo 2</span></div>
+            <div><strong>1</strong><span>{deckOne.length} cartas</span></div>
+            <div><strong>2</strong><span>{deckTwo.length} cartas</span></div>
           </div>
         </section>
 
