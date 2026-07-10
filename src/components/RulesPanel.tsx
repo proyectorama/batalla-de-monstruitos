@@ -12,15 +12,15 @@ export function RulesPanel() {
         </div>
         <div>
           <h3>2. Preparacion</h3>
-          <p>Son {cardCounts.total} cartas: 2 mazos de 30. Cada jugador roba 5 y pone 1 monstruo activo.</p>
+          <p>Son {cardCounts.total} cartas. Cada jugador roba 5 y puede tener hasta 3 monstruos en juego.</p>
         </div>
         <div>
           <h3>3. Turno</h3>
-          <p>Roba 1, baja hasta 1 monstruo, juega hasta 1 mejora, ataca y pasa el turno.</p>
+          <p>Roba 1, baja 1 monstruo, juega 1 mejora y elige 1 monstruo tuyo para atacar a cualquiera de los 3 rivales.</p>
         </div>
         <div>
           <h3>4. Mejoras</h3>
-          <p>Cada monstruo puede tener como maximo 2 mejoras. Si ya tiene 2, no puede recibir otra.</p>
+          <p>Cada monstruo puede tener hasta 3 mejoras. Pueden ser de vida, ataque o defensa.</p>
         </div>
       </div>
       <div className="icon-rules" aria-label="Iconos de las cartas">
@@ -33,6 +33,7 @@ export function RulesPanel() {
         <p><b>✦ 5 - ⬟ 2 = 3 dano.</b> El defensor pierde 3 vidas.</p>
         <p><b>✦ 3 - ⬟ 3 = 0.</b> Como el minimo es 1, pierde 1 vida.</p>
         <p><b>✦ 2 - ⬟ 5 = -3.</b> Como el minimo es 1, pierde 1 vida.</p>
+        <p><b>Objetivo libre.</b> Si el rival tiene 3 monstruos, puedes elegir a cual atacar.</p>
       </div>
     </section>
   );

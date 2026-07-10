@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { CardDetail } from "./components/CardDetail";
 import { CardGallery, type Filter } from "./components/CardGallery";
+import { GameSimulator } from "./components/GameSimulator";
 import { PrintArea } from "./components/PrintArea";
 import { RulesPanel } from "./components/RulesPanel";
 import { cardCounts, cards, deckOne, deckTwo } from "./data/deck";
 import type { Card } from "./types/cards";
 import type { PrintMode } from "./types/print";
+
+type AppTab = "cards" | "simulator";
 
 const getInitialCard = (): Card => {
   const firstCard = cards[0];
@@ -20,6 +23,7 @@ const getInitialCard = (): Card => {
 export function App() {
   const [selectedCard, setSelectedCard] = useState<Card>(getInitialCard);
   const [filter, setFilter] = useState<Filter>("all");
+  const [activeTab, setActiveTab] = useState<AppTab>("cards");
 
   const handlePrint = (mode: PrintMode) => {
     document.body.dataset.printMode = mode;
@@ -54,12 +58,23 @@ export function App() {
           </div>
         </section>
 
-        <RulesPanel />
+        <nav className="app-tabs" aria-label="Secciones del juego">
+          <button className={activeTab === "cards" ? "active" : ""} type="button" onClick={() => setActiveTab("cards")}>Cartas y reglas</button>
+          <button className={activeTab === "simulator" ? "active" : ""} type="button" onClick={() => setActiveTab("simulator")}>Simulador</button>
+        </nav>
 
-        <section className="workspace">
-          <CardGallery cards={cards} selectedCardId={selectedCard.id} filter={filter} onFilterChange={setFilter} onSelect={setSelectedCard} />
-          <CardDetail card={selectedCard} />
-        </section>
+        {activeTab === "cards" ? (
+          <>
+            <RulesPanel />
+
+            <section className="workspace">
+              <CardGallery cards={cards} selectedCardId={selectedCard.id} filter={filter} onFilterChange={setFilter} onSelect={setSelectedCard} />
+              <CardDetail card={selectedCard} />
+            </section>
+          </>
+        ) : (
+          <GameSimulator />
+        )}
       </main>
 
       <PrintArea cards={cards} />

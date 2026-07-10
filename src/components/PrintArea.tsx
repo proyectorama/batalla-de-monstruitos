@@ -45,9 +45,9 @@ export function PrintArea({ cards }: PrintAreaProps) {
               <strong>Jugador {player}</strong>
             </header>
             <div className="board-layout">
-              <div className="board-zone active-zone">Monstruo activo</div>
-              <div className="board-zone bench-zone">Espera 1</div>
-              <div className="board-zone bench-zone">Espera 2</div>
+              <div className="board-zone monster-zone">Monstruo 1</div>
+              <div className="board-zone monster-zone">Monstruo 2</div>
+              <div className="board-zone monster-zone">Monstruo 3</div>
               <div className="board-zone deck-zone">Mazo</div>
               <div className="board-zone discard-zone">Descarte</div>
               <div className="board-zone points-zone">Puntos: 0  1  2  3</div>
@@ -56,7 +56,7 @@ export function PrintArea({ cards }: PrintAreaProps) {
               <span>1 Roba</span>
               <span>2 Baja monstruo</span>
               <span>3 Juega 1 mejora</span>
-              <span>4 Ataca</span>
+              <span>4 Elige atacante</span>
               <span>5 Pasa turno</span>
             </footer>
           </div>
@@ -76,22 +76,23 @@ export function PrintArea({ cards }: PrintAreaProps) {
               <li>Cada jugador usa su equipo de 30 cartas: equipo 1 o equipo 2.</li>
               <li>Mezcla el mazo y roba 5 cartas.</li>
               <li>Si no robaste monstruos, muestra la mano, mezcla y roba 5 otra vez.</li>
-              <li>Pone 1 monstruo como activo. Puedes tener hasta 2 monstruos en espera.</li>
+              <li>Pone hasta 3 monstruos en juego. Si no tienes 3, puedes bajar mas en tus turnos.</li>
             </ol>
           </section>
           <section>
             <h2>Turno</h2>
             <ol>
               <li>Roba 1 carta.</li>
-              <li>Puedes bajar 1 monstruo a la espera si tienes lugar.</li>
+              <li>Puedes bajar 1 monstruo si tienes menos de 3 en juego.</li>
               <li>Puedes jugar 1 mejora sobre un monstruo tuyo.</li>
-              <li>Ataca con tu monstruo activo.</li>
+              <li>Elige 1 monstruo tuyo para atacar.</li>
+              <li>Elige cualquiera de los monstruos rivales como objetivo.</li>
               <li>Pasa el turno.</li>
             </ol>
           </section>
           <section>
             <h2>Mejoras</h2>
-            <p>Cada monstruo puede tener como maximo 2 mejoras. Las mejoras quedan sobre el monstruo. Si el monstruo es derrotado, sus mejoras tambien van al descarte.</p>
+            <p>Cada monstruo puede tener como maximo 3 mejoras. Pueden ser varias de vida, ataque o defensa. Las mejoras quedan sobre el monstruo. Si el monstruo es derrotado, sus mejoras tambien van al descarte.</p>
           </section>
           <section>
             <h2>Combate</h2>
@@ -100,6 +101,7 @@ export function PrintArea({ cards }: PrintAreaProps) {
               <p>✦ 5 - ⬟ 2 = 3 dano. Pierde 3 corazones.</p>
               <p>✦ 3 - ⬟ 3 = 0, pero el minimo es 1. Pierde 1 corazon.</p>
               <p>✦ 2 - ⬟ 5 = -3, pero el minimo es 1. Pierde 1 corazon.</p>
+              <p>Si el rival tiene 3 monstruos, elige a cual atacar antes de calcular el dano.</p>
             </div>
           </section>
           <section>

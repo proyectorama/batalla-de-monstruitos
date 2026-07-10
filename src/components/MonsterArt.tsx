@@ -118,7 +118,6 @@ export function BoostArtView({ card }: BoostArtProps) {
       {card.kind === "boost_life" ? <path d="M80 118 C51 96 40 80 47 62 C53 47 72 50 80 63 C88 50 107 47 113 62 C120 80 109 96 80 118 Z" fill={mainColor} stroke="#3a2d2a" strokeWidth="5" /> : null}
       {card.kind === "boost_attack" ? <path d="M84 36 L68 74 L102 72 L63 126 L76 90 L48 91 Z" fill={mainColor} stroke="#3a2d2a" strokeWidth="5" strokeLinejoin="round" /> : null}
       {card.kind === "boost_defense" ? <path d="M80 37 L116 52 L111 90 C108 111 94 125 80 132 C66 125 52 111 49 90 L44 52 Z" fill={mainColor} stroke="#3a2d2a" strokeWidth="5" strokeLinejoin="round" /> : null}
-      <text x="80" y="91" textAnchor="middle" dominantBaseline="middle" fontFamily="Verdana, sans-serif" fontSize="38" fontWeight="900" fill="#2f2522">+{bonus}</text>
     </svg>
   );
 }

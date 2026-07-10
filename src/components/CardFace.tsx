@@ -1,5 +1,5 @@
 import type { Card, StatKey } from "../types/cards";
-import { kindLabel, statIcon, statLabel } from "../utils/cards";
+import { statIcon, statLabel } from "../utils/cards";
 import { BoostArtView, MonsterArt } from "./MonsterArt";
 
 type CardFaceProps = {
@@ -17,8 +17,7 @@ export function CardFace({ card, selected = false, onSelect }: CardFaceProps) {
     <article className={`game-card ${card.kind} ${selected ? "is-selected" : ""}`}>
       <button className="card-button" type="button" disabled={!isInteractive} onClick={() => onSelect?.(card)} aria-label={`Ver ${card.name}`}>
         <header className="card-header">
-          <span className="card-kind">{kindLabel(card.kind)}</span>
-          <strong>{card.name}</strong>
+          <strong>{card.name.toUpperCase()}</strong>
         </header>
 
         <div className="art-frame">{card.kind === "monster" ? <MonsterArt art={card.art} /> : <BoostArtView card={card} />}</div>
@@ -34,9 +33,9 @@ export function CardFace({ card, selected = false, onSelect }: CardFaceProps) {
           </dl>
         ) : (
           <div className="boost-rule">
-            <span>{card.attackBonus > 0 ? `✦ +${card.attackBonus} Ataque` : null}</span>
-            <span>{card.defenseBonus > 0 ? `⬟ +${card.defenseBonus} Defensa` : null}</span>
-            <span>{card.lifeBonus > 0 ? `♥ +${card.lifeBonus} Vida` : null}</span>
+            <span>{card.attackBonus > 0 ? `✦ +${card.attackBonus}` : null}</span>
+            <span>{card.defenseBonus > 0 ? `⬟ +${card.defenseBonus}` : null}</span>
+            <span>{card.lifeBonus > 0 ? `♥ +${card.lifeBonus}` : null}</span>
           </div>
         )}
 
