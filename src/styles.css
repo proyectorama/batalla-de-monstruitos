@@ -1,0 +1,468 @@
+:root {
+  color: #2f2522;
+  background: #f8ecd4;
+  font-family: "Trebuchet MS", "Verdana", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --ink: #2f2522;
+  --paper: #fff7e5;
+  --cream: #f8ecd4;
+  --mint: #99e2b4;
+  --blue: #7bdff2;
+  --pink: #ff8fab;
+  --yellow: #ffd166;
+  --shadow: 0 22px 60px rgba(74, 45, 33, 0.2);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 143, 171, 0.28), transparent 25rem),
+    radial-gradient(circle at 92% 12%, rgba(123, 223, 242, 0.34), transparent 22rem),
+    linear-gradient(135deg, #f8ecd4 0%, #fff8e8 45%, #dff7df 100%);
+}
+
+button, a { font: inherit; }
+
+button { color: inherit; }
+
+.app-shell {
+  width: min(1400px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 34px 0 72px;
+}
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 430px;
+  gap: 24px;
+  align-items: stretch;
+  margin-bottom: 24px;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 18px -10px -10px 28px;
+  z-index: -1;
+  border: 4px dashed rgba(47, 37, 34, 0.18);
+  border-radius: 42px;
+  transform: rotate(-1.2deg);
+}
+
+.hero-copy, .panel, .deck-summary {
+  border: 4px solid var(--ink);
+  border-radius: 32px;
+  background: rgba(255, 247, 229, 0.92);
+  box-shadow: var(--shadow);
+}
+
+.hero-copy {
+  padding: clamp(28px, 5vw, 58px);
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.72), rgba(255, 247, 229, 0.82)),
+    repeating-linear-gradient(-12deg, transparent 0 18px, rgba(255, 209, 102, 0.18) 18px 28px);
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1, h2, h3, p { margin-top: 0; }
+
+h1 {
+  max-width: 900px;
+  margin-bottom: 18px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3.2rem, 9vw, 7.6rem);
+  line-height: 0.86;
+  letter-spacing: -0.07em;
+}
+
+h2 {
+  margin-bottom: 12px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 4vw, 3.35rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+h3 { margin-bottom: 6px; font-size: 1rem; }
+
+.hero-copy p:not(.eyebrow) {
+  max-width: 680px;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.55;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 28px;
+}
+
+.primary-action, .hero-actions a, .filters button {
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  background: var(--yellow);
+  color: var(--ink);
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 5px 0 var(--ink);
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.primary-action, .hero-actions a { padding: 13px 18px; }
+
+.primary-action:hover, .hero-actions a:hover, .filters button:hover, .filters button.active {
+  transform: translateY(2px);
+  box-shadow: 0 3px 0 var(--ink);
+  background: var(--pink);
+}
+
+.deck-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding: 22px;
+  background: #bdf4cf;
+}
+
+.deck-summary div {
+  display: grid;
+  place-items: center;
+  min-height: 132px;
+  border: 3px solid var(--ink);
+  border-radius: 26px;
+  background: var(--paper);
+}
+
+.deck-summary strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.7rem, 6vw, 4.8rem);
+  line-height: 0.8;
+}
+
+.deck-summary span {
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.panel { padding: clamp(18px, 3vw, 28px); }
+
+.rules { margin-bottom: 24px; }
+
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.rules-grid > div {
+  min-height: 150px;
+  padding: 18px;
+  border: 3px solid var(--ink);
+  border-radius: 24px;
+  background: linear-gradient(160deg, #fffdf6, #e3f9ea);
+}
+
+.rules-grid p {
+  margin-bottom: 0;
+  line-height: 1.45;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  gap: 24px;
+  align-items: start;
+}
+
+.panel-heading {
+  display: flex;
+  gap: 18px;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.filters button {
+  padding: 8px 12px;
+  background: #fffdf6;
+  font-size: 0.85rem;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(164px, 1fr));
+  gap: 16px;
+}
+
+.game-card {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.card-button {
+  display: grid;
+  width: 100%;
+  min-height: 254px;
+  padding: 9px;
+  border: 4px solid var(--ink);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.14)),
+    #fff1b8;
+  box-shadow: 0 8px 0 var(--ink);
+  text-align: left;
+  transition: transform 170ms ease, box-shadow 170ms ease, filter 170ms ease;
+}
+
+.boost_attack .card-button { background-color: #ffd1dc; }
+.boost_defense .card-button { background-color: #c9f7d5; }
+.boost_life .card-button { background-color: #cdefff; }
+
+.card-button:not(:disabled) { cursor: pointer; }
+
+.card-button:not(:disabled):hover, .is-selected .card-button {
+  transform: translateY(4px) rotate(-1deg);
+  box-shadow: 0 4px 0 var(--ink);
+  filter: saturate(1.08);
+}
+
+.card-button:disabled { cursor: default; opacity: 1; }
+
+.card-header {
+  display: grid;
+  min-height: 50px;
+  gap: 2px;
+  padding: 8px 10px;
+  border: 3px solid var(--ink);
+  border-radius: 16px;
+  background: rgba(255, 253, 246, 0.9);
+}
+
+.card-header strong {
+  overflow: hidden;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-kind, .card-footer {
+  font-size: 0.61rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.art-frame {
+  display: grid;
+  place-items: center;
+  min-height: 128px;
+  margin: 9px 0;
+  border: 3px solid rgba(47, 37, 34, 0.9);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.25)),
+    repeating-linear-gradient(45deg, rgba(47, 37, 34, 0.05) 0 6px, transparent 6px 12px);
+}
+
+.card-art {
+  width: min(138px, 90%);
+  height: auto;
+  filter: drop-shadow(0 6px 0 rgba(47, 37, 34, 0.12));
+}
+
+.boost-art { width: min(126px, 86%); }
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin: 0;
+}
+
+.stat {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2px;
+  padding: 5px 7px;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  background: #fffdf6;
+}
+
+.stat dt, .stat dd { margin: 0; font-weight: 900; }
+.stat dd { font-size: 1.18rem; line-height: 1; }
+.stat-life dt { color: #e63946; }
+.stat-attack dt { color: #fb8500; }
+.stat-defense dt { color: #277da1; }
+
+.boost-rule {
+  display: grid;
+  place-items: center;
+  min-height: 42px;
+  padding: 8px;
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  background: #fffdf6;
+  font-weight: 900;
+  text-align: center;
+}
+
+.boost-rule span:empty { display: none; }
+
+.card-footer {
+  margin-top: 8px;
+  text-align: center;
+}
+
+.detail-card {
+  position: sticky;
+  top: 18px;
+}
+
+.detail-card .game-card { margin: 18px 0; }
+.detail-card .card-button { min-height: 420px; }
+.detail-card .art-frame { min-height: 220px; }
+.detail-card .card-art { width: min(210px, 90%); }
+
+.detail-copy {
+  padding: 16px;
+  border: 3px solid var(--ink);
+  border-radius: 20px;
+  background: #fffdf6;
+}
+
+.detail-copy p { margin: 6px 0 0; line-height: 1.45; }
+
+.print-area { display: none; }
+
+@media (max-width: 980px) {
+  .hero, .workspace { grid-template-columns: 1fr; }
+  .deck-summary { grid-template-columns: repeat(4, 1fr); }
+  .deck-summary div { min-height: 96px; }
+  .rules-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .detail-card { position: static; }
+}
+
+@media (max-width: 640px) {
+  .app-shell { width: min(100% - 20px, 1400px); padding-top: 14px; }
+  .hero-copy, .panel, .deck-summary { border-radius: 24px; }
+  .deck-summary, .rules-grid { grid-template-columns: 1fr 1fr; }
+  .panel-heading { align-items: start; flex-direction: column; }
+  .filters { justify-content: flex-start; }
+  .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .card-button { min-height: 230px; padding: 7px; border-width: 3px; border-radius: 18px; }
+  .card-header strong { font-size: 0.9rem; }
+  .art-frame { min-height: 112px; }
+}
+
+@page {
+  size: A4 landscape;
+  margin: 6mm;
+}
+
+@media print {
+  html, body {
+    width: 297mm;
+    min-width: 0;
+    background: #fff;
+  }
+
+  .app-shell { display: none; }
+  .print-area { display: block; }
+
+  .print-page {
+    display: grid;
+    width: 285mm;
+    height: 198mm;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 3mm;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .print-page:last-child { page-break-after: auto; break-after: auto; }
+
+  .game-card, .card-button {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .card-button {
+    padding: 2.2mm;
+    border: 0.8mm solid #2f2522;
+    border-radius: 4mm;
+    box-shadow: none;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .card-header {
+    min-height: 11mm;
+    padding: 1.4mm 2mm;
+    border-width: 0.6mm;
+    border-radius: 2.8mm;
+  }
+
+  .card-header strong { font-size: 10pt; }
+  .card-kind, .card-footer { font-size: 5.6pt; }
+
+  .art-frame {
+    min-height: 28mm;
+    margin: 1.8mm 0;
+    border-width: 0.6mm;
+    border-radius: 3mm;
+  }
+
+  .card-art { width: 31mm; }
+  .boost-art { width: 29mm; }
+
+  .stats-row { gap: 1mm; }
+  .stat {
+    padding: 0.7mm 1.3mm;
+    border-width: 0.55mm;
+    border-radius: 2.3mm;
+  }
+
+  .stat dt { font-size: 8pt; }
+  .stat dd { font-size: 11pt; }
+
+  .boost-rule {
+    min-height: 9mm;
+    padding: 1mm;
+    border-width: 0.55mm;
+    border-radius: 2.5mm;
+    font-size: 9pt;
+  }
+
+  .card-footer { margin-top: 1.4mm; }
+}
