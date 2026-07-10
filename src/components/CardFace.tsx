@@ -10,12 +10,20 @@ type CardFaceProps = {
 
 const stats: StatKey[] = ["life", "attack", "defense"];
 
+const boostBadge = (card: Card): string => {
+  if (card.kind === "boost_attack") return `✦ +${card.attackBonus} ${card.name.toUpperCase()}`;
+  if (card.kind === "boost_defense") return `⬟ +${card.defenseBonus} ${card.name.toUpperCase()}`;
+  if (card.kind === "boost_life") return `♥ +${card.lifeBonus} ${card.name.toUpperCase()}`;
+  return "";
+};
+
 export function CardFace({ card, selected = false, onSelect }: CardFaceProps) {
   const isInteractive = onSelect !== undefined;
 
   return (
     <article className={`game-card ${card.kind} ${selected ? "is-selected" : ""}`}>
       <button className="card-button" type="button" disabled={!isInteractive} onClick={() => onSelect?.(card)} aria-label={`Ver ${card.name}`}>
+        {card.kind !== "monster" ? <div className="boost-band">{boostBadge(card)}</div> : null}
         <header className="card-header">
           <strong>{card.name.toUpperCase()}</strong>
         </header>

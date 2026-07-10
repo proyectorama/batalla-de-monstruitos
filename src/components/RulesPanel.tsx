@@ -16,11 +16,11 @@ export function RulesPanel() {
         </div>
         <div>
           <h3>3. Turno</h3>
-          <p>Roba 1, baja 1 monstruo, juega 1 mejora y elige 1 monstruo tuyo para atacar a cualquiera de los 3 rivales.</p>
+          <p>Roba 1, baja 1 monstruo, juega mejoras y atacan tus 3 monstruos, uno por uno.</p>
         </div>
         <div>
           <h3>4. Mejoras</h3>
-          <p>Cada monstruo puede tener hasta 3 mejoras. Pueden ser de vida, ataque o defensa.</p>
+          <p>Cada monstruo puede tener 3 de vida, 3 de ataque y 3 de defensa.</p>
         </div>
       </div>
       <div className="icon-rules" aria-label="Iconos de las cartas">
@@ -33,7 +33,7 @@ export function RulesPanel() {
         <p><b>✦ 5 - ⬟ 2 = 3 dano.</b> El defensor pierde 3 vidas.</p>
         <p><b>✦ 3 - ⬟ 3 = 0.</b> Como el minimo es 1, pierde 1 vida.</p>
         <p><b>✦ 2 - ⬟ 5 = -3.</b> Como el minimo es 1, pierde 1 vida.</p>
-        <p><b>Objetivo libre.</b> Si el rival tiene 3 monstruos, puedes elegir a cual atacar.</p>
+        <p><b>Atacan los 3.</b> Cada monstruo tuyo elige a cual rival atacar.</p>
       </div>
     </section>
   );

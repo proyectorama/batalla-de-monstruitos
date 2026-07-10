@@ -6,6 +6,29 @@ type PrintAreaProps = {
   cards: Card[];
 };
 
+const monsterSlots = [1, 2, 3];
+const boostSlots = [1, 2, 3];
+
+function MonsterBoardStation({ slot }: { slot: number }) {
+  return (
+    <div className="monster-station">
+      <div className="station-title">Monstruo {slot}</div>
+      <div className="attack-slots" aria-label="Mejoras de ataque">
+        {boostSlots.map((boostSlot) => <div className="boost-slot attack-slot" key={`attack-${slot}-${boostSlot}`}>✦</div>)}
+      </div>
+      <div className="station-core">
+        <div className="life-slots" aria-label="Mejoras de vida">
+          {boostSlots.map((boostSlot) => <div className="boost-slot life-slot" key={`life-${slot}-${boostSlot}`}>♥</div>)}
+        </div>
+        <div className="monster-card-zone">Carta</div>
+        <div className="defense-slots" aria-label="Mejoras de defensa">
+          {boostSlots.map((boostSlot) => <div className="boost-slot defense-slot" key={`defense-${slot}-${boostSlot}`}>⬟</div>)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function PrintArea({ cards }: PrintAreaProps) {
   const pages = chunkCards(cards, 15);
   const lifeTokens = Array.from({ length: 80 }, (_, index) => index + 1);
@@ -45,9 +68,7 @@ export function PrintArea({ cards }: PrintAreaProps) {
               <strong>Jugador {player}</strong>
             </header>
             <div className="board-layout">
-              <div className="board-zone monster-zone">Monstruo 1</div>
-              <div className="board-zone monster-zone">Monstruo 2</div>
-              <div className="board-zone monster-zone">Monstruo 3</div>
+              {monsterSlots.map((slot) => <MonsterBoardStation slot={slot} key={`station-${player}-${slot}`} />)}
               <div className="board-zone deck-zone">Mazo</div>
               <div className="board-zone discard-zone">Descarte</div>
               <div className="board-zone points-zone">Puntos: 0  1  2  3</div>
@@ -55,8 +76,8 @@ export function PrintArea({ cards }: PrintAreaProps) {
             <footer>
               <span>1 Roba</span>
               <span>2 Baja monstruo</span>
-              <span>3 Juega 1 mejora</span>
-              <span>4 Elige atacante</span>
+              <span>3 Juega mejoras</span>
+              <span>4 Atacan 3</span>
               <span>5 Pasa turno</span>
             </footer>
           </div>
@@ -84,15 +105,15 @@ export function PrintArea({ cards }: PrintAreaProps) {
             <ol>
               <li>Roba 1 carta.</li>
               <li>Puedes bajar 1 monstruo si tienes menos de 3 en juego.</li>
-              <li>Puedes jugar 1 mejora sobre un monstruo tuyo.</li>
-              <li>Elige 1 monstruo tuyo para atacar.</li>
-              <li>Elige cualquiera de los monstruos rivales como objetivo.</li>
+              <li>Puedes jugar mejoras sobre tus monstruos.</li>
+              <li>Atacan tus 3 monstruos, uno por uno.</li>
+              <li>Cada atacante elige cualquiera de los monstruos rivales como objetivo.</li>
               <li>Pasa el turno.</li>
             </ol>
           </section>
           <section>
             <h2>Mejoras</h2>
-            <p>Cada monstruo puede tener como maximo 3 mejoras. Pueden ser varias de vida, ataque o defensa. Las mejoras quedan sobre el monstruo. Si el monstruo es derrotado, sus mejoras tambien van al descarte.</p>
+            <p>Cada monstruo puede tener hasta 3 mejoras de vida a la izquierda, 3 de ataque arriba y 3 de defensa a la derecha. Si el monstruo es derrotado, sus mejoras tambien van al descarte.</p>
           </section>
           <section>
             <h2>Combate</h2>

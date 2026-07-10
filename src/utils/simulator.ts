@@ -9,7 +9,9 @@ type BoardMonster = {
   damage: number;
   attack: number;
   defense: number;
-  boosts: BoostCard[];
+  attackBoosts: BoostCard[];
+  defenseBoosts: BoostCard[];
+  lifeBoosts: BoostCard[];
 };
 
 type PlayerState = {
@@ -27,6 +29,34 @@ export type SimulationResult = {
   log: string[];
   playerOnePoints: number;
   playerTwoPoints: number;
+  finalBoards: SimulationBoard[];
+  attacks: SimulationAttack[];
+};
+
+export type SimulationMonster = {
+  slot: number;
+  name: string;
+  life: number;
+  attack: number;
+  defense: number;
+  damage: number;
+  attackBoosts: number;
+  defenseBoosts: number;
+  lifeBoosts: number;
+};
+
+export type SimulationBoard = {
+  player: PlayerId;
+  points: number;
+  monsters: SimulationMonster[];
+};
+
+export type SimulationAttack = {
+  turn: number;
+  player: PlayerId;
+  attackerSlot: number;
+  targetSlot: number;
+  damage: number;
 };
 
 const isMonster = (card: Card): card is MonsterCard => card.kind === "monster";
@@ -39,13 +69,21 @@ const createMonster = (card: MonsterCard): BoardMonster => ({
   damage: 0,
   attack: card.attack,
   defense: card.defense,
-  boosts: [],
+  attackBoosts: [],
+  defenseBoosts: [],
+  lifeBoosts: [],
 });
 
-const totalLife = (monster: BoardMonster): number => monster.baseLife + monster.boosts.reduce((total, boost) => total + boost.lifeBonus, 0);
-const totalAttack = (monster: BoardMonster): number => monster.attack + monster.boosts.reduce((total, boost) => total + boost.attackBonus, 0);
-const totalDefense = (monster: BoardMonster): number => monster.defense + monster.boosts.reduce((total, boost) => total + boost.defenseBonus, 0);
+const totalLife = (monster: BoardMonster): number => monster.baseLife + monster.lifeBoosts.reduce((total, boost) => total + boost.lifeBonus, 0);
+const totalAttack = (monster: BoardMonster): number => monster.attack + monster.attackBoosts.reduce((total, boost) => total + boost.attackBonus, 0);
+const totalDefense = (monster: BoardMonster): number => monster.defense + monster.defenseBoosts.reduce((total, boost) => total + boost.defenseBonus, 0);
 const remainingLife = (monster: BoardMonster): number => totalLife(monster) - monster.damage;
+
+const boostPile = (monster: BoardMonster, boost: BoostCard): BoostCard[] => {
+  if (boost.kind === "boost_attack") return monster.attackBoosts;
+  if (boost.kind === "boost_defense") return monster.defenseBoosts;
+  return monster.lifeBoosts;
+};
 
 const shuffle = (items: Card[], seed: number): Card[] => {
   const shuffled = [...items];
@@ -114,25 +152,24 @@ const playMonster = (player: PlayerState, log: string[]): void => {
   log.push(`J${player.id} baja ${card.name.toUpperCase()} a la zona ${player.board.length}.`);
 };
 
-const boostScore = (boost: BoostCard): number => boost.attackBonus * 3 + boost.defenseBonus * 2 + boost.lifeBonus;
-
-const playBoost = (player: PlayerState, log: string[]): void => {
-  const target = player.board.find((monster) => monster.boosts.length < 3);
-
-  if (!target) {
-    return;
-  }
-
-  const boostIndex = player.hand.findIndex(isBoost);
+const playBoost = (player: PlayerState, log: string[]): boolean => {
+  const boostIndex = player.hand.findIndex((card) => isBoost(card) && player.board.some((monster) => boostPile(monster, card).length < 3));
   const card = player.hand[boostIndex];
 
   if (!card || !isBoost(card)) {
-    return;
+    return false;
+  }
+
+  const target = player.board.find((monster) => boostPile(monster, card).length < 3);
+
+  if (!target) {
+    return false;
   }
 
   player.hand.splice(boostIndex, 1);
-  target.boosts.push(card);
-  log.push(`J${player.id} pone ${card.name.toUpperCase()} en ${target.name}. Ahora tiene ${target.boosts.length}/3 mejoras.`);
+  boostPile(target, card).push(card);
+  log.push(`J${player.id} pone ${card.name.toUpperCase()} en ${target.name}.`);
+  return true;
 };
 
 const chooseAttacker = (player: PlayerState): BoardMonster | undefined =>
@@ -151,30 +188,58 @@ const cleanupDefeated = (attacker: PlayerState, defender: PlayerState, target: B
   log.push(`${target.name} queda sin vida. J${attacker.id} gana 1 punto (${attacker.points}/3).`);
 };
 
-const takeTurn = (active: PlayerState, rival: PlayerState, turn: number, log: string[]): void => {
+const monsterSlot = (player: PlayerState, monster: BoardMonster): number => player.board.findIndex((item) => item.id === monster.id) + 1;
+
+const boardView = (player: PlayerState): SimulationBoard => ({
+  player: player.id,
+  points: player.points,
+  monsters: player.board.map((monster, index) => ({
+    slot: index + 1,
+    name: monster.name,
+    life: Math.max(0, remainingLife(monster)),
+    attack: totalAttack(monster),
+    defense: totalDefense(monster),
+    damage: monster.damage,
+    attackBoosts: monster.attackBoosts.length,
+    defenseBoosts: monster.defenseBoosts.length,
+    lifeBoosts: monster.lifeBoosts.length,
+  })),
+});
+
+const takeTurn = (active: PlayerState, rival: PlayerState, turn: number, log: string[], attacks: SimulationAttack[]): void => {
   log.push(`Turno ${turn}: J${active.id}.`);
   draw(active, 1);
   playMonster(active, log);
-  playBoost(active, log);
-
-  const attacker = chooseAttacker(active);
-  const target = chooseTarget(rival);
-
-  if (!attacker || !target) {
-    log.push(`J${active.id} no puede atacar.`);
-    return;
+  for (let count = 0; count < 3; count += 1) {
+    if (!playBoost(active, log)) break;
   }
 
-  const damage = Math.max(1, totalAttack(attacker) - totalDefense(target));
-  target.damage += damage;
-  log.push(`${attacker.name} ataca a ${target.name}: ✦ ${totalAttack(attacker)} - ⬟ ${totalDefense(target)} = ${damage} dano. Le quedan ${Math.max(0, remainingLife(target))} vidas.`);
-  cleanupDefeated(active, rival, target, log);
+  const attackers = [...active.board];
+
+  for (const attacker of attackers) {
+    if (!active.board.some((monster) => monster.id === attacker.id)) continue;
+    const target = chooseTarget(rival);
+
+    if (!target) {
+      log.push(`J${active.id} no tiene objetivo para ${attacker.name}.`);
+      return;
+    }
+
+    const damage = Math.max(1, totalAttack(attacker) - totalDefense(target));
+    const attackerSlot = monsterSlot(active, attacker);
+    const targetSlot = monsterSlot(rival, target);
+    target.damage += damage;
+    attacks.push({ turn, player: active.id, attackerSlot, targetSlot, damage });
+    log.push(`${attacker.name} ataca a ${target.name}: ✦ ${totalAttack(attacker)} - ⬟ ${totalDefense(target)} = ${damage} dano. Le quedan ${Math.max(0, remainingLife(target))} vidas.`);
+    cleanupDefeated(active, rival, target, log);
+  }
 };
 
 const canContinue = (player: PlayerState): boolean => player.points < 3 && (player.board.length > 0 || player.hand.some(isMonster) || player.deck.some(isMonster));
 
 export const simulateGame = (cards: Card[], seed: number): SimulationResult => {
   const log: string[] = [];
+  const attacks: SimulationAttack[] = [];
   const playerOne = preparePlayer(1, cards, seed + 1);
   const playerTwo = preparePlayer(2, cards, seed + 2);
 
@@ -196,7 +261,7 @@ export const simulateGame = (cards: Card[], seed: number): SimulationResult => {
   for (turns = 1; turns <= 80; turns += 1) {
     const active = turns % 2 === 1 ? playerOne : playerTwo;
     const rival = turns % 2 === 1 ? playerTwo : playerOne;
-    takeTurn(active, rival, turns, log);
+    takeTurn(active, rival, turns, log, attacks);
 
     if (active.points >= 3) {
       winner = active.id;
@@ -219,5 +284,7 @@ export const simulateGame = (cards: Card[], seed: number): SimulationResult => {
     log,
     playerOnePoints: playerOne.points,
     playerTwoPoints: playerTwo.points,
+    finalBoards: [boardView(playerOne), boardView(playerTwo)],
+    attacks,
   };
 };
