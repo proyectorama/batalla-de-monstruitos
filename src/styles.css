@@ -1,7 +1,7 @@
 :root {
   color: #2f2522;
   background: #f8ecd4;
-  font-family: "Trebuchet MS", "Verdana", sans-serif;
+  font-family: Verdana, "Trebuchet MS", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   --ink: #2f2522;
@@ -24,6 +24,7 @@ body {
     radial-gradient(circle at 12% 8%, rgba(255, 143, 171, 0.28), transparent 25rem),
     radial-gradient(circle at 92% 12%, rgba(123, 223, 242, 0.34), transparent 22rem),
     linear-gradient(135deg, #f8ecd4 0%, #fff8e8 45%, #dff7df 100%);
+  text-transform: uppercase;
 }
 
 button, a { font: inherit; }
@@ -82,18 +83,18 @@ h1, h2, h3, p { margin-top: 0; }
 h1 {
   max-width: 900px;
   margin-bottom: 18px;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: Verdana, "Trebuchet MS", sans-serif;
   font-size: clamp(3.2rem, 9vw, 7.6rem);
   line-height: 0.86;
-  letter-spacing: -0.07em;
+  letter-spacing: -0.05em;
 }
 
 h2 {
   margin-bottom: 12px;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: Verdana, "Trebuchet MS", sans-serif;
   font-size: clamp(2rem, 4vw, 3.35rem);
   line-height: 0.95;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.03em;
 }
 
 h3 { margin-bottom: 6px; font-size: 1rem; }
@@ -150,7 +151,7 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 }
 
 .deck-summary strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: Verdana, "Trebuchet MS", sans-serif;
   font-size: clamp(2.7rem, 6vw, 4.8rem);
   line-height: 0.8;
 }
@@ -264,10 +265,10 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
 .card-header strong {
   overflow: hidden;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: Verdana, "Trebuchet MS", sans-serif;
   font-size: 1.05rem;
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: 0.01em;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -354,7 +355,7 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   border: 3px solid var(--ink);
   border-radius: 50%;
   background: #fffdf6;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: Verdana, "Trebuchet MS", sans-serif;
   font-size: 1.3rem;
   line-height: 1;
 }
@@ -455,14 +456,15 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
   .app-shell { display: none; }
   .print-area { display: block; }
-  .print-cards, .print-boards, .print-rules, .print-tokens { display: none; }
+  .print-cards, .print-backs, .print-boards, .print-rules, .print-tokens { display: none; }
 
   body[data-print-mode="cards"] .print-cards,
+  body[data-print-mode="backs"] .print-backs,
   body[data-print-mode="boards"] .print-boards,
   body[data-print-mode="rules"] .print-rules,
   body[data-print-mode="tokens"] .print-tokens { display: block; }
 
-  .card-print-page {
+  .card-print-page, .card-back-page {
     display: grid;
     width: 285mm;
     height: 198mm;
@@ -473,7 +475,7 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
     break-after: page;
   }
 
-  .card-print-page:last-child { page-break-after: auto; break-after: auto; }
+  .card-print-page:last-child, .card-back-page:last-child { page-break-after: auto; break-after: auto; }
 
   .game-card, .card-button {
     width: 100%;
@@ -535,6 +537,47 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
     font-size: 9pt;
   }
 
+  .card-back {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    border: 0.8mm solid #2f2522;
+    background:
+      radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.65), transparent 18mm),
+      repeating-linear-gradient(45deg, rgba(47, 37, 34, 0.08) 0 2mm, transparent 2mm 4mm),
+      #fff7e5;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .card-back.team-1 { background-color: #cdefff; }
+  .card-back.team-2 { background-color: #ffd6e2; }
+
+  .back-circle {
+    display: grid;
+    place-items: center;
+    width: 34mm;
+    height: 34mm;
+    border: 1.2mm solid #2f2522;
+    border-radius: 50%;
+    background: #fffdf6;
+    box-shadow: 0 1.8mm 0 #2f2522;
+    text-align: center;
+  }
+
+  .back-circle span {
+    font-size: 8pt;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+  }
+
+  .back-circle strong {
+    font-size: 44pt;
+    line-height: 0.82;
+    font-weight: 900;
+  }
+
   .board-page, .rules-page, .tokens-page {
     width: 285mm;
     min-height: 198mm;
@@ -565,7 +608,7 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   }
 
   .board-page header span { font-size: 18pt; font-weight: 900; text-transform: uppercase; }
-  .board-page header strong { font-family: Georgia, "Times New Roman", serif; font-size: 42pt; line-height: 1; }
+  .board-page header strong { font-family: Verdana, "Trebuchet MS", sans-serif; font-size: 42pt; line-height: 1; }
 
   .board-layout {
     display: grid;

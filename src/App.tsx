@@ -39,6 +39,7 @@ export function App() {
             </p>
             <div className="hero-actions">
               <button className="primary-action" type="button" onClick={() => handlePrint("cards")}>Imprimir cartas</button>
+              <button type="button" onClick={() => handlePrint("backs")}>Imprimir dorsos</button>
               <button type="button" onClick={() => handlePrint("boards")}>Imprimir tablero</button>
               <button type="button" onClick={() => handlePrint("rules")}>Imprimir reglas</button>
               <button type="button" onClick={() => handlePrint("tokens")}>Imprimir corazones</button>

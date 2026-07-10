@@ -1,11 +1,26 @@
-import type { BoostArt, MonsterArt as MonsterArtType } from "../types/cards";
+import type { BoostCard, MonsterArt as MonsterArtType } from "../types/cards";
 
 type MonsterArtProps = {
   art: MonsterArtType;
 };
 
 type BoostArtProps = {
-  art: BoostArt;
+  card: BoostCard;
+};
+
+const bonusValue = (card: BoostCard): number => Math.max(card.attackBonus, card.defenseBonus, card.lifeBonus);
+
+const bonusColor = (bonus: number): string => {
+  switch (bonus) {
+    case 1:
+      return "#7bdff2";
+    case 2:
+      return "#ffd166";
+    case 3:
+      return "#ff8fab";
+    default:
+      return "#bdb2ff";
+  }
 };
 
 const bodyPath = (body: MonsterArtType["body"]): string => {
@@ -92,29 +107,18 @@ export function MonsterArt({ art }: MonsterArtProps) {
   );
 }
 
-export function BoostArtView({ art }: BoostArtProps) {
+export function BoostArtView({ card }: BoostArtProps) {
+  const bonus = bonusValue(card);
+  const mainColor = bonusColor(bonus);
+
   return (
     <svg className="card-art boost-art" viewBox="0 0 160 160" role="img" aria-label="Icono de mejora">
-      <circle cx="80" cy="80" r="60" fill={art.color} stroke="#3a2d2a" strokeWidth="5" />
-      {art.icon === "cookie" ? (
-        <g>
-          <circle cx="80" cy="82" r="38" fill={art.color} stroke="#3a2d2a" strokeWidth="5" />
-          <circle cx="66" cy="72" r="5" fill={art.accent} />
-          <circle cx="88" cy="93" r="6" fill={art.accent} />
-          <circle cx="99" cy="68" r="4" fill={art.accent} />
-        </g>
-      ) : null}
-      {art.icon === "spark" ? <path d="M85 28 L69 72 L105 69 L66 132 L78 90 L47 91 Z" fill={art.accent} stroke="#3a2d2a" strokeWidth="5" strokeLinejoin="round" /> : null}
-      {art.icon === "shield" ? <path d="M80 30 L122 47 L116 92 C112 116 96 130 80 137 C64 130 48 116 44 92 L38 47 Z" fill={art.accent} stroke="#3a2d2a" strokeWidth="5" strokeLinejoin="round" /> : null}
-      {art.icon === "leaf" ? <path d="M42 101 C52 48 101 35 123 47 C124 96 82 122 42 101 Z M53 99 C72 87 91 69 111 50" fill={art.accent} stroke="#3a2d2a" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" /> : null}
-      {art.icon === "heart" ? <path d="M80 125 C46 99 31 80 40 58 C48 38 72 42 80 58 C88 42 112 38 120 58 C129 80 114 99 80 125 Z" fill={art.accent} stroke="#3a2d2a" strokeWidth="5" /> : null}
-      {art.icon === "potion" ? (
-        <g>
-          <path d="M67 28 H93 V54 L116 99 C127 121 110 139 80 139 C50 139 33 121 44 99 L67 54 Z" fill="#fffaf0" stroke="#3a2d2a" strokeWidth="5" strokeLinejoin="round" />
-          <path d="M52 104 C64 93 93 93 108 105 C107 120 95 130 80 130 C64 130 53 120 52 104 Z" fill={art.accent} />
-          <path d="M64 28 H96" stroke="#3a2d2a" strokeWidth="9" strokeLinecap="round" />
-        </g>
-      ) : null}
+      <circle cx="80" cy="80" r="60" fill={mainColor} stroke="#3a2d2a" strokeWidth="5" />
+      <circle cx="80" cy="80" r="48" fill="#fffaf0" stroke="#3a2d2a" strokeWidth="4" opacity="0.94" />
+      {card.kind === "boost_life" ? <path d="M80 118 C51 96 40 80 47 62 C53 47 72 50 80 63 C88 50 107 47 113 62 C120 80 109 96 80 118 Z" fill={mainColor} stroke="#3a2d2a" strokeWidth="5" /> : null}
+      {card.kind === "boost_attack" ? <path d="M84 36 L68 74 L102 72 L63 126 L76 90 L48 91 Z" fill={mainColor} stroke="#3a2d2a" strokeWidth="5" strokeLinejoin="round" /> : null}
+      {card.kind === "boost_defense" ? <path d="M80 37 L116 52 L111 90 C108 111 94 125 80 132 C66 125 52 111 49 90 L44 52 Z" fill={mainColor} stroke="#3a2d2a" strokeWidth="5" strokeLinejoin="round" /> : null}
+      <text x="80" y="91" textAnchor="middle" dominantBaseline="middle" fontFamily="Verdana, sans-serif" fontSize="38" fontWeight="900" fill="#2f2522">+{bonus}</text>
     </svg>
   );
 }

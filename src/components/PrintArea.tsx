@@ -22,6 +22,21 @@ export function PrintArea({ cards }: PrintAreaProps) {
         ))}
       </div>
 
+      <div className="print-backs">
+        {pages.map((pageCards, pageIndex) => (
+          <div className="print-page card-back-page" key={`backs-${pageIndex + 1}`}>
+            {pageCards.map((card) => (
+              <div className={`card-back team-${card.deck}`} key={`back-${card.id}`}>
+                <div className="back-circle">
+                  <span>Equipo</span>
+                  <strong>{card.deck}</strong>
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+
       <div className="print-boards">
         {[1, 2].map((player) => (
           <div className="board-page" key={`board-${player}`}>

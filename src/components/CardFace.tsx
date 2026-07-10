@@ -21,7 +21,7 @@ export function CardFace({ card, selected = false, onSelect }: CardFaceProps) {
           <strong>{card.name}</strong>
         </header>
 
-        <div className="art-frame">{card.kind === "monster" ? <MonsterArt art={card.art} /> : <BoostArtView art={card.art} />}</div>
+        <div className="art-frame">{card.kind === "monster" ? <MonsterArt art={card.art} /> : <BoostArtView card={card} />}</div>
 
         {card.kind === "monster" ? (
           <dl className="stats-row">
@@ -34,16 +34,12 @@ export function CardFace({ card, selected = false, onSelect }: CardFaceProps) {
           </dl>
         ) : (
           <div className="boost-rule">
-            <span>{card.attackBonus > 0 ? `+${card.attackBonus} Ataque` : null}</span>
-            <span>{card.defenseBonus > 0 ? `+${card.defenseBonus} Defensa` : null}</span>
-            <span>{card.lifeBonus > 0 ? `+${card.lifeBonus} Vida` : null}</span>
+            <span>{card.attackBonus > 0 ? `✦ +${card.attackBonus} Ataque` : null}</span>
+            <span>{card.defenseBonus > 0 ? `⬟ +${card.defenseBonus} Defensa` : null}</span>
+            <span>{card.lifeBonus > 0 ? `♥ +${card.lifeBonus} Vida` : null}</span>
           </div>
         )}
 
-        <footer className="card-footer" aria-label={`Equipo ${card.deck}`}>
-          <span>Equipo</span>
-          <strong>{card.deck}</strong>
-        </footer>
       </button>
     </article>
   );
