@@ -11,26 +11,41 @@ type SimBoardProps = {
 function SimBoard({ board, activeSlot, targetSlot }: SimBoardProps) {
   return (
     <div className={`sim-board player-${board.player}`}>
-      <h3>JUGADOR {board.player}</h3>
-      <div className="sim-monsters">
+      <header className="sim-board-header">
+        <span>TABLERO</span>
+        <strong>JUGADOR {board.player}</strong>
+      </header>
+      <div className="sim-board-layout">
         {[1, 2, 3].map((slot) => {
           const monster = board.monsters.find((item) => item.slot === slot);
           return (
-            <div className={`sim-monster ${activeSlot === slot ? "is-attacking" : ""} ${targetSlot === slot ? "is-target" : ""}`} key={`sim-${board.player}-${slot}`}>
-              <div className="sim-attack-slots">{Array.from({ length: monster?.attackBoosts ?? 0 }, (_, index) => <span key={index}>✦</span>)}</div>
-              <div className="sim-core">
-                <div className="sim-life-slots">{Array.from({ length: monster?.lifeBoosts ?? 0 }, (_, index) => <span key={index}>♥</span>)}</div>
-                <div className="sim-card-mini">
-                  <strong>{monster?.name ?? `MONSTRUO ${slot}`}</strong>
-                  {monster ? <span>♥ {monster.life}  ✦ {monster.attack}  ⬟ {monster.defense}</span> : <span>VACIO</span>}
-                </div>
-                <div className="sim-defense-slots">{Array.from({ length: monster?.defenseBoosts ?? 0 }, (_, index) => <span key={index}>⬟</span>)}</div>
+            <div className={`sim-station ${activeSlot === slot ? "is-attacking" : ""} ${targetSlot === slot ? "is-target" : ""}`} key={`sim-${board.player}-${slot}`}>
+              <div className="sim-station-title">MONSTRUO {slot}</div>
+              <div className="sim-attack-stack">
+                {Array.from({ length: 3 }, (_, index) => <span className={index < (monster?.attackBoosts ?? 0) ? "filled" : ""} key={index}>✦ ATAQUE</span>)}
               </div>
+              <div className="sim-station-core">
+                <div className="sim-defense-stack">
+                  {Array.from({ length: 3 }, (_, index) => <span className={index < (monster?.defenseBoosts ?? 0) ? "filled" : ""} key={index}>⬟ DEFENSA</span>)}
+                </div>
+                <div className="sim-card-mini">
+                  <strong>{monster?.name ?? "CARTA"}</strong>
+                  {monster ? <span>♥ {monster.life} ✦ {monster.attack} ⬟ {monster.defense}</span> : <span>CARTA</span>}
+                </div>
+                <div className="sim-life-stack">
+                  {Array.from({ length: 3 }, (_, index) => <span className={index < (monster?.lifeBoosts ?? 0) ? "filled" : ""} key={index}>♥ VIDA</span>)}
+                </div>
+              </div>
+              <div className="sim-heart-track">{Array.from({ length: 5 }, (_, index) => <span key={index}>♡</span>)}</div>
             </div>
           );
         })}
       </div>
-      <p>PUNTOS {board.points}/3</p>
+      <footer className="sim-board-footer">
+        <span>MAZO</span>
+        <span>DESCARTE</span>
+        <span>PUNTOS: {board.points} 1 2 3</span>
+      </footer>
     </div>
   );
 }

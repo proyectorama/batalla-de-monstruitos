@@ -76,13 +76,6 @@ export function PrintArea({ cards }: PrintAreaProps) {
               <div className="board-zone discard-zone">Descarte</div>
               <div className="board-zone points-zone">Puntos: 0  1  2  3</div>
             </div>
-            <footer>
-              <span>1 Roba</span>
-              <span>2 Baja monstruo</span>
-              <span>3 Juega mejoras</span>
-              <span>4 Atacan 3</span>
-              <span>5 Pasa turno</span>
-            </footer>
           </div>
         ))}
       </div>
