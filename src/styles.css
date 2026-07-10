@@ -831,10 +831,10 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   .board-page {
     display: grid;
     grid-template-rows: auto 1fr auto;
-    gap: 7mm;
+    gap: 5mm;
     padding: 4mm;
     border: 1.2mm solid #2f2522;
-    background: #fff7e5;
+    background: #fff;
   }
 
   .board-page header {
@@ -851,8 +851,9 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   .board-layout {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 1fr auto;
-    gap: 4mm;
+    grid-template-rows: 1fr 42mm;
+    column-gap: 16mm;
+    row-gap: 7mm;
   }
 
   .board-zone {
@@ -868,50 +869,111 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
   .monster-station {
     display: grid;
-    grid-template-rows: auto auto 1fr;
-    gap: 2mm;
-    padding: 2mm;
-    border: 0.9mm solid #2f2522;
-    border-radius: 5mm;
-    background: #fffdf6;
+    grid-template-rows: auto auto 1fr auto;
+    align-content: start;
+    min-height: 122mm;
   }
 
-  .station-title { text-align: center; font-size: 13pt; font-weight: 900; }
+  .station-title {
+    margin-bottom: 1.5mm;
+    text-align: center;
+    font-size: 12pt;
+    font-weight: 900;
+  }
 
-  .attack-slots {
+  .attack-stack {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5mm;
+    justify-content: center;
+    align-content: end;
+    gap: 0;
+    min-height: 30mm;
   }
 
   .station-core {
     display: grid;
-    grid-template-columns: 12mm 1fr 12mm;
-    gap: 1.5mm;
+    grid-template-columns: 30mm 1fr 30mm;
+    align-items: end;
   }
 
-  .life-slots, .defense-slots {
-    display: grid;
-    grid-template-rows: repeat(3, 1fr);
-    gap: 1.5mm;
+  .defense-stack,
+  .life-stack {
+    display: flex;
+    align-items: end;
+    height: 62mm;
   }
 
-  .boost-slot, .monster-card-zone {
+  .defense-stack { justify-content: flex-end; }
+  .life-stack { justify-content: flex-start; }
+
+  .boost-slot,
+  .monster-card-zone {
     display: grid;
     place-items: center;
-    border: 0.65mm dashed #2f2522;
-    border-radius: 2.5mm;
-    font-size: 14pt;
+    border: 0.85mm solid #2f2522;
+    border-radius: 0;
+    background: #fff;
     font-weight: 900;
+    text-align: center;
   }
 
-  .attack-slot { background: #ffe17a; }
-  .life-slot { background: #ffb3c7; }
-  .defense-slot { background: #b9fbc0; }
-  .monster-card-zone { min-height: 62mm; background: #ffd6a5; font-size: 20pt; }
+  .attack-slot {
+    width: 38mm;
+    height: 11mm;
+    margin-top: -0.85mm;
+    font-size: 12pt;
+  }
+
+  .defense-slot,
+  .life-slot {
+    width: 12mm;
+    height: 62mm;
+    margin-left: -0.85mm;
+    writing-mode: vertical-rl;
+    font-size: 10pt;
+    letter-spacing: 0.02em;
+  }
+
+  .defense-slot {
+    transform: rotate(180deg);
+  }
+
+  .monster-card-zone {
+    min-height: 62mm;
+    font-size: 20pt;
+  }
+
+  .heart-track {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    height: 20mm;
+    margin-top: 7mm;
+    border: 0.85mm solid #2f2522;
+    background: #fff;
+  }
+
+  .heart-track span {
+    display: grid;
+    place-items: center;
+    font-size: 28pt;
+    line-height: 1;
+  }
+
   .deck-zone { background: #cdefff; }
   .discard-zone { background: #ffc8dd; }
   .points-zone { background: #d8f3dc; }
+
+  .deck-zone,
+  .discard-zone,
+  .points-zone {
+    align-self: start;
+    min-height: 34mm;
+    background: #fff;
+  }
+
+  .deck-zone { grid-column: 1; width: 45mm; justify-self: start; }
+  .discard-zone { grid-column: 2; }
+  .points-zone { grid-column: 3; }
 
   .board-page footer {
     display: grid;

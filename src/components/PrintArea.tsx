@@ -13,17 +13,20 @@ function MonsterBoardStation({ slot }: { slot: number }) {
   return (
     <div className="monster-station">
       <div className="station-title">Monstruo {slot}</div>
-      <div className="attack-slots" aria-label="Mejoras de ataque">
-        {boostSlots.map((boostSlot) => <div className="boost-slot attack-slot" key={`attack-${slot}-${boostSlot}`}>✦</div>)}
+      <div className="attack-stack" aria-label="Mejoras de ataque">
+        {boostSlots.map((boostSlot) => <div className="boost-slot attack-slot" key={`attack-${slot}-${boostSlot}`}>✦ Ataque</div>)}
       </div>
       <div className="station-core">
-        <div className="life-slots" aria-label="Mejoras de vida">
-          {boostSlots.map((boostSlot) => <div className="boost-slot life-slot" key={`life-${slot}-${boostSlot}`}>♥</div>)}
+        <div className="defense-stack" aria-label="Mejoras de defensa">
+          {boostSlots.map((boostSlot) => <div className="boost-slot defense-slot" key={`defense-${slot}-${boostSlot}`}>⬟ Defensa</div>)}
         </div>
         <div className="monster-card-zone">Carta</div>
-        <div className="defense-slots" aria-label="Mejoras de defensa">
-          {boostSlots.map((boostSlot) => <div className="boost-slot defense-slot" key={`defense-${slot}-${boostSlot}`}>⬟</div>)}
+        <div className="life-stack" aria-label="Mejoras de vida">
+          {boostSlots.map((boostSlot) => <div className="boost-slot life-slot" key={`life-${slot}-${boostSlot}`}>♥ Vida</div>)}
         </div>
+      </div>
+      <div className="heart-track" aria-label="Contador de vida">
+        {Array.from({ length: 5 }, (_, index) => <span key={`heart-${slot}-${index}`}>♡</span>)}
       </div>
     </div>
   );
