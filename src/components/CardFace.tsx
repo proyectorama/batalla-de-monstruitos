@@ -5,6 +5,7 @@ import { StatIcon } from "./StatIcon";
 
 type CardFaceProps = {
   card: Card;
+  hideMonsterArt?: boolean;
   selected?: boolean;
   onSelect?: (card: Card) => void;
 };
@@ -25,21 +26,24 @@ const boostStat = (card: Card): StatKey | null => {
   return null;
 };
 
-export function CardFace({ card, selected = false, onSelect }: CardFaceProps) {
+export function CardFace({ card, hideMonsterArt = false, selected = false, onSelect }: CardFaceProps) {
   const isInteractive = onSelect !== undefined;
   const cardBoostStat = boostStat(card);
+  const showStickerSpace = card.kind === "monster" && hideMonsterArt;
 
   return (
     <article className={`game-card ${card.kind} ${selected ? "is-selected" : ""}`}>
       <button className="card-button" type="button" disabled={!isInteractive} onClick={() => onSelect?.(card)} aria-label={`Ver ${card.name}`}>
         {card.kind !== "monster" ? <div className="boost-band">{cardBoostStat ? <StatIcon stat={cardBoostStat} /> : null}<span className="boost-band-label">{boostBadge(card)}</span></div> : null}
         <header className="card-header">
-          <strong>{card.name.toUpperCase()}</strong>
+          <strong>{showStickerSpace ? "" : card.name.toUpperCase()}</strong>
         </header>
 
         <div className="art-frame">
           <span className="card-print-id">{card.id}</span>
-          {card.kind === "monster" ? <MonsterArt art={card.art} /> : <BoostArtView card={card} />}
+          {showStickerSpace ? <div className="sticker-space" aria-label="Espacio para sticker" /> : null}
+          {!showStickerSpace && card.kind === "monster" ? <MonsterArt art={card.art} /> : null}
+          {card.kind !== "monster" ? <BoostArtView card={card} /> : null}
         </div>
 
         {card.kind === "monster" ? (

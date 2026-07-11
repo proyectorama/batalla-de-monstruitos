@@ -5,6 +5,7 @@ import { StatIcon } from "./StatIcon";
 
 type PrintAreaProps = {
   cards: Card[];
+  hideMonsterArt: boolean;
 };
 
 const monsterSlots = [1, 2, 3];
@@ -66,7 +67,7 @@ function ConsumablesPage() {
   );
 }
 
-export function PrintArea({ cards }: PrintAreaProps) {
+export function PrintArea({ cards, hideMonsterArt }: PrintAreaProps) {
   const pages = chunkCards(cards, 15);
   return (
     <section className="print-area" aria-label="Hojas listas para imprimir">
@@ -74,7 +75,7 @@ export function PrintArea({ cards }: PrintAreaProps) {
         {pages.map((pageCards, pageIndex) => (
           <div className="print-page card-print-page" key={`page-${pageIndex + 1}`}>
             {pageCards.map((card) => (
-              <CardFace card={card} key={card.id} />
+              <CardFace card={card} hideMonsterArt={hideMonsterArt} key={card.id} />
             ))}
           </div>
         ))}

@@ -25,6 +25,7 @@ export function App() {
   const [modalCard, setModalCard] = useState<Card | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
   const [activeTab, setActiveTab] = useState<AppTab>("cards");
+  const [hideMonsterArt, setHideMonsterArt] = useState(false);
 
   const handlePrint = (mode: PrintMode) => {
     document.body.dataset.printMode = mode;
@@ -52,6 +53,14 @@ export function App() {
               Un juego de cartas tipo Pokemon/Magic, simplificado para chicos: monstruos tiernos, mejoras grandes y reglas con numeros faciles de contar.
             </p>
             <div className="hero-actions">
+              <label className="print-sticker-switch">
+                <input type="checkbox" checked={hideMonsterArt} onChange={(event) => setHideMonsterArt(event.target.checked)} />
+                <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
+                <span className="switch-copy">
+                  <strong>Modo stickers</strong>
+                  <small>Imprime monstruos sin dibujo ni nombre</small>
+                </span>
+              </label>
               <button className="primary-action" type="button" onClick={() => handlePrint("cards")}>Imprimir cartas</button>
               <button type="button" onClick={() => handlePrint("backs")}>Imprimir dorsos</button>
               <button type="button" onClick={() => handlePrint("boards")}>Imprimir tablero</button>
@@ -96,7 +105,7 @@ export function App() {
         )}
       </main>
 
-      <PrintArea cards={cards} />
+      <PrintArea cards={cards} hideMonsterArt={hideMonsterArt} />
     </>
   );
 }
