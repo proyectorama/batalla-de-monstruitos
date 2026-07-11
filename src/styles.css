@@ -847,15 +847,13 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
   .app-shell { display: none; }
   .print-area { display: block; }
-  .print-cards, .print-backs, .print-boards, .print-rules, .print-tokens, .print-shields, .print-swords { display: none; }
+  .print-cards, .print-backs, .print-boards, .print-rules, .print-consumables { display: none; }
 
   body[data-print-mode="cards"] .print-cards,
   body[data-print-mode="backs"] .print-backs,
   body[data-print-mode="boards"] .print-boards,
   body[data-print-mode="rules"] .print-rules,
-  body[data-print-mode="tokens"] .print-tokens,
-  body[data-print-mode="shields"] .print-shields,
-  body[data-print-mode="swords"] .print-swords { display: block; }
+  body[data-print-mode="consumables"] .print-consumables { display: block; }
 
   .card-print-page {
     display: grid;

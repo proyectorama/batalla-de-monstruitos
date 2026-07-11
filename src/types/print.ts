@@ -1,1 +1,1 @@
-export type PrintMode = "cards" | "backs" | "boards" | "rules" | "tokens" | "shields" | "swords";
+export type PrintMode = "cards" | "backs" | "boards" | "rules" | "consumables";

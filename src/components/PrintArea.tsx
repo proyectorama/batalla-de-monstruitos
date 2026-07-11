@@ -47,16 +47,20 @@ function MonsterBoardStation({ slot }: { slot: number }) {
   );
 }
 
-function TokenPage({ stat, title, copy }: { stat: "life" | "attack" | "defense"; title: string; copy: string }) {
-  const tokens = Array.from({ length: 160 }, (_, index) => index + 1);
+const consumables = [
+  ...Array.from({ length: 80 }, (_, index) => ({ stat: "life" as const, id: `life-${index + 1}` })),
+  ...Array.from({ length: 40 }, (_, index) => ({ stat: "attack" as const, id: `attack-${index + 1}` })),
+  ...Array.from({ length: 40 }, (_, index) => ({ stat: "defense" as const, id: `defense-${index + 1}` })),
+];
 
+function ConsumablesPage() {
   return (
-    <div className={`tokens-page ${stat}-tokens-page`}>
-      <h1>{title}</h1>
-      <p>{copy}</p>
+    <div className="tokens-page consumables-page">
+      <h1>Consumibles</h1>
+      <p>80 corazones de vida, 40 espadas de ataque y 40 escudos de defensa.</p>
       <div className="tokens-grid">
-        {tokens.map((token) => (
-          <div className={`life-token stat-token stat-token-${stat}`} key={token}><StatIcon stat={stat} /></div>
+        {consumables.map((token) => (
+          <div className={`life-token stat-token stat-token-${token.stat}`} key={token.id}><StatIcon stat={token.stat} /></div>
         ))}
       </div>
     </div>
@@ -147,16 +151,8 @@ export function PrintArea({ cards, player }: PrintAreaProps) {
         </div>
       </div>
 
-      <div className="print-tokens">
-        <TokenPage stat="life" title="Fichas de vida" copy="Recorta los cuadrados. Cada corazon vale 1 vida." />
-      </div>
-
-      <div className="print-shields">
-        <TokenPage stat="defense" title="Fichas de escudo" copy="Recorta los cuadrados. Usalos para marcar la defensa total del monstruo." />
-      </div>
-
-      <div className="print-swords">
-        <TokenPage stat="attack" title="Fichas de espada" copy="Recorta los cuadrados. Usalos para marcar el ataque total del monstruo." />
+      <div className="print-consumables">
+        <ConsumablesPage />
       </div>
     </section>
   );

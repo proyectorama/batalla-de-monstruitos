@@ -4,7 +4,7 @@ import { CardGallery, type Filter } from "./components/CardGallery";
 import { GameSimulator } from "./components/GameSimulator";
 import { PrintArea } from "./components/PrintArea";
 import { RulesPanel } from "./components/RulesPanel";
-import { cardCounts, cards, deckOne, deckTwo } from "./data/deck";
+import { cardCounts, cards } from "./data/deck";
 import type { Card } from "./types/cards";
 import type { PrintMode } from "./types/print";
 
@@ -58,17 +58,15 @@ export function App() {
               <button type="button" onClick={() => handlePrint("backs")}>Imprimir dorsos</button>
               <button type="button" onClick={() => handlePrint("boards")}>Imprimir tablero</button>
               <button type="button" onClick={() => handlePrint("rules")}>Imprimir reglas</button>
-              <button type="button" onClick={() => handlePrint("tokens")}>Imprimir corazones</button>
-              <button type="button" onClick={() => handlePrint("shields")}>Imprimir escudos</button>
-              <button type="button" onClick={() => handlePrint("swords")}>Imprimir espadas</button>
+              <button type="button" onClick={() => handlePrint("consumables")}>Imprimir consumibles</button>
               <a href={cardsDownloadHref} download="batalla-de-monstruitos-cards.json">Descargar JSON</a>
             </div>
           </div>
           <div className="deck-summary" aria-label="Resumen del mazo">
             <div><strong>{cardCounts.total}</strong><span>cartas</span></div>
             <div><strong>{cardCounts.monsters}</strong><span>monstruos</span></div>
-            <div><strong>1</strong><span>{deckOne.length} cartas</span></div>
-            <div><strong>2</strong><span>{deckTwo.length} cartas</span></div>
+            <div><strong>{cardCounts.boosts}</strong><span>mejoras</span></div>
+            <div><strong>160</strong><span>Consumibles</span></div>
           </div>
         </section>
 
