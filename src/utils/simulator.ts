@@ -66,6 +66,12 @@ export type SimulationAttack = {
   damage: number;
 };
 
+export type SimulationDiscard = {
+  player: PlayerId;
+  monsterSlot: number;
+  cards: Card[];
+};
+
 export type SimulationPlayer = {
   player: PlayerId;
   life: number;
@@ -82,10 +88,11 @@ export type SimulationStep = {
   log: string[];
   players: [SimulationPlayer, SimulationPlayer];
   attack: SimulationAttack | null;
+  discarded: SimulationDiscard | null;
   winner: PlayerId | null;
 };
 
-type LogEvent = (message: string, attack?: SimulationAttack | null) => void;
+type LogEvent = (message: string, attack?: SimulationAttack | null, discarded?: SimulationDiscard | null) => void;
 
 const isMonster = (card: Card): card is MonsterCard => card.kind === "monster";
 const isBoost = (card: Card): card is BoostCard => card.kind !== "monster";
@@ -212,14 +219,17 @@ const chooseAttacker = (player: PlayerState): BoardMonster | undefined =>
 const chooseTarget = (player: PlayerState): BoardMonster | undefined =>
   [...player.board].sort((left, right) => remainingLife(left) - remainingLife(right))[0];
 
-const cleanupDefeated = (attacker: PlayerState, defender: PlayerState, target: BoardMonster, log: LogEvent): void => {
+const cleanupDefeated = (defender: PlayerState, target: BoardMonster, log: LogEvent): void => {
   if (remainingLife(target) > 0) {
     return;
   }
 
+  const monsterSlot = defender.board.findIndex((monster) => monster.id === target.id) + 1;
+  const discardedCards = [target.card, ...target.attackBoosts, ...target.defenseBoosts, ...target.lifeBoosts];
+
   defender.board = defender.board.filter((monster) => monster.id !== target.id);
-  defender.discard.push(target.card, ...target.attackBoosts, ...target.defenseBoosts, ...target.lifeBoosts);
-  log(`${target.name} queda sin vida y va al descarte con sus mejoras.`);
+  defender.discard.unshift(...discardedCards);
+  log(`${target.name} queda sin vida y va al descarte con sus mejoras.`, null, { player: defender.id, monsterSlot, cards: discardedCards });
 };
 
 const monsterSlot = (player: PlayerState, monster: BoardMonster): number => player.board.findIndex((item) => item.id === monster.id) + 1;
@@ -286,7 +296,7 @@ const takeTurn = (active: PlayerState, rival: PlayerState, turn: number, log: Lo
     const attack = { turn, player: active.id, attackerSlot, targetSlot, damage };
     attacks.push(attack);
     log(`${attacker.name} ataca a ${target.name}: ${totalAttack(attacker)} espadas - ${totalDefense(target)} escudos = ${damage} dano. Le quedan ${Math.max(0, remainingLife(target))} vidas.`, attack);
-    cleanupDefeated(active, rival, target, log);
+    cleanupDefeated(rival, target, log);
   }
 };
 
@@ -300,7 +310,7 @@ export const simulateGame = (cards: Card[], seed: number): SimulationResult => {
   let currentTurn = 0;
   let winner: PlayerId | null = null;
 
-  const record: LogEvent = (message, attack = null) => {
+  const record: LogEvent = (message, attack = null, discarded = null) => {
     log.push(message);
     steps.push({
       turn: currentTurn,
@@ -309,6 +319,7 @@ export const simulateGame = (cards: Card[], seed: number): SimulationResult => {
       log: [...log],
       players: [playerView(playerOne), playerView(playerTwo)],
       attack,
+      discarded,
       winner,
     });
   };
