@@ -3,13 +3,14 @@ import { CardFace } from "./CardFace";
 
 type CardDetailProps = {
   card: Card;
+  titleId?: string;
 };
 
-export function CardDetail({ card }: CardDetailProps) {
+export function CardDetail({ card, titleId = "detail-title" }: CardDetailProps) {
   return (
-    <aside className="detail-card panel" aria-labelledby="detail-title">
+    <aside className="detail-card panel" aria-labelledby={titleId}>
       <p className="eyebrow">Carta seleccionada</p>
-      <h2 id="detail-title">{card.name.toUpperCase()}</h2>
+      <h2 id={titleId}>{card.name.toUpperCase()}</h2>
       <CardFace card={card} />
       <div className="detail-copy">
         {card.kind === "monster" ? (

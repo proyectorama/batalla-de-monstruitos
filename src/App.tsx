@@ -22,12 +22,21 @@ const getInitialCard = (): Card => {
 
 export function App() {
   const [selectedCard, setSelectedCard] = useState<Card>(getInitialCard);
+  const [modalCard, setModalCard] = useState<Card | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
   const [activeTab, setActiveTab] = useState<AppTab>("cards");
 
   const handlePrint = (mode: PrintMode) => {
     document.body.dataset.printMode = mode;
     window.setTimeout(() => window.print(), 0);
+  };
+
+  const handleSelectCard = (card: Card) => {
+    setSelectedCard(card);
+
+    if (window.matchMedia("(max-width: 980px)").matches) {
+      setModalCard(card);
+    }
   };
 
   const cardsDownloadHref = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(cards, null, 2))}`;
@@ -69,9 +78,18 @@ export function App() {
             <RulesPanel />
 
             <section className="workspace">
-              <CardGallery cards={cards} selectedCardId={selectedCard.id} filter={filter} onFilterChange={setFilter} onSelect={setSelectedCard} />
+              <CardGallery cards={cards} selectedCardId={selectedCard.id} filter={filter} onFilterChange={setFilter} onSelect={handleSelectCard} />
               <CardDetail card={selectedCard} />
             </section>
+
+            {modalCard ? (
+              <div className="mobile-card-modal" role="dialog" aria-modal="true" aria-labelledby="mobile-detail-title" onClick={() => setModalCard(null)}>
+                <div className="mobile-card-modal-content" onClick={(event) => event.stopPropagation()}>
+                  <button className="modal-close" type="button" aria-label="Cerrar carta" onClick={() => setModalCard(null)}>Cerrar</button>
+                  <CardDetail card={modalCard} titleId="mobile-detail-title" />
+                </div>
+              </div>
+            ) : null}
           </>
         ) : (
           <GameSimulator />
