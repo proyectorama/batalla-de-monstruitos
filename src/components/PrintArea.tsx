@@ -36,11 +36,11 @@ function MonsterBoardStation({ slot }: { slot: number }) {
       </div>
       <div className="station-core">
         <div className="life-stack" aria-label="Mejoras de vida">
-          {boostSlots.map((boostSlot) => <div className="boost-slot life-slot" key={`life-${slot}-${boostSlot}`}><StatIcon stat="life" /> Vida</div>)}
+          {boostSlots.map((boostSlot) => <div className="boost-slot life-slot" key={`life-${slot}-${boostSlot}`}><StatIcon stat="life" /><span>Vida</span></div>)}
         </div>
         <div className="monster-card-zone">Carta</div>
         <div className="defense-stack" aria-label="Mejoras de defensa">
-          {boostSlots.map((boostSlot) => <div className="boost-slot defense-slot" key={`defense-${slot}-${boostSlot}`}><StatIcon stat="defense" /> Defensa</div>)}
+          {boostSlots.map((boostSlot) => <div className="boost-slot defense-slot" key={`defense-${slot}-${boostSlot}`}><StatIcon stat="defense" /><span>Defensa</span></div>)}
         </div>
       </div>
     </div>
@@ -99,7 +99,7 @@ export function PrintArea({ cards, player }: PrintAreaProps) {
 
       <div className="print-rules">
         <div className="rules-page">
-          <h1>Reglas de Monstruitos Batalla</h1>
+          <h1>Reglas de Batalla de monstruitos</h1>
           <section>
             <h2>Objetivo</h2>
             <p>Cada jugador empieza con 20 vidas. Gana quien deja al rival en 0 vidas.</p>

@@ -45,7 +45,7 @@ export function App() {
         <section className="hero">
           <div className="hero-copy">
             <p className="eyebrow">Mazo imprimible para 2 jugadores</p>
-            <h1>Monstruitos Batalla</h1>
+            <h1>Batalla de monstruitos</h1>
             <p>
               Un juego de cartas tipo Pokemon/Magic, simplificado para chicos: monstruos tiernos, mejoras grandes y reglas con numeros faciles de contar.
             </p>
@@ -61,7 +61,7 @@ export function App() {
               <button type="button" onClick={() => handlePrint("tokens")}>Imprimir corazones</button>
               <button type="button" onClick={() => handlePrint("shields")}>Imprimir escudos</button>
               <button type="button" onClick={() => handlePrint("swords")}>Imprimir espadas</button>
-              <a href={cardsDownloadHref} download="monstruitos-batalla-cards.json">Descargar JSON</a>
+              <a href={cardsDownloadHref} download="batalla-de-monstruitos-cards.json">Descargar JSON</a>
             </div>
           </div>
           <div className="deck-summary" aria-label="Resumen del mazo">

@@ -14,7 +14,7 @@ const stats: StatKey[] = ["life", "attack", "defense"];
 const boostBadge = (card: Card): string => {
   if (card.kind === "boost_attack") return `+${card.attackBonus} ${card.name.toUpperCase()}`;
   if (card.kind === "boost_defense") return `+${card.defenseBonus} ${card.name.toUpperCase()}`;
-  if (card.kind === "boost_life") return `♥ +${card.lifeBonus} ${card.name.toUpperCase()}`;
+  if (card.kind === "boost_life") return `+${card.lifeBonus} ${card.name.toUpperCase()}`;
   return "";
 };
 
@@ -32,7 +32,7 @@ export function CardFace({ card, selected = false, onSelect }: CardFaceProps) {
   return (
     <article className={`game-card ${card.kind} ${selected ? "is-selected" : ""}`}>
       <button className="card-button" type="button" disabled={!isInteractive} onClick={() => onSelect?.(card)} aria-label={`Ver ${card.name}`}>
-        {card.kind !== "monster" ? <div className="boost-band">{cardBoostStat ? <StatIcon stat={cardBoostStat} /> : null}{boostBadge(card)}</div> : null}
+        {card.kind !== "monster" ? <div className="boost-band">{cardBoostStat ? <StatIcon stat={cardBoostStat} /> : null}<span className="boost-band-label">{boostBadge(card)}</span></div> : null}
         <header className="card-header">
           <strong>{card.name.toUpperCase()}</strong>
         </header>
@@ -55,7 +55,7 @@ export function CardFace({ card, selected = false, onSelect }: CardFaceProps) {
           <div className="boost-rule">
             <span>{card.attackBonus > 0 ? <><StatIcon stat="attack" /> +{card.attackBonus}</> : null}</span>
             <span>{card.defenseBonus > 0 ? <><StatIcon stat="defense" /> +{card.defenseBonus}</> : null}</span>
-            <span>{card.lifeBonus > 0 ? `♥ +${card.lifeBonus}` : null}</span>
+            <span>{card.lifeBonus > 0 ? <><StatIcon stat="life" /> +{card.lifeBonus}</> : null}</span>
           </div>
         )}
 
