@@ -24,17 +24,10 @@ export function App() {
   const [selectedCard, setSelectedCard] = useState<Card>(getInitialCard);
   const [filter, setFilter] = useState<Filter>("all");
   const [activeTab, setActiveTab] = useState<AppTab>("cards");
-  const [printPlayer, setPrintPlayer] = useState(1);
 
   const handlePrint = (mode: PrintMode) => {
     document.body.dataset.printMode = mode;
     window.setTimeout(() => window.print(), 0);
-  };
-
-  const handlePrintPlayerChange = (value: string) => {
-    const nextPlayer = Number(value);
-
-    setPrintPlayer(Number.isFinite(nextPlayer) && nextPlayer > 0 ? Math.floor(nextPlayer) : 1);
   };
 
   const cardsDownloadHref = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(cards, null, 2))}`;
@@ -50,10 +43,6 @@ export function App() {
               Un juego de cartas tipo Pokemon/Magic, simplificado para chicos: monstruos tiernos, mejoras grandes y reglas con numeros faciles de contar.
             </p>
             <div className="hero-actions">
-              <label className="print-player-field">
-                <span>Trama jugador</span>
-                <input min="1" step="1" type="number" value={printPlayer} onChange={(event) => handlePrintPlayerChange(event.target.value)} />
-              </label>
               <button className="primary-action" type="button" onClick={() => handlePrint("cards")}>Imprimir cartas</button>
               <button type="button" onClick={() => handlePrint("backs")}>Imprimir dorsos</button>
               <button type="button" onClick={() => handlePrint("boards")}>Imprimir tablero</button>
@@ -89,7 +78,7 @@ export function App() {
         )}
       </main>
 
-      <PrintArea cards={cards} player={printPlayer} />
+      <PrintArea cards={cards} />
     </>
   );
 }

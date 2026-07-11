@@ -5,7 +5,6 @@ import { StatIcon } from "./StatIcon";
 
 type PrintAreaProps = {
   cards: Card[];
-  player: number;
 };
 
 const monsterSlots = [1, 2, 3];
@@ -67,7 +66,7 @@ function ConsumablesPage() {
   );
 }
 
-export function PrintArea({ cards, player }: PrintAreaProps) {
+export function PrintArea({ cards }: PrintAreaProps) {
   const pages = chunkCards(cards, 15);
   return (
     <section className="print-area" aria-label="Hojas listas para imprimir">
@@ -82,11 +81,11 @@ export function PrintArea({ cards, player }: PrintAreaProps) {
       </div>
 
       <div className="print-backs">
-        <div className={`back-pattern-page player-${player}`} aria-label="Dorso continuo" />
+        <div className="back-pattern-page" aria-label="Dorso continuo" />
       </div>
 
       <div className="print-boards">
-        <div className={`board-page player-${player}`} key={`board-${player}`}>
+        <div className="board-page">
           <header>
             <span>Tablero</span>
             <div className="player-life-track" aria-label="Vida del jugador">
@@ -94,7 +93,7 @@ export function PrintArea({ cards, player }: PrintAreaProps) {
             </div>
           </header>
           <div className="board-layout">
-            {monsterSlots.map((slot) => <MonsterBoardStation slot={slot} key={`station-${player}-${slot}`} />)}
+            {monsterSlots.map((slot) => <MonsterBoardStation slot={slot} key={`station-${slot}`} />)}
             <div className="board-zone deck-zone">Mazo</div>
             <div className="board-zone discard-zone">Descarte</div>
           </div>
@@ -113,7 +112,7 @@ export function PrintArea({ cards, player }: PrintAreaProps) {
               <section>
                 <h2>Preparacion</h2>
                 <ol>
-                  <li>Cada jugador usa el mismo mazo. El numero de jugador solo cambia los colores del dorso.</li>
+                  <li>Cada jugador usa el mismo mazo y el mismo dorso de cartas.</li>
                   <li>Mezcla el mazo y roba 5 cartas.</li>
                   <li>Si no robaste monstruos, muestra la mano, mezcla y roba 5 otra vez.</li>
                   <li>Pone hasta 3 monstruos en juego. Si no tienes 3, puedes bajar mas en tus turnos.</li>
