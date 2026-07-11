@@ -20,15 +20,15 @@ type PlayerState = {
   hand: Card[];
   board: BoardMonster[];
   discard: Card[];
-  points: number;
+  life: number;
 };
 
 export type SimulationResult = {
   winner: PlayerId | null;
   turns: number;
   log: string[];
-  playerOnePoints: number;
-  playerTwoPoints: number;
+  playerOneLife: number;
+  playerTwoLife: number;
   finalBoards: SimulationBoard[];
   attacks: SimulationAttack[];
 };
@@ -47,7 +47,7 @@ export type SimulationMonster = {
 
 export type SimulationBoard = {
   player: PlayerId;
-  points: number;
+  life: number;
   monsters: SimulationMonster[];
 };
 
@@ -55,7 +55,7 @@ export type SimulationAttack = {
   turn: number;
   player: PlayerId;
   attackerSlot: number;
-  targetSlot: number;
+  targetSlot: number | null;
   damage: number;
 };
 
@@ -121,7 +121,7 @@ const preparePlayer = (id: PlayerId, cards: Card[], seed: number): PlayerState =
     hand: [],
     board: [],
     discard: [],
-    points: 0,
+    life: 20,
   };
 
   draw(player, 5);
@@ -184,15 +184,14 @@ const cleanupDefeated = (attacker: PlayerState, defender: PlayerState, target: B
   }
 
   defender.board = defender.board.filter((monster) => monster.id !== target.id);
-  attacker.points += 1;
-  log.push(`${target.name} queda sin vida. J${attacker.id} gana 1 punto (${attacker.points}/3).`);
+  log.push(`${target.name} queda sin vida y va al descarte.`);
 };
 
 const monsterSlot = (player: PlayerState, monster: BoardMonster): number => player.board.findIndex((item) => item.id === monster.id) + 1;
 
 const boardView = (player: PlayerState): SimulationBoard => ({
   player: player.id,
-  points: player.points,
+  life: player.life,
   monsters: player.board.map((monster, index) => ({
     slot: index + 1,
     name: monster.name,
@@ -221,8 +220,12 @@ const takeTurn = (active: PlayerState, rival: PlayerState, turn: number, log: st
     const target = chooseTarget(rival);
 
     if (!target) {
-      log.push(`J${active.id} no tiene objetivo para ${attacker.name}.`);
-      return;
+      const directDamage = totalAttack(attacker);
+      const attackerSlot = monsterSlot(active, attacker);
+      rival.life = Math.max(0, rival.life - directDamage);
+      attacks.push({ turn, player: active.id, attackerSlot, targetSlot: null, damage: directDamage });
+      log.push(`${attacker.name} no encuentra monstruos y pega directo: ${directDamage} dano a J${rival.id}. Le quedan ${rival.life} vidas.`);
+      continue;
     }
 
     const damage = Math.max(1, totalAttack(attacker) - totalDefense(target));
@@ -230,12 +233,10 @@ const takeTurn = (active: PlayerState, rival: PlayerState, turn: number, log: st
     const targetSlot = monsterSlot(rival, target);
     target.damage += damage;
     attacks.push({ turn, player: active.id, attackerSlot, targetSlot, damage });
-    log.push(`${attacker.name} ataca a ${target.name}: ✦ ${totalAttack(attacker)} - ⬟ ${totalDefense(target)} = ${damage} dano. Le quedan ${Math.max(0, remainingLife(target))} vidas.`);
+    log.push(`${attacker.name} ataca a ${target.name}: ${totalAttack(attacker)} espadas - ${totalDefense(target)} escudos = ${damage} dano. Le quedan ${Math.max(0, remainingLife(target))} vidas.`);
     cleanupDefeated(active, rival, target, log);
   }
 };
-
-const canContinue = (player: PlayerState): boolean => player.points < 3 && (player.board.length > 0 || player.hand.some(isMonster) || player.deck.some(isMonster));
 
 export const simulateGame = (cards: Card[], seed: number): SimulationResult => {
   const log: string[] = [];
@@ -263,14 +264,8 @@ export const simulateGame = (cards: Card[], seed: number): SimulationResult => {
     const rival = turns % 2 === 1 ? playerTwo : playerOne;
     takeTurn(active, rival, turns, log, attacks);
 
-    if (active.points >= 3) {
+    if (rival.life <= 0) {
       winner = active.id;
-      break;
-    }
-
-    if (!canContinue(rival)) {
-      winner = active.id;
-      log.push(`J${rival.id} se queda sin monstruos disponibles.`);
       break;
     }
   }
@@ -282,8 +277,8 @@ export const simulateGame = (cards: Card[], seed: number): SimulationResult => {
     winner,
     turns: finalTurns,
     log,
-    playerOnePoints: playerOne.points,
-    playerTwoPoints: playerTwo.points,
+    playerOneLife: playerOne.life,
+    playerTwoLife: playerTwo.life,
     finalBoards: [boardView(playerOne), boardView(playerTwo)],
     attacks,
   };

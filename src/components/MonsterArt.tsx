@@ -116,8 +116,22 @@ export function BoostArtView({ card }: BoostArtProps) {
       <circle cx="80" cy="80" r="60" fill={mainColor} stroke="#3a2d2a" strokeWidth="5" />
       <circle cx="80" cy="80" r="48" fill="#fffaf0" stroke="#3a2d2a" strokeWidth="4" opacity="0.94" />
       {card.kind === "boost_life" ? <path d="M80 118 C51 96 40 80 47 62 C53 47 72 50 80 63 C88 50 107 47 113 62 C120 80 109 96 80 118 Z" fill={mainColor} stroke="#3a2d2a" strokeWidth="5" /> : null}
-      {card.kind === "boost_attack" ? <path d="M84 36 L68 74 L102 72 L63 126 L76 90 L48 91 Z" fill={mainColor} stroke="#3a2d2a" strokeWidth="5" strokeLinejoin="round" /> : null}
-      {card.kind === "boost_defense" ? <path d="M80 37 L116 52 L111 90 C108 111 94 125 80 132 C66 125 52 111 49 90 L44 52 Z" fill={mainColor} stroke="#3a2d2a" strokeWidth="5" strokeLinejoin="round" /> : null}
+      {card.kind === "boost_attack" ? (
+        <g>
+          <path d="M86 69 L123 23 L137 37 L91 74 Z" fill={mainColor} stroke="#3a2d2a" strokeWidth="5" strokeLinejoin="round" />
+          <path d="M65 59 L80 44 L112 76 L97 91 Z" fill="#ff8fab" stroke="#3a2d2a" strokeWidth="5" strokeLinejoin="round" />
+          <path d="M56 72 L89 105 L41 135 L25 119 Z" fill="#7bdff2" stroke="#3a2d2a" strokeWidth="5" strokeLinejoin="round" />
+          <path d="M37 118 L48 129" fill="none" stroke="#fffdf6" strokeWidth="6" strokeLinecap="round" />
+        </g>
+      ) : null}
+      {card.kind === "boost_defense" ? (
+        <g>
+          <path d="M80 31 L121 48 L116 90 C113 112 96 128 80 136 C64 128 47 112 44 90 L39 48 Z" fill={mainColor} stroke="#3a2d2a" strokeWidth="5" strokeLinejoin="round" />
+          <path d="M80 43 L108 55 L104 88 C102 103 92 115 80 122 C68 115 58 103 56 88 L52 55 Z" fill="#fffdf6" stroke="#3a2d2a" strokeWidth="4" strokeLinejoin="round" />
+          <path d="M80 49 L98 58 L96 86 C94 96 89 105 80 112 Z" fill="#7bdff2" opacity="0.9" />
+          <path d="M64 80 L75 92 L98 68" fill="none" stroke="#3a2d2a" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+        </g>
+      ) : null}
     </svg>
   );
 }

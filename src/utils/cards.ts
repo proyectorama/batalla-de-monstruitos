@@ -24,17 +24,6 @@ export const statLabel = (stat: StatKey): string => {
   }
 };
 
-export const statIcon = (stat: StatKey): string => {
-  switch (stat) {
-    case "life":
-      return "♥";
-    case "attack":
-      return "✦";
-    case "defense":
-      return "⬟";
-  }
-};
-
 export const chunkCards = (items: Card[], size: number): Card[][] => {
   const chunks: Card[][] = [];
 

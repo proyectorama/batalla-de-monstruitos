@@ -150,6 +150,29 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
 .primary-action, .hero-actions button, .hero-actions a { padding: 13px 18px; }
 
+.print-player-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  background: #fffdf6;
+  box-shadow: 0 5px 0 var(--ink);
+  font-weight: 900;
+}
+
+.print-player-field input {
+  width: 70px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 5px 8px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 900;
+}
+
 .primary-action:hover, .hero-actions button:hover, .hero-actions a:hover, .filters button:hover, .filters button.active {
   transform: translateY(2px);
   box-shadow: 0 3px 0 var(--ink);
@@ -250,9 +273,11 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 .card-button {
   position: relative;
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   overflow: hidden;
   width: 100%;
-  min-height: 254px;
+  height: 272px;
+  min-height: 0;
   padding: 9px;
   border: 4px solid var(--ink);
   border-radius: 22px;
@@ -274,8 +299,10 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 .boost-band {
   position: absolute;
   z-index: 2;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   border: 3px solid var(--ink);
   background: #fffdf6;
   font-size: 0.72rem;
@@ -283,6 +310,8 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   letter-spacing: 0.03em;
   text-align: center;
 }
+
+.boost-band .stat-icon { width: 18px; height: 18px; }
 
 .boost_attack .boost-band {
   inset: 0 0 auto;
@@ -347,6 +376,7 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 }
 
 .art-frame {
+  position: relative;
   display: grid;
   place-items: center;
   min-height: 128px;
@@ -358,6 +388,21 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
     repeating-linear-gradient(45deg, rgba(47, 37, 34, 0.05) 0 6px, transparent 6px 12px);
 }
 
+.card-print-id {
+  position: absolute;
+  top: 5px;
+  right: 7px;
+  z-index: 1;
+  color: rgba(47, 37, 34, 0.42);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.boost_attack .art-frame {
+  min-height: 94px;
+}
+
 .card-art {
   width: min(138px, 90%);
   height: auto;
@@ -365,27 +410,31 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 }
 
 .boost-art { width: min(126px, 86%); }
+.boost_attack .boost-art { width: min(104px, 76%); }
 
 .stats-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
   margin: 0;
 }
 
 .stat {
   display: grid;
-  grid-template-columns: 1fr auto;
+  min-width: 0;
+  grid-template-columns: auto auto;
   align-items: center;
-  gap: 2px;
-  padding: 5px 7px;
+  justify-content: center;
+  gap: 1px;
+  padding: 5px 3px;
   border: 3px solid var(--ink);
   border-radius: 12px;
   background: #fffdf6;
 }
 
 .stat dt, .stat dd { margin: 0; font-weight: 900; }
-.stat dd { font-size: 1.18rem; line-height: 1; }
+.stat dt .stat-icon { width: 15px; height: 15px; }
+.stat dd { font-size: 1.08rem; line-height: 1; }
 .stat-life dt { color: #e63946; }
 .stat-attack dt { color: #fb8500; }
 .stat-defense dt { color: #277da1; }
@@ -402,6 +451,15 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   font-size: 1.35rem;
   text-align: center;
 }
+
+.boost-rule span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.boost-rule .stat-icon { width: 28px; height: 28px; }
 
 .boost-rule span:empty { display: none; }
 
@@ -433,7 +491,7 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 }
 
 .detail-card .game-card { margin: 18px 0; }
-.detail-card .card-button { min-height: 420px; }
+.detail-card .card-button { height: 420px; min-height: 420px; }
 .detail-card .art-frame { min-height: 220px; }
 .detail-card .card-art { width: min(210px, 90%); }
 
@@ -447,6 +505,23 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 .detail-copy p { margin: 6px 0 0; line-height: 1.45; }
 
 .print-area { display: none; }
+
+.stat-icon {
+  display: inline-block;
+  width: 1.15em;
+  height: 1.15em;
+  flex: 0 0 auto;
+  vertical-align: -0.18em;
+}
+
+.stat-icon-life {
+  color: #e63946;
+}
+
+.stat-icon-shadow {
+  fill: rgba(47, 37, 34, 0.16);
+  transform: translate(3px, 3px);
+}
 
 .icon-rules {
   display: flex;
@@ -474,6 +549,8 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   border: 2px solid var(--ink);
   border-radius: 50%;
 }
+
+.icon .stat-icon { width: 24px; height: 24px; }
 
 .life-icon { color: #e63946; }
 .attack-icon { color: #fb8500; }
@@ -737,60 +814,76 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   .deck-summary, .rules-grid { grid-template-columns: 1fr 1fr; }
   .panel-heading { align-items: start; flex-direction: column; }
   .filters { justify-content: flex-start; }
-  .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .card-button { min-height: 230px; padding: 7px; border-width: 3px; border-radius: 18px; }
+  .card-grid { grid-template-columns: repeat(auto-fill, minmax(164px, 1fr)); gap: 10px; }
+  .card-button { height: 248px; padding: 7px; border-width: 3px; border-radius: 18px; }
   .card-header strong { font-size: 0.9rem; }
   .art-frame { min-height: 112px; }
+  .boost_attack .art-frame { min-height: 78px; }
 }
 
 @page {
   size: A4 landscape;
-  margin: 6mm;
+  margin: 0;
 }
 
 @media print {
   html, body {
     width: 297mm;
+    height: 210mm;
     min-width: 0;
     background: #fff;
   }
 
   .app-shell { display: none; }
   .print-area { display: block; }
-  .print-cards, .print-backs, .print-boards, .print-rules, .print-tokens { display: none; }
+  .print-cards, .print-backs, .print-boards, .print-rules, .print-tokens, .print-shields, .print-swords { display: none; }
 
   body[data-print-mode="cards"] .print-cards,
   body[data-print-mode="backs"] .print-backs,
   body[data-print-mode="boards"] .print-boards,
   body[data-print-mode="rules"] .print-rules,
-  body[data-print-mode="tokens"] .print-tokens { display: block; }
+  body[data-print-mode="tokens"] .print-tokens,
+  body[data-print-mode="shields"] .print-shields,
+  body[data-print-mode="swords"] .print-swords { display: block; }
 
-  .card-print-page, .card-back-page {
+  .card-print-page {
     display: grid;
     width: 285mm;
     height: 198mm;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    margin: 6mm auto;
+    grid-template-columns: repeat(5, 57mm);
+    grid-template-rows: repeat(3, 66mm);
     gap: 0;
     page-break-after: always;
     break-after: page;
   }
 
-  .card-print-page:last-child, .card-back-page:last-child { page-break-after: auto; break-after: auto; }
+  .card-print-page:last-child { page-break-after: auto; break-after: auto; }
 
   .game-card, .card-button {
-    width: 100%;
-    height: 100%;
+    width: 57mm;
+    height: 66mm;
     min-height: 0;
   }
 
   .card-button {
+    margin: 0;
     padding: 2.2mm;
     border: 0.8mm solid #2f2522;
-    border-radius: 0;
+    border-radius: 4mm;
     box-shadow: none;
+    overflow: hidden;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+  }
+
+  .boost-band {
+    gap: 1mm;
+  }
+
+  .boost-band .stat-icon {
+    width: 5mm;
+    height: 5mm;
   }
 
   .boost_attack .card-button { padding-top: 9mm; }
@@ -827,12 +920,18 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
   .card-art { width: 31mm; }
   .boost-art { width: 29mm; }
+  .boost_attack .boost-art { width: 24mm; }
 
   .stats-row { gap: 1mm; }
   .stat {
     padding: 0.7mm 1.3mm;
     border-width: 0.55mm;
     border-radius: 2.3mm;
+  }
+
+  .stat dt .stat-icon {
+    width: 5mm;
+    height: 5mm;
   }
 
   .stat dt { font-size: 8pt; }
@@ -846,50 +945,55 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
     font-size: 14pt;
   }
 
-  .card-back {
-    display: grid;
-    place-items: center;
-    width: 100%;
-    height: 100%;
-    border: 0.8mm solid #2f2522;
+  .boost-rule span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1mm;
+  }
+
+  .boost-rule .stat-icon {
+    width: 7mm;
+    height: 7mm;
+  }
+
+  .back-pattern-page {
+    width: 297mm;
+    height: 210mm;
+    border: 1.2mm solid #2f2522;
+    overflow: hidden;
     background:
-      radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.65), transparent 18mm),
-      repeating-linear-gradient(45deg, rgba(47, 37, 34, 0.08) 0 2mm, transparent 2mm 4mm),
+      radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.72), transparent 28mm),
+      radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.48), transparent 34mm),
+      repeating-linear-gradient(45deg, rgba(47, 37, 34, 0.1) 0 2.2mm, transparent 2.2mm 4.4mm),
+      repeating-linear-gradient(-45deg, rgba(47, 37, 34, 0.05) 0 4mm, transparent 4mm 8mm),
       #fff7e5;
+    page-break-after: auto;
+    break-after: auto;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
-  .card-back.team-1 { background-color: #cdefff; }
-  .card-back.team-2 { background-color: #ffd6e2; }
-
-  .back-circle {
-    display: grid;
-    place-items: center;
-    width: 34mm;
-    height: 34mm;
-    border: 1.2mm solid #2f2522;
-    border-radius: 50%;
-    background: #fffdf6;
-    box-shadow: 0 1.8mm 0 #2f2522;
-    text-align: center;
+  .back-pattern-page::before,
+  .back-pattern-page::after {
+    content: "";
+    position: absolute;
   }
 
-  .back-circle span {
+  .back-pattern-page.player-1 { background-color: #cdefff; }
+  .back-pattern-page.player-2 { background-color: #b9fbc0; }
+  .back-pattern-page.player-3 { background-color: #ffd1dc; }
+  .back-pattern-page.player-4 { background-color: #ffe17a; }
+
+  .card-print-id {
+    top: 1.4mm;
+    right: 1.7mm;
     font-size: 8pt;
-    font-weight: 900;
-    letter-spacing: 0.08em;
-  }
-
-  .back-circle strong {
-    font-size: 44pt;
-    line-height: 0.82;
-    font-weight: 900;
   }
 
   .board-page, .rules-page, .tokens-page {
-    width: 285mm;
-    min-height: 198mm;
+    width: 297mm;
+    min-height: 210mm;
     page-break-after: always;
     break-after: page;
     color: #2f2522;
@@ -902,10 +1006,14 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   .board-page {
     display: grid;
     grid-template-rows: auto 1fr;
-    gap: 3mm;
-    padding: 3mm 4mm;
+    gap: 2mm;
+    height: 210mm;
+    padding: 3mm;
     border: 1.2mm solid #2f2522;
-    background: #fff;
+    background:
+      radial-gradient(circle at 12% 10%, rgba(255, 143, 171, 0.22), transparent 38mm),
+      radial-gradient(circle at 86% 18%, rgba(123, 223, 242, 0.24), transparent 42mm),
+      linear-gradient(135deg, #fff7e5 0%, #fffdf6 45%, #e3f9ea 100%);
   }
 
   .board-page header {
@@ -913,18 +1021,40 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
     justify-content: space-between;
     align-items: end;
     border-bottom: 1mm solid #2f2522;
-    padding-bottom: 3mm;
+    padding-bottom: 2mm;
+    color: #2f2522;
   }
 
-  .board-page header span { font-size: 18pt; font-weight: 900; text-transform: uppercase; }
-  .board-page header strong { font-family: Verdana, "Trebuchet MS", sans-serif; font-size: 42pt; line-height: 1; }
+  .board-page header span { font-size: 16pt; font-weight: 900; text-transform: uppercase; }
+
+  .player-life-track {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    width: 228mm;
+    border: 0.7mm solid #2f2522;
+    background: #fffdf6;
+  }
+
+  .player-life-track span {
+    display: grid;
+    place-items: center;
+    height: 11mm;
+    border-left: 0.35mm solid rgba(47, 37, 34, 0.55);
+    color: #e63946;
+    font-size: 17pt;
+    line-height: 1;
+  }
+
+  .player-life-track span:first-child { border-left: 0; }
 
   .board-layout {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 1fr 31mm;
-    column-gap: 11mm;
-    row-gap: 5mm;
+    grid-template-rows: auto 1fr;
+    column-gap: 1mm;
+    row-gap: 3mm;
+    min-width: 0;
+    min-height: 0;
   }
 
   .board-zone {
@@ -940,16 +1070,11 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
   .monster-station {
     display: grid;
-    grid-template-rows: auto auto 1fr auto;
+    grid-template-rows: auto auto auto auto 1fr;
     align-content: start;
-    min-height: 116mm;
-  }
-
-  .station-title {
-    margin-bottom: 1.5mm;
-    text-align: center;
-    font-size: 12pt;
-    font-weight: 900;
+    min-width: 0;
+    min-height: 0;
+    padding-top: 1mm;
   }
 
   .attack-stack {
@@ -957,20 +1082,22 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
     justify-content: center;
     align-content: end;
     gap: 0;
-    min-height: 30mm;
+    min-height: 0;
+    margin-top: 1.8mm;
   }
 
   .station-core {
     display: grid;
-    grid-template-columns: 22mm 42mm 22mm;
-    align-items: end;
+    grid-template-columns: auto 53mm auto;
+    justify-content: center;
+    align-items: start;
   }
 
   .defense-stack,
   .life-stack {
     display: flex;
     align-items: end;
-    height: 62mm;
+    height: 60mm;
   }
 
   .defense-stack { justify-content: flex-end; }
@@ -982,26 +1109,58 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
     place-items: center;
     border: 0.85mm solid #2f2522;
     border-radius: 0;
-    background: #fff;
+    background: #fffdf6;
     font-weight: 900;
     text-align: center;
   }
 
   .attack-slot {
-    width: 42mm;
-    height: 11mm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 53mm;
+    height: 9.5mm;
     margin-top: -0.85mm;
-    font-size: 12pt;
+    background:
+      repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.86) 0 1.8mm, rgba(255, 255, 255, 0.22) 1.8mm 3.2mm),
+      #fff0bd;
+    font-size: 10pt;
+    gap: 1mm;
+    white-space: nowrap;
   }
+
+  .attack-slot .stat-icon { width: 6mm; height: 6mm; }
 
   .defense-slot,
   .life-slot {
-    width: 11mm;
-    height: 58mm;
+    width: 7.2mm;
+    height: 60mm;
     margin-left: -0.85mm;
     writing-mode: vertical-rl;
-    font-size: 10pt;
+    overflow: hidden;
+    font-size: 7.2pt;
     letter-spacing: 0.02em;
+    line-height: 1;
+  }
+
+  .defense-slot .stat-icon,
+  .life-slot .stat-icon {
+    width: 4.2mm;
+    height: 4.2mm;
+    margin-bottom: 1mm;
+    transform: none;
+  }
+
+  .defense-slot {
+    background:
+      repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.86) 0 1.8mm, rgba(255, 255, 255, 0.22) 1.8mm 3.2mm),
+      #e2ffe5;
+  }
+
+  .life-slot {
+    background:
+      repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.86) 0 1.8mm, rgba(255, 255, 255, 0.22) 1.8mm 3.2mm),
+      #ffe0e8;
   }
 
   .defense-slot {
@@ -1009,42 +1168,63 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   }
 
   .monster-card-zone {
-    min-height: 58mm;
-    font-size: 20pt;
+    background: #fff1b8;
+    min-height: 60mm;
+    font-size: 21pt;
   }
 
   .heart-track {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     align-items: center;
-    height: 18mm;
-    margin-top: 5mm;
+    width: 70mm;
+    height: 12.5mm;
+    justify-self: center;
+    margin: 0 auto 1.4mm;
     border: 0.85mm solid #2f2522;
-    background: #fff;
+    background: #fffdf6;
   }
 
   .heart-track span {
     display: grid;
     place-items: center;
-    font-size: 28pt;
+    color: #e63946;
+    font-size: 20pt;
     line-height: 1;
   }
 
-  .deck-zone { background: #cdefff; }
-  .discard-zone { background: #ffc8dd; }
-  .points-zone { background: #d8f3dc; }
-
-  .deck-zone,
-  .discard-zone,
-  .points-zone {
-    align-self: start;
-    min-height: 26mm;
-    background: #fff;
+  .total-track {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    width: 70mm;
+    height: 12.5mm;
+    justify-self: center;
+    margin: 0 auto 1.4mm;
+    border: 0.85mm solid #2f2522;
+    background: #fffdf6;
   }
 
-  .deck-zone { grid-column: 1; width: 45mm; justify-self: start; }
-  .discard-zone { grid-column: 2; }
-  .points-zone { grid-column: 3; }
+  .total-track span {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    border-left: 0.35mm solid rgba(47, 37, 34, 0.55);
+  }
+
+  .total-track span:first-child { border-left: 0; }
+  .defense-total-track { background: #e2ffe5; }
+  .attack-total-track { background: #fff0bd; }
+  .total-track .stat-icon { width: 7mm; height: 7mm; }
+
+  .deck-zone,
+  .discard-zone {
+    align-self: stretch;
+    min-height: 0;
+  }
+
+  .deck-zone { grid-column: 1; width: 82mm; justify-self: start; background: #cdefff; }
+  .discard-zone { grid-column: 2 / 4; background: #ffc8dd; }
 
   .board-page footer {
     display: grid;
@@ -1101,7 +1281,7 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
   .tokens-grid {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
+    grid-template-columns: repeat(20, 1fr);
     gap: 0;
     border-top: 0.6mm solid #2f2522;
     border-left: 0.6mm solid #2f2522;
@@ -1114,7 +1294,16 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
     border-right: 0.6mm solid #2f2522;
     border-bottom: 0.6mm solid #2f2522;
     color: #e63946;
-    font-size: 22pt;
+    font-size: 38pt;
     font-weight: 900;
   }
+
+  .stat-token .stat-icon {
+    width: 12mm;
+    height: 12mm;
+  }
+
+  .stat-token-attack { background: #fff0bd; }
+  .stat-token-defense { background: #e2ffe5; }
+  .stat-token-life { background: #fffdf6; }
 }
