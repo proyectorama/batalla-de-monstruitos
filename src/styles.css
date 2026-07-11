@@ -579,13 +579,96 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
 .combat-examples p { margin: 8px 0 0; }
 
-.simulator { margin-top: 0; }
+.simulator {
+  width: calc(100vw - 32px);
+  margin-top: 0;
+  margin-left: calc((100% - (100vw - 32px)) / 2);
+}
 
 .sim-table {
   display: grid;
-  grid-template-rows: auto auto 78px auto auto;
+  grid-template-columns: repeat(2, minmax(760px, 1fr));
   gap: 14px;
+  align-items: start;
+  overflow-x: auto;
   margin-bottom: 18px;
+  padding-bottom: 10px;
+}
+
+.sim-player-area {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  min-width: 760px;
+}
+
+.sim-player-area.is-active-turn::before {
+  content: "Turno activo";
+  position: absolute;
+  top: -10px;
+  right: 18px;
+  z-index: 4;
+  padding: 7px 12px;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  background: var(--yellow);
+  box-shadow: 0 4px 0 var(--ink);
+  font-size: 0.74rem;
+  font-weight: 900;
+  animation: activeTurnChip 760ms ease-in-out infinite alternate;
+}
+
+.sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sim-controls label,
+.sim-controls button {
+  min-height: 46px;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  background: #fffdf6;
+  box-shadow: 0 4px 0 var(--ink);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.sim-controls label {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding: 7px 12px;
+}
+
+.sim-controls button {
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.sim-controls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  box-shadow: none;
+}
+
+.sim-controls input {
+  width: 76px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 5px 8px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 900;
+}
+
+.sim-controls small {
+  font-size: 0.72rem;
+  font-weight: 900;
 }
 
 .sim-current-event {
@@ -642,8 +725,10 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 .sim-card-row {
   display: flex;
   gap: 8px;
-  min-height: 92px;
+  width: 100%;
+  min-height: 142px;
   overflow-x: auto;
+  overflow-y: hidden;
   padding: 6px 2px 10px;
 }
 
@@ -926,7 +1011,11 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 .sim-card-scale .boost_defense .card-button { padding-right: 24px; }
 .sim-card-scale .boost-rule { min-height: 36px; gap: 3px; }
 
-.sim-card-hand { width: 132px; height: 204px; }
+.sim-card-hand {
+  flex: 0 0 120px;
+  width: 120px;
+  height: 168px;
+}
 .sim-card-board { width: 158px; height: 238px; }
 .sim-card-boost { width: 100%; height: 100%; }
 .sim-card-discard { width: 54px; height: 82px; }
@@ -1155,6 +1244,11 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   to { transform: translateY(0) scale(1); filter: saturate(1); }
 }
 
+@keyframes activeTurnChip {
+  from { filter: saturate(1); transform: translateY(0) scale(1); }
+  to { filter: saturate(1.35); transform: translateY(-2px) scale(1.04); }
+}
+
 .attack-lane {
   display: flex;
   place-items: center;
@@ -1280,6 +1374,12 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
     font-weight: 900;
     text-transform: uppercase;
   }
+  .sim-table {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    overflow-x: visible;
+  }
+  .sim-player-area { min-width: 0; }
   .sim-board { overflow-x: auto; }
   .sim-board-layout { min-width: 760px; }
 }
@@ -1298,7 +1398,8 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   .boost_attack .art-frame { min-height: 78px; }
   .sim-player-life-track { grid-template-columns: repeat(10, 1fr); }
   .sim-summary { grid-template-columns: 1fr 1fr; }
-  .sim-card-row { min-height: 84px; }
+  .sim-card-row { max-width: 100%; min-height: 132px; }
+  .sim-card-hand { width: 108px; height: 152px; }
   .sim-mini-card { flex-basis: 98px; }
 }
 

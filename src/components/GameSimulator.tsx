@@ -138,6 +138,8 @@ export function GameSimulator() {
   const [seed, setSeed] = useState(11);
   const [step, setStep] = useState(0);
   const [started, setStarted] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [turnSpeed, setTurnSpeed] = useState(3);
   const result = started ? simulateGame(cards, seed) : null;
   const currentStep = result?.steps[Math.min(step, Math.max(0, result.steps.length - 1))];
   const playerOne = currentStep?.players[0] ?? { player: 1 as const, life: 20, board: { player: 1 as const, life: 20, monsters: [] }, hand: [], deckCount: cards.filter((card) => card.deck === 1).length, discard: [] };
@@ -147,17 +149,26 @@ export function GameSimulator() {
   const playerTwoAttack = currentAttack?.player === 2 ? currentAttack.attackerSlot : undefined;
   const playerOneTarget = currentAttack?.player === 2 ? currentAttack.targetSlot ?? undefined : undefined;
   const playerTwoTarget = currentAttack?.player === 1 ? currentAttack.targetSlot ?? undefined : undefined;
+  const isFinished = result ? step >= result.steps.length - 1 : false;
 
   useEffect(() => {
-    if (!result || step >= result.steps.length - 1) return;
-    const timer = window.setInterval(() => setStep((current) => Math.min(current + 1, result.steps.length - 1)), 3000);
+    if (!result || paused || isFinished) return;
+    const timer = window.setInterval(() => setStep((current) => Math.min(current + 1, result.steps.length - 1)), turnSpeed * 1000);
     return () => window.clearInterval(timer);
-  }, [result?.steps.length, seed, step]);
+  }, [isFinished, paused, result?.steps.length, seed, step, turnSpeed]);
 
   const startSimulation = () => {
     setStep(0);
     setSeed(Math.floor(Math.random() * 1000000));
     setStarted(true);
+    setPaused(false);
+  };
+
+  const nextTurn = () => {
+    if (!result) return;
+    const currentTurn = currentStep?.turn ?? 0;
+    const nextTurnIndex = result.steps.findIndex((item, index) => index > step && item.turn > currentTurn);
+    setStep(nextTurnIndex >= 0 ? nextTurnIndex : result.steps.length - 1);
   };
 
   return (
@@ -169,19 +180,28 @@ export function GameSimulator() {
         </div>
         <button className="primary-action" type="button" onClick={startSimulation}>{started ? "Simular otra" : "Simular partida aleatoria"}</button>
       </div>
+      <div className="sim-controls" aria-label="Controles del simulador">
+        <label>
+          <span>Velocidad turno</span>
+          <input min="0.5" max="20" step="0.5" type="number" value={turnSpeed} onChange={(event) => setTurnSpeed(Math.max(0.5, Number(event.target.value) || 0.5))} />
+          <small>seg</small>
+        </label>
+        <button type="button" disabled={!result || isFinished} onClick={() => setPaused((current) => !current)}>{paused ? "Reanudar" : "Pausa"}</button>
+        <button type="button" disabled={!result || isFinished} onClick={nextTurn}>Siguiente turno</button>
+      </div>
       <div className="sim-current-event">
         <span>{result ? `Paso ${Math.min(step + 1, result.steps.length)} / ${result.steps.length}` : "En espera"}</span>
         <strong>{currentStep?.message.toUpperCase() ?? "TOCA SIMULAR PARTIDA ALEATORIA PARA EMPEZAR"}</strong>
       </div>
       <div className={`sim-table attack-from-${currentAttack?.player ?? 0}`}>
-        <PlayerPanel player={playerTwo} />
-        <SimBoard activeSlot={playerTwoAttack} discarded={currentStep?.discarded ?? null} player={playerTwo} targetSlot={playerTwoTarget} />
-        <div className="attack-lane">
-          <div className="attack-beam"><StatIcon stat="attack" /></div>
-          <strong>{currentAttack ? `J${currentAttack.player} HACE ${currentAttack.damage} DANO` : "LISTO"}</strong>
+        <div className={`sim-player-area ${currentStep?.activePlayer === 2 ? "is-active-turn" : ""}`}>
+          <PlayerPanel player={playerTwo} />
+          <SimBoard activeSlot={playerTwoAttack} discarded={currentStep?.discarded ?? null} player={playerTwo} targetSlot={playerTwoTarget} />
         </div>
-        <SimBoard activeSlot={playerOneAttack} discarded={currentStep?.discarded ?? null} player={playerOne} targetSlot={playerOneTarget} />
-        <PlayerPanel player={playerOne} />
+        <div className={`sim-player-area ${currentStep?.activePlayer === 1 ? "is-active-turn" : ""}`}>
+          <PlayerPanel player={playerOne} />
+          <SimBoard activeSlot={playerOneAttack} discarded={currentStep?.discarded ?? null} player={playerOne} targetSlot={playerOneTarget} />
+        </div>
       </div>
       <div className="sim-summary">
         <div><strong>{currentStep?.winner ? `J${currentStep.winner}` : "-"}</strong><span>Ganador</span></div>
@@ -191,7 +211,7 @@ export function GameSimulator() {
       </div>
       <ol className="sim-log">
         {[...(currentStep?.log ?? [])].reverse().map((entry, index) => (
-          <li key={`${seed}-${index}`}>{entry.toUpperCase()}</li>
+          <li key={`${seed}-${index}`} value={(currentStep?.log.length ?? 0) - index}>{entry.toUpperCase()}</li>
         ))}
       </ol>
     </section>
