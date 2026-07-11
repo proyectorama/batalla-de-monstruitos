@@ -501,6 +501,8 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   top: 18px;
 }
 
+.mobile-card-modal { display: none; }
+
 .detail-card .game-card { margin: 18px 0; }
 .detail-card .card-button { height: 420px; min-height: 420px; }
 .detail-card .art-frame { min-height: 220px; }
@@ -581,10 +583,116 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
 .sim-table {
   display: grid;
-  grid-template-rows: auto 78px auto;
-  gap: 12px;
+  grid-template-rows: auto auto 78px auto auto;
+  gap: 14px;
   margin-bottom: 18px;
 }
+
+.sim-current-event {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  border: 3px solid var(--ink);
+  border-radius: 20px;
+  background: #fff0bd;
+  box-shadow: 0 5px 0 var(--ink);
+}
+
+.sim-current-event span {
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.sim-current-event strong { font-size: clamp(1rem, 2vw, 1.4rem); }
+
+.sim-player-panel {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 4px solid var(--ink);
+  border-radius: 18px;
+  background: #e3f9ea;
+}
+
+.sim-player-panel.player-2 { background: #ffe0e8; }
+
+.sim-player-panel > header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 900;
+}
+
+.sim-card-strip {
+  display: grid;
+  gap: 8px;
+}
+
+.sim-card-strip header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.sim-card-row {
+  display: flex;
+  gap: 8px;
+  min-height: 92px;
+  overflow-x: auto;
+  padding: 6px 2px 10px;
+}
+
+.sim-card-row p {
+  display: grid;
+  place-items: center;
+  min-width: 170px;
+  margin: 0;
+  border: 2px dashed var(--ink);
+  border-radius: 14px;
+  background: rgba(255, 253, 246, 0.8);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.sim-mini-card {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  flex: 0 0 112px;
+  min-height: 82px;
+  padding: 8px;
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  background: #fff1b8;
+  box-shadow: 0 4px 0 rgba(47, 37, 34, 0.26);
+}
+
+.sim-mini-card.boost_attack { background: #fff0bd; }
+.sim-mini-card.boost_defense { background: #e2ffe5; }
+.sim-mini-card.boost_life { background: #ffe0e8; }
+
+.sim-mini-card strong {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 0.68rem;
+  line-height: 1.15;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.sim-mini-card span {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 0.74rem;
+  font-weight: 900;
+}
+
+.sim-mini-card .stat-icon { width: 18px; height: 18px; }
 
 .sim-board {
   padding: 14px;
@@ -595,27 +703,48 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
 .sim-board-header {
   display: flex;
-  justify-content: space-between;
-  align-items: end;
+  gap: 12px;
+  align-items: center;
   border-bottom: 4px solid var(--ink);
   margin-bottom: 12px;
   padding-bottom: 8px;
 }
 
 .sim-board-header span { font-size: 1rem; font-weight: 900; }
-.sim-board-header strong { font-size: clamp(1.5rem, 4vw, 2.8rem); line-height: 0.9; }
+
+.sim-player-life-track {
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  flex: 1;
+  border: 3px solid var(--ink);
+  background: #fffdf6;
+}
+
+.sim-player-life-track span {
+  display: grid;
+  place-items: center;
+  min-height: 28px;
+  border-left: 1px solid rgba(47, 37, 34, 0.45);
+  color: rgba(47, 37, 34, 0.18);
+  font-size: 1.1rem;
+}
+
+.sim-player-life-track span:first-child { border-left: 0; }
+.sim-player-life-track span.filled { color: #e63946; }
 
 .sim-board-layout {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  grid-template-rows: auto minmax(88px, 1fr);
+  column-gap: 8px;
+  row-gap: 12px;
 }
 
 .sim-station {
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto auto auto auto 1fr;
   min-width: 0;
-  padding: 4px;
+  padding: 4px 2px;
   transition: transform 220ms ease, background 220ms ease;
 }
 
@@ -627,38 +756,34 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   animation: hitPulse 700ms ease infinite alternate;
 }
 
-.sim-station-title {
-  text-align: center;
-  font-size: 0.76rem;
-  font-weight: 900;
-}
+.sim-station.is-target .sim-card-zone { animation: hitPulse 700ms ease infinite alternate; }
 
 .sim-attack-stack {
   display: grid;
   justify-content: center;
   align-content: end;
-  min-height: 58px;
+  min-height: 86px;
+  margin-top: 6px;
 }
 
 .sim-station-core {
   display: grid;
-  grid-template-columns: 39px 1fr 39px;
-  align-items: end;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  justify-content: center;
+  align-items: start;
 }
 
 .sim-defense-stack, .sim-life-stack {
   display: flex;
   align-items: end;
-  min-height: 132px;
+  min-height: 164px;
 }
 
 .sim-defense-stack { justify-content: flex-end; }
 .sim-life-stack { justify-content: flex-start; }
 
-.sim-attack-stack span,
-.sim-defense-stack span,
-.sim-life-stack span,
-.sim-card-mini {
+.sim-boost-slot,
+.sim-card-zone {
   display: grid;
   place-items: center;
   border: 3px solid var(--ink);
@@ -667,35 +792,47 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   font-weight: 900;
 }
 
-.sim-attack-stack span {
-  width: min(112px, 100%);
+.sim-boost-slot {
+  overflow: hidden;
+  gap: 2px;
+}
+
+.sim-attack-stack .sim-boost-slot {
+  display: flex;
+  justify-content: center;
+  width: min(190px, 100%);
   height: 30px;
   margin-top: -3px;
-  font-size: 0.66rem;
+  font-size: 0.58rem;
 }
 
-.sim-defense-stack span,
-.sim-life-stack span {
-  width: 30px;
-  height: 132px;
+.sim-defense-stack .sim-boost-slot,
+.sim-life-stack .sim-boost-slot {
+  width: 31px;
+  height: 164px;
   margin-left: -3px;
   writing-mode: vertical-rl;
-  font-size: 0.62rem;
+  font-size: 0.56rem;
 }
 
-.sim-defense-stack span { transform: rotate(180deg); }
-.sim-attack-stack span.filled { background: #ffe17a; }
-.sim-defense-stack span.filled { background: #b9fbc0; }
-.sim-life-stack span.filled { background: #ffb3c7; }
+.sim-defense-stack .sim-boost-slot { transform: rotate(180deg); }
+.sim-attack-stack .sim-boost-slot.filled { background: #ffe17a; }
+.sim-defense-stack .sim-boost-slot.filled { background: #b9fbc0; }
+.sim-life-stack .sim-boost-slot.filled { background: #ffb3c7; }
 
-.sim-card-mini {
-  min-height: 132px;
+.sim-boost-slot .stat-icon { width: 18px; height: 18px; }
+
+.sim-card-zone {
+  align-content: center;
+  gap: 6px;
+  min-height: 164px;
   padding: 8px;
   background: #fff1b8;
 }
 
-.sim-card-mini strong { font-size: 0.8rem; }
-.sim-card-mini span { font-size: 0.75rem; font-weight: 900; }
+.sim-card-zone strong { font-size: 0.82rem; }
+.sim-card-zone span, .sim-card-zone em { font-size: 0.75rem; font-weight: 900; font-style: normal; }
+.sim-card-zone .stat-icon { width: 18px; height: 18px; vertical-align: middle; }
 
 .sim-heart-track {
   display: grid;
@@ -707,23 +844,46 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   background: #fff;
 }
 
-.sim-heart-track span { display: grid; place-items: center; font-size: 1.3rem; }
+.sim-heart-track span { display: grid; place-items: center; color: rgba(47, 37, 34, 0.2); font-size: 1.3rem; }
+.sim-heart-track span.filled { color: #e63946; }
 
-.sim-board-footer {
+.sim-total-track {
   display: grid;
-  grid-template-columns: 0.8fr 1fr 1fr;
-  gap: 12px;
-  margin-top: 14px;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  min-height: 34px;
+  margin-bottom: 8px;
+  border: 3px solid var(--ink);
+  background: #fff;
 }
 
-.sim-board-footer span {
+.sim-total-track span {
   display: grid;
   place-items: center;
-  min-height: 56px;
+  min-height: 30px;
+  border-left: 1px solid rgba(47, 37, 34, 0.45);
+  opacity: 0.18;
+}
+
+.sim-total-track span:first-child { border-left: 0; }
+.sim-total-track span.filled { opacity: 1; }
+.sim-defense-total-track { background: #e2ffe5; }
+.sim-attack-total-track { background: #fff0bd; }
+.sim-total-track .stat-icon { width: 20px; height: 20px; }
+
+.sim-board-zone {
+  display: grid;
+  place-items: center;
+  min-height: 76px;
   border: 3px dashed var(--ink);
-  border-radius: 12px;
+  border-radius: 16px;
+  background: #fffdf6;
+  font-size: 1rem;
   font-weight: 900;
 }
+
+.sim-deck-zone { grid-column: 1; background: #cdefff; }
+.sim-discard-zone { grid-column: 2 / 4; background: #ffc8dd; }
 
 .attack-lane {
   display: flex;
@@ -816,7 +976,42 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   .deck-summary { grid-template-columns: repeat(4, 1fr); }
   .deck-summary div { min-height: 96px; }
   .rules-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .workspace > .detail-card { display: none; }
   .detail-card { position: static; }
+  .mobile-card-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+    background: rgba(47, 37, 34, 0.66);
+  }
+  .mobile-card-modal-content {
+    position: relative;
+    width: min(100%, 420px);
+    max-height: calc(100vh - 36px);
+    overflow: auto;
+  }
+  .mobile-card-modal .detail-card { padding-top: 56px; }
+  .mobile-card-modal .detail-card .card-button { height: 360px; min-height: 360px; }
+  .mobile-card-modal .detail-card .art-frame { min-height: 178px; }
+  .modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 1;
+    border: 3px solid var(--ink);
+    border-radius: 999px;
+    background: var(--pink);
+    padding: 8px 12px;
+    box-shadow: 0 4px 0 var(--ink);
+    cursor: pointer;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+  .sim-board { overflow-x: auto; }
+  .sim-board-layout { min-width: 760px; }
 }
 
 @media (max-width: 640px) {
@@ -827,9 +1022,14 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   .filters { justify-content: flex-start; }
   .card-grid { grid-template-columns: repeat(auto-fill, minmax(164px, 1fr)); gap: 10px; }
   .card-button { height: 248px; padding: 7px; border-width: 3px; border-radius: 18px; }
+  .mobile-card-modal .detail-card .card-button { height: 330px; min-height: 330px; }
   .card-header strong { font-size: 0.9rem; }
   .art-frame { min-height: 112px; }
   .boost_attack .art-frame { min-height: 78px; }
+  .sim-player-life-track { grid-template-columns: repeat(10, 1fr); }
+  .sim-summary { grid-template-columns: 1fr 1fr; }
+  .sim-card-row { min-height: 84px; }
+  .sim-mini-card { flex-basis: 98px; }
 }
 
 @page {
