@@ -104,50 +104,56 @@ export function PrintArea({ cards, player }: PrintAreaProps) {
       <div className="print-rules">
         <div className="rules-page">
           <h1>Reglas de Batalla de monstruitos</h1>
-          <section>
-            <h2>Objetivo</h2>
-            <p>Cada jugador empieza con 20 vidas. Gana quien deja al rival en 0 vidas.</p>
-          </section>
-          <section>
-            <h2>Preparacion</h2>
-            <ol>
-              <li>Cada jugador usa el mismo mazo. El numero de jugador solo cambia los colores del dorso.</li>
-              <li>Mezcla el mazo y roba 5 cartas.</li>
-              <li>Si no robaste monstruos, muestra la mano, mezcla y roba 5 otra vez.</li>
-              <li>Pone hasta 3 monstruos en juego. Si no tienes 3, puedes bajar mas en tus turnos.</li>
-            </ol>
-          </section>
-          <section>
-            <h2>Turno</h2>
-            <ol>
-              <li>Roba 1 carta.</li>
-              <li>Puedes bajar 1 monstruo si tienes menos de 3 en juego.</li>
-              <li>Puedes jugar mejoras sobre tus monstruos.</li>
-              <li>Atacan tus 3 monstruos, uno por uno.</li>
-              <li>Cada atacante elige cualquiera de los monstruos rivales como objetivo.</li>
-              <li>Pasa el turno.</li>
-            </ol>
-          </section>
-          <section>
-            <h2>Mejoras</h2>
-            <p>Cada monstruo puede tener hasta 3 mejoras de vida, 3 de ataque y 3 de defensa. Si el monstruo es derrotado, sus mejoras tambien van al descarte.</p>
-            <p>Los escudos y espadas del tablero son una ayuda para sumar rapido: pon tantos escudos como defensa total y tantas espadas como ataque total tenga el monstruo con sus mejoras.</p>
-          </section>
-          <section>
-            <h2>Combate</h2>
-            <p><b>Dano = ataque del atacante - defensa del defensor.</b> Si el resultado es 0 o menos, igual hace 1 dano.</p>
-            <div className="print-combat-examples">
-              <p>5 espadas - 2 escudos = 3 dano. Pierde 3 corazones.</p>
-              <p>3 espadas - 3 escudos = 0, pero el minimo es 1. Pierde 1 corazon.</p>
-              <p>2 espadas - 5 escudos = -3, pero el minimo es 1. Pierde 1 corazon.</p>
-              <p>Si el rival tiene 3 monstruos, elige a cual atacar antes de calcular el dano.</p>
-              <p>Si un jugador se queda sin monstruos para defenderse, el dano baja directamente de sus 20 vidas.</p>
+          <div className="rules-columns">
+            <div>
+              <section>
+                <h2>Objetivo</h2>
+                <p>Cada jugador empieza con 20 vidas. Gana quien deja al rival en 0 vidas.</p>
+              </section>
+              <section>
+                <h2>Preparacion</h2>
+                <ol>
+                  <li>Cada jugador usa el mismo mazo. El numero de jugador solo cambia los colores del dorso.</li>
+                  <li>Mezcla el mazo y roba 5 cartas.</li>
+                  <li>Si no robaste monstruos, muestra la mano, mezcla y roba 5 otra vez.</li>
+                  <li>Pone hasta 3 monstruos en juego. Si no tienes 3, puedes bajar mas en tus turnos.</li>
+                </ol>
+              </section>
+              <section>
+                <h2>Turno</h2>
+                <ol>
+                  <li>Roba 1 carta.</li>
+                  <li>Puedes bajar 1 monstruo si tienes menos de 3 en juego.</li>
+                  <li>Puedes jugar mejoras sobre tus monstruos.</li>
+                  <li>Atacan tus 3 monstruos, uno por uno.</li>
+                  <li>Cada atacante elige cualquiera de los monstruos rivales como objetivo.</li>
+                  <li>Pasa el turno.</li>
+                </ol>
+              </section>
+              <section>
+                <h2>Iconos</h2>
+                <p><b>♥ Vida</b> son los corazones que tiene el monstruo. <b>Espadas</b> son la fuerza para atacar. <b>Escudos</b> reducen el dano recibido.</p>
+              </section>
             </div>
-          </section>
-          <section>
-            <h2>Iconos</h2>
-            <p><b>♥ Vida</b> son los corazones que tiene el monstruo. <b>Espadas</b> son la fuerza para atacar. <b>Escudos</b> reducen el dano recibido.</p>
-          </section>
+            <div>
+              <section>
+                <h2>Mejoras</h2>
+                <p>Cada monstruo puede tener hasta 3 mejoras de vida, 3 de ataque y 3 de defensa. Si el monstruo es derrotado, sus mejoras tambien van al descarte.</p>
+                <p>Los escudos y espadas del tablero son una ayuda para sumar rapido: pon tantos escudos como defensa total y tantas espadas como ataque total tenga el monstruo con sus mejoras.</p>
+              </section>
+              <section>
+                <h2>Combate</h2>
+                <p><b>Dano = ataque del atacante - defensa del defensor.</b> Si el resultado es 0 o menos, igual hace 1 dano.</p>
+                <div className="print-combat-examples">
+                  <p>5 espadas - 2 escudos = 3 dano. Pierde 3 corazones.</p>
+                  <p>3 espadas - 3 escudos = 0, pero el minimo es 1. Pierde 1 corazon.</p>
+                  <p>2 espadas - 5 escudos = -3, pero el minimo es 1. Pierde 1 corazon.</p>
+                  <p>Si el rival tiene 3 monstruos, elige a cual atacar antes de calcular el dano.</p>
+                  <p>Si un jugador se queda sin monstruos para defenderse, el dano baja directamente de sus 20 vidas.</p>
+                </div>
+              </section>
+            </div>
+          </div>
         </div>
       </div>
 
