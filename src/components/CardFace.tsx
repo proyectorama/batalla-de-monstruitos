@@ -54,7 +54,7 @@ export function CardFace({ card, cardPrintOptions = defaultCardPrintOptions, sel
         </div>
 
         {card.kind === "monster" ? (
-          <dl className="stats-row">
+          <dl className={`stats-row ${hideStatValues ? "stats-row-write-in" : ""}`}>
             {stats.map((stat) => (
               <div className={`stat stat-${stat}`} key={stat}>
                 <dt><StatIcon stat={stat} /></dt>
