@@ -65,6 +65,12 @@ export function App() {
               Un juego de cartas tipo Pokemon/Magic, simplificado para chicos: monstruos tiernos, mejoras grandes y reglas con numeros faciles de contar.
             </p>
             <div className="hero-actions">
+              <button className="primary-action" type="button" onClick={() => handlePrint("cards")}>Imprimir cartas</button>
+              <button type="button" onClick={() => handlePrint("backs")}>Imprimir dorsos</button>
+              <button type="button" onClick={() => handlePrint("boards")}>Imprimir tablero</button>
+              <button type="button" onClick={() => handlePrint("rules")}>Imprimir reglas</button>
+              <button type="button" onClick={() => handlePrint("consumables")}>Imprimir consumibles</button>
+              <a href={cardsDownloadHref} download="batalla-de-monstruitos-cards.json">Descargar JSON</a>
               <div className="print-options" aria-label="Opciones de impresión">
                 <strong className="print-options-title">Opciones de impresión</strong>
                 <label className="print-option-switch">
@@ -79,8 +85,8 @@ export function App() {
                   <input type="checkbox" checked={showStatIconsOnly} onChange={(event) => setShowStatIconsOnly(event.target.checked)} />
                   <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
                   <span className="switch-copy">
-                    <strong>Solo iconos de vida, ataque y defensa</strong>
-                    <small>Oculta los valores para escribir ataque y defensa propios</small>
+                    <strong>Sin vida, defensa y ataque</strong>
+                    <small>Deja solo los iconos y vacía los valores para escribir los números propios a mano</small>
                   </span>
                 </label>
                 <label className="print-option-switch">
@@ -92,12 +98,6 @@ export function App() {
                   </span>
                 </label>
               </div>
-              <button className="primary-action" type="button" onClick={() => handlePrint("cards")}>Imprimir cartas</button>
-              <button type="button" onClick={() => handlePrint("backs")}>Imprimir dorsos</button>
-              <button type="button" onClick={() => handlePrint("boards")}>Imprimir tablero</button>
-              <button type="button" onClick={() => handlePrint("rules")}>Imprimir reglas</button>
-              <button type="button" onClick={() => handlePrint("consumables")}>Imprimir consumibles</button>
-              <a href={cardsDownloadHref} download="batalla-de-monstruitos-cards.json">Descargar JSON</a>
             </div>
           </div>
           <div className="deck-summary" aria-label="Resumen del mazo">

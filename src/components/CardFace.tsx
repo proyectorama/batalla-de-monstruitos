@@ -58,7 +58,7 @@ export function CardFace({ card, cardPrintOptions = defaultCardPrintOptions, sel
             {stats.map((stat) => (
               <div className={`stat stat-${stat}`} key={stat}>
                 <dt><StatIcon stat={stat} /></dt>
-                <dd aria-label={statLabel(stat)}>{hideStatValues ? <span className="stat-write-in" aria-hidden="true" /> : card[stat]}</dd>
+                <dd aria-label={statLabel(stat)}>{hideStatValues ? null : card[stat]}</dd>
               </div>
             ))}
           </dl>

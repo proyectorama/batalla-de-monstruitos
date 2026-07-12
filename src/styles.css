@@ -1579,13 +1579,6 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   .boost_attack .boost-art { width: 24mm; }
   .custom-art-space { width: 24mm; border-width: 0.6mm; border-radius: 3mm; }
 
-  .stat-write-in {
-    display: block;
-    width: 8mm;
-    height: 0.45mm;
-    border-bottom: 0.55mm solid #2f2522;
-  }
-
   .stats-row { gap: 1mm; }
   .stat {
     padding: 0.7mm 1.3mm;
