@@ -1788,8 +1788,8 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
     height: 9.5mm;
     margin-top: -0.85mm;
     background:
-      repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.86) 0 1.8mm, rgba(255, 255, 255, 0.22) 1.8mm 3.2mm),
-      #fff0bd;
+      repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0 2.4mm, rgba(255, 255, 255, 0.72) 2.4mm 4.8mm),
+      #fff8dc;
     font-size: 10pt;
     gap: 1mm;
     white-space: nowrap;
@@ -1831,8 +1831,8 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
   .defense-slot {
     background:
-      repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.86) 0 1.8mm, rgba(255, 255, 255, 0.22) 1.8mm 3.2mm),
-      #e2ffe5;
+      repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0 2.4mm, rgba(255, 255, 255, 0.72) 2.4mm 4.8mm),
+      #f3fff4;
   }
 
   .life-slot {
