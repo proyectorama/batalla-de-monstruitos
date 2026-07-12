@@ -1,11 +1,12 @@
 import type { Card, StatKey } from "../types/cards";
+import type { CardPrintOptions } from "../types/print";
 import { statLabel } from "../utils/cards";
 import { BoostArtView, MonsterArt } from "./MonsterArt";
 import { StatIcon } from "./StatIcon";
 
 type CardFaceProps = {
   card: Card;
-  hideMonsterArt?: boolean;
+  cardPrintOptions?: CardPrintOptions;
   selected?: boolean;
   onSelect?: (card: Card) => void;
 };
@@ -26,23 +27,29 @@ const boostStat = (card: Card): StatKey | null => {
   return null;
 };
 
-export function CardFace({ card, hideMonsterArt = false, selected = false, onSelect }: CardFaceProps) {
+const defaultCardPrintOptions: CardPrintOptions = {
+  hideTitleAndArt: false,
+  showStatIconsOnly: false,
+};
+
+export function CardFace({ card, cardPrintOptions = defaultCardPrintOptions, selected = false, onSelect }: CardFaceProps) {
   const isInteractive = onSelect !== undefined;
   const cardBoostStat = boostStat(card);
-  const showStickerSpace = card.kind === "monster" && hideMonsterArt;
+  const showCustomArtSpace = card.kind === "monster" && cardPrintOptions.hideTitleAndArt;
+  const hideStatValues = card.kind === "monster" && cardPrintOptions.showStatIconsOnly;
 
   return (
     <article className={`game-card ${card.kind} ${selected ? "is-selected" : ""}`}>
       <button className="card-button" type="button" disabled={!isInteractive} onClick={() => onSelect?.(card)} aria-label={`Ver ${card.name}`}>
         {card.kind !== "monster" ? <div className="boost-band">{cardBoostStat ? <StatIcon stat={cardBoostStat} /> : null}<span className="boost-band-label">{boostBadge(card)}</span></div> : null}
         <header className="card-header">
-          <strong>{showStickerSpace ? "" : card.name.toUpperCase()}</strong>
+          <strong>{showCustomArtSpace ? "" : card.name.toUpperCase()}</strong>
         </header>
 
         <div className="art-frame">
           <span className="card-print-id">{card.id}</span>
-          {showStickerSpace ? <div className="sticker-space" aria-label="Espacio para sticker" /> : null}
-          {!showStickerSpace && card.kind === "monster" ? <MonsterArt art={card.art} /> : null}
+          {showCustomArtSpace ? <div className="custom-art-space" aria-label="Espacio para dibujo propio" /> : null}
+          {!showCustomArtSpace && card.kind === "monster" ? <MonsterArt art={card.art} /> : null}
           {card.kind !== "monster" ? <BoostArtView card={card} /> : null}
         </div>
 
@@ -51,7 +58,7 @@ export function CardFace({ card, hideMonsterArt = false, selected = false, onSel
             {stats.map((stat) => (
               <div className={`stat stat-${stat}`} key={stat}>
                 <dt><StatIcon stat={stat} /></dt>
-                <dd aria-label={statLabel(stat)}>{card[stat]}</dd>
+                <dd aria-label={statLabel(stat)}>{hideStatValues ? <span className="stat-write-in" aria-hidden="true" /> : card[stat]}</dd>
               </div>
             ))}
           </dl>

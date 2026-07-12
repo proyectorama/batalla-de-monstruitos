@@ -6,7 +6,7 @@ import { PrintArea } from "./components/PrintArea";
 import { RulesPanel } from "./components/RulesPanel";
 import { cardCounts, cards } from "./data/deck";
 import type { Card } from "./types/cards";
-import type { PrintMode } from "./types/print";
+import type { BoardPrintOptions, CardPrintOptions, PrintMode } from "./types/print";
 
 type AppTab = "cards" | "simulator";
 
@@ -25,10 +25,22 @@ export function App() {
   const [modalCard, setModalCard] = useState<Card | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
   const [activeTab, setActiveTab] = useState<AppTab>("cards");
-  const [hideMonsterArt, setHideMonsterArt] = useState(false);
+  const [hideCardTitleAndArt, setHideCardTitleAndArt] = useState(false);
+  const [showStatIconsOnly, setShowStatIconsOnly] = useState(false);
+  const [printBoardA3, setPrintBoardA3] = useState(false);
+
+  const cardPrintOptions: CardPrintOptions = {
+    hideTitleAndArt: hideCardTitleAndArt,
+    showStatIconsOnly,
+  };
+
+  const boardPrintOptions: BoardPrintOptions = {
+    size: printBoardA3 ? "A3" : "A4",
+  };
 
   const handlePrint = (mode: PrintMode) => {
     document.body.dataset.printMode = mode;
+    document.body.dataset.boardPrintSize = boardPrintOptions.size;
     window.setTimeout(() => window.print(), 0);
   };
 
@@ -53,14 +65,33 @@ export function App() {
               Un juego de cartas tipo Pokemon/Magic, simplificado para chicos: monstruos tiernos, mejoras grandes y reglas con numeros faciles de contar.
             </p>
             <div className="hero-actions">
-              <label className="print-sticker-switch">
-                <input type="checkbox" checked={hideMonsterArt} onChange={(event) => setHideMonsterArt(event.target.checked)} />
-                <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
-                <span className="switch-copy">
-                  <strong>Modo stickers</strong>
-                  <small>Imprime monstruos sin dibujo ni nombre</small>
-                </span>
-              </label>
+              <div className="print-options" aria-label="Opciones de impresión">
+                <strong className="print-options-title">Opciones de impresión</strong>
+                <label className="print-option-switch">
+                  <input type="checkbox" checked={hideCardTitleAndArt} onChange={(event) => setHideCardTitleAndArt(event.target.checked)} />
+                  <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
+                  <span className="switch-copy">
+                    <strong>Sin título y dibujo</strong>
+                    <small>Deja las cartas listas para completar o pegar dibujo propio</small>
+                  </span>
+                </label>
+                <label className="print-option-switch">
+                  <input type="checkbox" checked={showStatIconsOnly} onChange={(event) => setShowStatIconsOnly(event.target.checked)} />
+                  <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
+                  <span className="switch-copy">
+                    <strong>Solo iconos de vida, ataque y defensa</strong>
+                    <small>Oculta los valores para escribir ataque y defensa propios</small>
+                  </span>
+                </label>
+                <label className="print-option-switch">
+                  <input type="checkbox" checked={printBoardA3} onChange={(event) => setPrintBoardA3(event.target.checked)} />
+                  <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
+                  <span className="switch-copy">
+                    <strong>Tablero A3</strong>
+                    <small>Imprime el tablero más grande; elegí A3 horizontal si el diálogo lo pide</small>
+                  </span>
+                </label>
+              </div>
               <button className="primary-action" type="button" onClick={() => handlePrint("cards")}>Imprimir cartas</button>
               <button type="button" onClick={() => handlePrint("backs")}>Imprimir dorsos</button>
               <button type="button" onClick={() => handlePrint("boards")}>Imprimir tablero</button>
@@ -105,7 +136,7 @@ export function App() {
         )}
       </main>
 
-      <PrintArea cards={cards} hideMonsterArt={hideMonsterArt} />
+      <PrintArea cards={cards} cardPrintOptions={cardPrintOptions} boardPrintOptions={boardPrintOptions} />
     </>
   );
 }

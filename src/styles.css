@@ -150,21 +150,33 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
 .primary-action, .hero-actions button, .hero-actions a { padding: 13px 18px; }
 
-.print-sticker-switch {
+.print-options {
+  display: grid;
+  gap: 10px;
+  max-width: 420px;
+  padding: 10px;
+  border: 3px solid var(--ink);
+  border-radius: 24px;
+  background: linear-gradient(135deg, #fffdf6, #e3f9ea);
+  box-shadow: 0 5px 0 var(--ink);
+}
+
+.print-options-title {
+  font-size: 0.85rem;
+  font-weight: 1000;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.print-option-switch {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  max-width: 330px;
-  padding: 9px 14px 9px 10px;
-  border: 3px solid var(--ink);
-  border-radius: 20px;
-  background: linear-gradient(135deg, #fffdf6, #e3f9ea);
-  box-shadow: 0 5px 0 var(--ink);
   font-weight: 900;
   cursor: pointer;
 }
 
-.print-sticker-switch input {
+.print-option-switch input {
   position: absolute;
   opacity: 0;
   pointer-events: none;
@@ -193,16 +205,16 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   transition: transform 160ms ease, background 160ms ease;
 }
 
-.print-sticker-switch input:checked + .switch-track {
+.print-option-switch input:checked + .switch-track {
   background: var(--yellow);
 }
 
-.print-sticker-switch input:checked + .switch-track .switch-thumb {
+.print-option-switch input:checked + .switch-track .switch-thumb {
   background: var(--mint);
   transform: translateX(24px);
 }
 
-.print-sticker-switch input:focus-visible + .switch-track {
+.print-option-switch input:focus-visible + .switch-track {
   outline: 3px solid var(--blue);
   outline-offset: 3px;
 }
@@ -474,7 +486,7 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 .boost-art { width: min(126px, 86%); }
 .boost_attack .boost-art { width: min(104px, 76%); }
 
-.sticker-space {
+.custom-art-space {
   width: min(106px, 76%);
   aspect-ratio: 1;
   border: 3px dashed rgba(47, 37, 34, 0.38);
@@ -1467,6 +1479,11 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   margin: 0;
 }
 
+@page board-a3 {
+  size: A3 landscape;
+  margin: 0;
+}
+
 @media print {
   html, body {
     width: 297mm;
@@ -1560,7 +1577,14 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   .card-art { width: 31mm; }
   .boost-art { width: 29mm; }
   .boost_attack .boost-art { width: 24mm; }
-  .sticker-space { width: 24mm; border-width: 0.6mm; border-radius: 3mm; }
+  .custom-art-space { width: 24mm; border-width: 0.6mm; border-radius: 3mm; }
+
+  .stat-write-in {
+    display: block;
+    width: 8mm;
+    height: 0.45mm;
+    border-bottom: 0.55mm solid #2f2522;
+  }
 
   .stats-row { gap: 1mm; }
   .stat {
@@ -1632,6 +1656,18 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
   .board-page:last-child, .rules-page:last-child, .tokens-page:last-child { page-break-after: auto; break-after: auto; }
 
+  body[data-print-mode="boards"][data-board-print-size="A3"] {
+    width: 420mm;
+    height: 297mm;
+  }
+
+  body[data-print-mode="boards"][data-board-print-size="A3"] .board-page {
+    page: board-a3;
+    transform: scale(1.4142857);
+    page-break-after: auto;
+    break-after: auto;
+  }
+
   .board-page {
     display: grid;
     grid-template-rows: auto 1fr;
@@ -1639,6 +1675,7 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
     height: 210mm;
     padding: 3mm;
     border: 1.2mm solid #2f2522;
+    transform-origin: top left;
     background:
       radial-gradient(circle at 12% 10%, rgba(255, 143, 171, 0.22), transparent 38mm),
       radial-gradient(circle at 86% 18%, rgba(123, 223, 242, 0.24), transparent 42mm),
