@@ -6,7 +6,15 @@ import { PrintArea } from "./components/PrintArea";
 import { RulesPanel } from "./components/RulesPanel";
 import { cardCounts, cards } from "./data/deck";
 import type { Card } from "./types/cards";
-import type { BoardPrintOptions, CardPrintOptions, PrintMode } from "./types/print";
+import {
+  defaultCardSizeHeight,
+  defaultCardSizeWidth,
+  spanishSizeHeight,
+  spanishSizeWidth,
+  type BoardPrintOptions,
+  type CardPrintOptions,
+  type PrintMode,
+} from "./types/print";
 
 type AppTab = "cards" | "simulator";
 
@@ -27,11 +35,14 @@ export function App() {
   const [activeTab, setActiveTab] = useState<AppTab>("cards");
   const [hideCardTitleAndArt, setHideCardTitleAndArt] = useState(false);
   const [showStatIconsOnly, setShowStatIconsOnly] = useState(false);
+  const [useSpanishCardSize, setUseSpanishCardSize] = useState(false);
   const [printBoardA3, setPrintBoardA3] = useState(false);
 
   const cardPrintOptions: CardPrintOptions = {
     hideTitleAndArt: hideCardTitleAndArt,
     showStatIconsOnly,
+    width: useSpanishCardSize ? spanishSizeWidth : defaultCardSizeWidth,
+    height: useSpanishCardSize ? spanishSizeHeight : defaultCardSizeHeight,
   };
 
   const boardPrintOptions: BoardPrintOptions = {
@@ -87,6 +98,14 @@ export function App() {
                   <span className="switch-copy">
                     <strong>Sin vida, defensa y ataque</strong>
                     <small>Deja solo los iconos y vacía los valores para escribir los números propios a mano</small>
+                  </span>
+                </label>
+                <label className="print-option-switch">
+                  <input type="checkbox" checked={useSpanishCardSize} onChange={(event) => setUseSpanishCardSize(event.target.checked)} />
+                  <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
+                  <span className="switch-copy">
+                    <strong>Cartas españolas (57 × 92 mm)</strong>
+                    <small>Imprime 10 por hoja A4 horizontal; usa escala 100 % y sin márgenes</small>
                   </span>
                 </label>
                 <label className="print-option-switch">

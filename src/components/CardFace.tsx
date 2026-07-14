@@ -1,5 +1,5 @@
 import type { Card, StatKey } from "../types/cards";
-import type { CardPrintOptions } from "../types/print";
+import { defaultCardSizeHeight, defaultCardSizeWidth, type CardPrintOptions } from "../types/print";
 import { statLabel } from "../utils/cards";
 import { BoostArtView, MonsterArt } from "./MonsterArt";
 import { StatIcon } from "./StatIcon";
@@ -30,6 +30,8 @@ const boostStat = (card: Card): StatKey | null => {
 const defaultCardPrintOptions: CardPrintOptions = {
   hideTitleAndArt: false,
   showStatIconsOnly: false,
+  width: defaultCardSizeWidth,
+  height: defaultCardSizeHeight,
 };
 
 export function CardFace({ card, cardPrintOptions = defaultCardPrintOptions, selected = false, onSelect }: CardFaceProps) {

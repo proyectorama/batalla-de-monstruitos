@@ -1514,11 +1514,11 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
   .card-print-page {
     display: grid;
-    width: 285mm;
-    height: 198mm;
-    margin: 6mm auto;
-    grid-template-columns: repeat(5, 57mm);
-    grid-template-rows: repeat(3, 66mm);
+    width: var(--printed-cards-width);
+    height: var(--printed-cards-height);
+    margin: calc((210mm - var(--printed-cards-height)) / 2) auto;
+    grid-template-columns: repeat(var(--card-print-columns), var(--card-print-width));
+    grid-template-rows: repeat(var(--card-print-rows), var(--card-print-height));
     gap: 0;
     page-break-after: always;
     break-after: page;
@@ -1527,8 +1527,8 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   .card-print-page:last-child { page-break-after: auto; break-after: auto; }
 
   .game-card, .card-button {
-    width: 57mm;
-    height: 66mm;
+    width: var(--card-print-width);
+    height: var(--card-print-height);
     min-height: 0;
   }
 
@@ -1666,9 +1666,26 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
   body[data-print-mode="boards"][data-board-print-size="A3"] .board-page {
     page: board-a3;
-    transform: scale(1.4142857);
+    width: 420mm;
+    height: 297mm;
+    min-height: 297mm;
     page-break-after: auto;
     break-after: auto;
+  }
+
+  body[data-print-mode="boards"][data-board-print-size="A3"] .station-core {
+    grid-template-columns: auto 57mm auto;
+  }
+
+  body[data-print-mode="boards"][data-board-print-size="A3"] .attack-slot {
+    width: 57mm;
+  }
+
+  body[data-print-mode="boards"][data-board-print-size="A3"] .defense-stack,
+  body[data-print-mode="boards"][data-board-print-size="A3"] .life-stack,
+  body[data-print-mode="boards"][data-board-print-size="A3"] .monster-card-zone {
+    height: 66mm;
+    min-height: 66mm;
   }
 
   .board-page {

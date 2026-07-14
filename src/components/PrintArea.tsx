@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { Card } from "../types/cards";
 import type { BoardPrintOptions, CardPrintOptions } from "../types/print";
 import { chunkCards } from "../utils/cards";
@@ -70,12 +71,27 @@ function ConsumablesPage() {
 }
 
 export function PrintArea({ cards, cardPrintOptions, boardPrintOptions }: PrintAreaProps) {
-  const pages = chunkCards(cards, 15);
+  const pageWidth = 297;
+  const pageHeight = 210;
+  const columns = Math.floor(pageWidth / cardPrintOptions.width);
+  const rows = Math.floor(pageHeight / cardPrintOptions.height);
+  const cardsPerPage = columns * rows;
+  const printedCardsWidth = columns * cardPrintOptions.width;
+  const printedCardsHeight = rows * cardPrintOptions.height;
+  const cardPageStyle = {
+    "--card-print-width": `${cardPrintOptions.width}mm`,
+    "--card-print-height": `${cardPrintOptions.height}mm`,
+    "--card-print-columns": columns,
+    "--card-print-rows": rows,
+    "--printed-cards-width": `${printedCardsWidth}mm`,
+    "--printed-cards-height": `${printedCardsHeight}mm`,
+  } as CSSProperties;
+  const pages = chunkCards(cards, cardsPerPage);
   return (
     <section className="print-area" aria-label="Hojas listas para imprimir" data-board-size={boardPrintOptions.size}>
       <div className="print-cards">
         {pages.map((pageCards, pageIndex) => (
-          <div className="print-page card-print-page" key={`page-${pageIndex + 1}`}>
+          <div className="print-page card-print-page" style={cardPageStyle} key={`page-${pageIndex + 1}`}>
             {pageCards.map((card) => (
               <CardFace card={card} cardPrintOptions={cardPrintOptions} key={card.id} />
             ))}
