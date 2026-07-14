@@ -82,41 +82,49 @@ export function App() {
               <button type="button" onClick={() => handlePrint("rules")}>Imprimir reglas</button>
               <button type="button" onClick={() => handlePrint("consumables")}>Imprimir consumibles</button>
               <a href={cardsDownloadHref} download="batalla-de-monstruitos-cards.json">Descargar JSON</a>
-              <div className="print-options" aria-label="Opciones de impresión">
-                <strong className="print-options-title">Opciones de impresión</strong>
-                <label className="print-option-switch">
-                  <input type="checkbox" checked={hideCardTitleAndArt} onChange={(event) => setHideCardTitleAndArt(event.target.checked)} />
-                  <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
-                  <span className="switch-copy">
-                    <strong>Sin título y dibujo</strong>
-                    <small>Deja las cartas listas para completar o pegar dibujo propio</small>
+              <details className="print-options">
+                <summary className="print-options-summary">
+                  <span>
+                    <strong>Personalizar impresión</strong>
+                    <small>Elegí qué mostrar en las cartas y el tamaño de impresión antes de imprimir.</small>
                   </span>
-                </label>
-                <label className="print-option-switch">
-                  <input type="checkbox" checked={showStatIconsOnly} onChange={(event) => setShowStatIconsOnly(event.target.checked)} />
-                  <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
-                  <span className="switch-copy">
-                    <strong>Sin vida, defensa y ataque</strong>
-                    <small>Deja solo los iconos y vacía los valores para escribir los números propios a mano</small>
-                  </span>
-                </label>
-                <label className="print-option-switch">
-                  <input type="checkbox" checked={useSpanishCardSize} onChange={(event) => setUseSpanishCardSize(event.target.checked)} />
-                  <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
-                  <span className="switch-copy">
-                    <strong>Cartas españolas (57 × 92 mm)</strong>
-                    <small>Imprime 10 por hoja A4 horizontal; usa escala 100 % y sin márgenes</small>
-                  </span>
-                </label>
-                <label className="print-option-switch">
-                  <input type="checkbox" checked={printBoardA3} onChange={(event) => setPrintBoardA3(event.target.checked)} />
-                  <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
-                  <span className="switch-copy">
-                    <strong>Tablero A3</strong>
-                    <small>Imprime el tablero más grande; elegí A3 horizontal si el diálogo lo pide</small>
-                  </span>
-                </label>
-              </div>
+                  <span className="print-options-chevron" aria-hidden="true" />
+                </summary>
+                <div className="print-options-body">
+                  <label className="print-option-switch">
+                    <input type="checkbox" checked={hideCardTitleAndArt} onChange={(event) => setHideCardTitleAndArt(event.target.checked)} />
+                    <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
+                    <span className="switch-copy">
+                      <strong>Sin título y dibujo</strong>
+                      <small>Deja las cartas listas para completar o pegar dibujo propio</small>
+                    </span>
+                  </label>
+                  <label className="print-option-switch">
+                    <input type="checkbox" checked={showStatIconsOnly} onChange={(event) => setShowStatIconsOnly(event.target.checked)} />
+                    <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
+                    <span className="switch-copy">
+                      <strong>Sin vida, defensa y ataque</strong>
+                      <small>Deja solo los iconos y vacía los valores para escribir los números propios a mano</small>
+                    </span>
+                  </label>
+                  <label className="print-option-switch">
+                    <input type="checkbox" checked={useSpanishCardSize} onChange={(event) => setUseSpanishCardSize(event.target.checked)} />
+                    <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
+                    <span className="switch-copy">
+                      <strong>Cartas españolas (57 × 92 mm)</strong>
+                      <small>Imprime 10 por hoja A4 horizontal; usa escala 100 % y sin márgenes</small>
+                    </span>
+                  </label>
+                  <label className="print-option-switch">
+                    <input type="checkbox" checked={printBoardA3} onChange={(event) => setPrintBoardA3(event.target.checked)} />
+                    <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
+                    <span className="switch-copy">
+                      <strong>Tablero A3</strong>
+                      <small>Imprime el tablero más grande; elegí A3 horizontal si el diálogo lo pide</small>
+                    </span>
+                  </label>
+                </div>
+              </details>
             </div>
           </div>
           <div className="deck-summary" aria-label="Resumen del mazo">
