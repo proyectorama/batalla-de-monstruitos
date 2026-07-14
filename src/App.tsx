@@ -70,18 +70,18 @@ export function App() {
       <main className="app-shell">
         <section className="hero">
           <div className="hero-copy">
-            <p className="eyebrow">Mazo imprimible para 2 jugadores</p>
+            <p className="eyebrow">Mazo imprimible de 45 cartas</p>
             <h1>Batalla de monstruitos</h1>
             <p>
-              Un juego de cartas tipo Pokemon/Magic, simplificado para chicos: monstruos tiernos, mejoras grandes y reglas con numeros faciles de contar.
+              Un juego de cartas tipo Pokemon/Magic, simplificado para chicos. Cada jugador imprime su propia copia de este mazo de 45 cartas.
             </p>
             <div className="hero-actions">
-              <button className="primary-action" type="button" onClick={() => handlePrint("cards")}>Imprimir cartas</button>
+              <button className="primary-action" type="button" onClick={() => handlePrint("cards")}>Imprimir mazo</button>
               <button type="button" onClick={() => handlePrint("backs")}>Imprimir dorsos</button>
               <button type="button" onClick={() => handlePrint("boards")}>Imprimir tablero</button>
               <button type="button" onClick={() => handlePrint("rules")}>Imprimir reglas</button>
               <button type="button" onClick={() => handlePrint("consumables")}>Imprimir consumibles</button>
-              <a href={cardsDownloadHref} download="batalla-de-monstruitos-cards.json">Descargar JSON</a>
+              <a href={cardsDownloadHref} download="batalla-de-monstruitos-mazo-45.json">Descargar JSON</a>
               <details className="print-options">
                 <summary className="print-options-summary">
                   <span>
@@ -128,7 +128,7 @@ export function App() {
             </div>
           </div>
           <div className="deck-summary" aria-label="Resumen del mazo">
-            <div><strong>{cardCounts.total}</strong><span>cartas</span></div>
+            <div><strong>{cardCounts.total}</strong><span>cartas por jugador</span></div>
             <div><strong>{cardCounts.monsters}</strong><span>monstruos</span></div>
             <div><strong>{cardCounts.boosts}</strong><span>mejoras</span></div>
             <div><strong>160</strong><span>Consumibles</span></div>

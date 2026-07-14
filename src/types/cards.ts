@@ -22,7 +22,6 @@ export type MonsterCard = {
   id: string;
   name: string;
   kind: "monster";
-  deck: 1 | 2;
   life: number;
   attack: number;
   defense: number;
@@ -33,7 +32,6 @@ export type BoostCard = {
   id: string;
   name: string;
   kind: "boost_attack" | "boost_defense" | "boost_life";
-  deck: 1 | 2;
   attackBonus: number;
   defenseBonus: number;
   lifeBonus: number;

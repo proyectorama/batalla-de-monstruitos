@@ -13,7 +13,7 @@ export function RulesPanel() {
         </div>
         <div>
           <h3>2. Preparacion</h3>
-          <p>Son {cardCounts.total} cartas. Cada jugador roba 5 y puede tener hasta 3 monstruos en juego.</p>
+          <p>Cada jugador imprime y usa su propia copia del mazo de {cardCounts.total} cartas. Mezcla, roba 5 y puede tener hasta 3 monstruos en juego.</p>
         </div>
         <div>
           <h3>3. Turno</h3>

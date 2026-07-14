@@ -137,8 +137,8 @@ export function PrintArea({ cards, cardPrintOptions, boardPrintOptions }: PrintA
               <section>
                 <h2>Preparacion</h2>
                 <ol>
-                  <li>Cada jugador usa el mismo mazo y el mismo dorso de cartas.</li>
-                  <li>Mezcla el mazo y roba 5 cartas.</li>
+                  <li>Cada jugador imprime y usa su propia copia del mazo de 45 cartas.</li>
+                  <li>Cada jugador mezcla su mazo y roba 5 cartas.</li>
                   <li>Si no robaste monstruos, muestra la mano, mezcla y roba 5 otra vez.</li>
                   <li>Pone hasta 3 monstruos en juego. Si no tienes 3, puedes bajar mas en tus turnos.</li>
                 </ol>

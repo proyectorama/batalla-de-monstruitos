@@ -158,7 +158,7 @@ const draw = (player: PlayerState, amount: number): Card[] => {
 const preparePlayer = (id: PlayerId, cards: Card[], seed: number): PlayerState => {
   const player: PlayerState = {
     id,
-    deck: shuffle(cards.filter((card) => card.deck === id), seed),
+    deck: shuffle(cards, seed),
     hand: [],
     board: [],
     discard: [],
@@ -324,7 +324,7 @@ export const simulateGame = (cards: Card[], seed: number): SimulationResult => {
     });
   };
 
-  record("Se mezclan los mazos y ambos jugadores roban 5 cartas.");
+  record("Cada jugador mezcla su copia del mazo de 45 cartas y roba 5.");
 
   while (playerOne.board.length < 3) {
     const before = playerOne.board.length;

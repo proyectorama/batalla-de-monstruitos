@@ -142,8 +142,8 @@ export function GameSimulator() {
   const [turnSpeed, setTurnSpeed] = useState(3);
   const result = started ? simulateGame(cards, seed) : null;
   const currentStep = result?.steps[Math.min(step, Math.max(0, result.steps.length - 1))];
-  const playerOne = currentStep?.players[0] ?? { player: 1 as const, life: 20, board: { player: 1 as const, life: 20, monsters: [] }, hand: [], deckCount: cards.filter((card) => card.deck === 1).length, discard: [] };
-  const playerTwo = currentStep?.players[1] ?? { player: 2 as const, life: 20, board: { player: 2 as const, life: 20, monsters: [] }, hand: [], deckCount: cards.filter((card) => card.deck === 2).length, discard: [] };
+  const playerOne = currentStep?.players[0] ?? { player: 1 as const, life: 20, board: { player: 1 as const, life: 20, monsters: [] }, hand: [], deckCount: cards.length, discard: [] };
+  const playerTwo = currentStep?.players[1] ?? { player: 2 as const, life: 20, board: { player: 2 as const, life: 20, monsters: [] }, hand: [], deckCount: cards.length, discard: [] };
   const currentAttack = currentStep?.attack ?? null;
   const playerOneAttack = currentAttack?.player === 1 ? currentAttack.attackerSlot : undefined;
   const playerTwoAttack = currentAttack?.player === 2 ? currentAttack.attackerSlot : undefined;
