@@ -1673,21 +1673,6 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
     break-after: auto;
   }
 
-  body[data-print-mode="boards"][data-board-print-size="A3"] .station-core {
-    grid-template-columns: auto 57mm auto;
-  }
-
-  body[data-print-mode="boards"][data-board-print-size="A3"] .attack-slot {
-    width: 57mm;
-  }
-
-  body[data-print-mode="boards"][data-board-print-size="A3"] .defense-stack,
-  body[data-print-mode="boards"][data-board-print-size="A3"] .life-stack,
-  body[data-print-mode="boards"][data-board-print-size="A3"] .monster-card-zone {
-    height: 66mm;
-    min-height: 66mm;
-  }
-
   .board-page {
     display: grid;
     grid-template-rows: auto 1fr;
@@ -1736,22 +1721,9 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   .board-layout {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: auto 1fr;
     column-gap: 1mm;
-    row-gap: 3mm;
     min-width: 0;
     min-height: 0;
-  }
-
-  .board-zone {
-    display: grid;
-    place-items: center;
-    border: 1mm dashed #2f2522;
-    border-radius: 5mm;
-    background: #fffdf6;
-    font-size: 20pt;
-    font-weight: 900;
-    text-align: center;
   }
 
   .monster-station {
@@ -1774,7 +1746,7 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
   .station-core {
     display: grid;
-    grid-template-columns: auto 53mm auto;
+    grid-template-columns: auto var(--board-card-width) auto;
     justify-content: center;
     align-items: start;
   }
@@ -1783,7 +1755,7 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   .life-stack {
     display: flex;
     align-items: end;
-    height: 60mm;
+    height: var(--board-card-height);
   }
 
   .defense-stack { justify-content: flex-end; }
@@ -1804,12 +1776,12 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 53mm;
+    width: var(--board-card-width);
     height: 9.5mm;
     margin-top: -0.85mm;
     background:
-      repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0 2.4mm, rgba(255, 255, 255, 0.72) 2.4mm 4.8mm),
-      #fff8dc;
+      repeating-linear-gradient(135deg, #fff 0 2.4mm, rgba(255, 252, 242, 0.72) 2.4mm 4.8mm),
+      #fffefa;
     font-size: 10pt;
     gap: 1mm;
     white-space: nowrap;
@@ -1823,8 +1795,8 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    width: 7.2mm;
-    height: 60mm;
+    width: var(--board-side-boost-width);
+    height: var(--board-card-height);
     padding-top: 2mm;
     margin-left: -0.85mm;
     writing-mode: horizontal-tb;
@@ -1851,8 +1823,8 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
   .defense-slot {
     background:
-      repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0 2.4mm, rgba(255, 255, 255, 0.72) 2.4mm 4.8mm),
-      #f3fff4;
+      repeating-linear-gradient(135deg, #fff 0 2.4mm, rgba(247, 255, 249, 0.72) 2.4mm 4.8mm),
+      #fbfffc;
   }
 
   .life-slot {
@@ -1863,7 +1835,9 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
   .monster-card-zone {
     background: #fff1b8;
-    min-height: 60mm;
+    width: var(--board-card-width);
+    height: var(--board-card-height);
+    min-height: var(--board-card-height);
     font-size: 21pt;
   }
 
@@ -1910,15 +1884,6 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
   .defense-total-track { background: #e2ffe5; }
   .attack-total-track { background: #fff0bd; }
   .total-track .stat-icon { width: 7mm; height: 7mm; }
-
-  .deck-zone,
-  .discard-zone {
-    align-self: stretch;
-    min-height: 0;
-  }
-
-  .deck-zone { grid-column: 1; width: 82mm; justify-self: start; background: #cdefff; }
-  .discard-zone { grid-column: 2 / 4; background: #ffc8dd; }
 
   .board-page footer {
     display: grid;

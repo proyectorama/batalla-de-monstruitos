@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import type { Card } from "../types/cards";
-import type { BoardPrintOptions, CardPrintOptions } from "../types/print";
+import { spanishSizeHeight, spanishSizeWidth, type BoardPrintOptions, type CardPrintOptions } from "../types/print";
 import { chunkCards } from "../utils/cards";
 import { CardFace } from "./CardFace";
 import { StatIcon } from "./StatIcon";
@@ -86,6 +86,14 @@ export function PrintArea({ cards, cardPrintOptions, boardPrintOptions }: PrintA
     "--printed-cards-width": `${printedCardsWidth}mm`,
     "--printed-cards-height": `${printedCardsHeight}mm`,
   } as CSSProperties;
+  const usesSpanishCardSize = cardPrintOptions.width === spanishSizeWidth && cardPrintOptions.height === spanishSizeHeight;
+  const boardCardWidth = usesSpanishCardSize || boardPrintOptions.size === "A3" ? cardPrintOptions.width : 53;
+  const boardCardHeight = usesSpanishCardSize ? cardPrintOptions.height : boardPrintOptions.size === "A3" ? 66 : 60;
+  const boardPageStyle = {
+    "--board-card-width": `${boardCardWidth}mm`,
+    "--board-card-height": `${boardCardHeight}mm`,
+    "--board-side-boost-width": `${usesSpanishCardSize ? 6.8 : 7.2}mm`,
+  } as CSSProperties;
   const pages = chunkCards(cards, cardsPerPage);
   return (
     <section className="print-area" aria-label="Hojas listas para imprimir" data-board-size={boardPrintOptions.size}>
@@ -104,7 +112,7 @@ export function PrintArea({ cards, cardPrintOptions, boardPrintOptions }: PrintA
       </div>
 
       <div className="print-boards">
-        <div className="board-page">
+        <div className="board-page" style={boardPageStyle}>
           <header>
             <span>Tablero</span>
             <div className="player-life-track" aria-label="Vida del jugador">
@@ -113,8 +121,6 @@ export function PrintArea({ cards, cardPrintOptions, boardPrintOptions }: PrintA
           </header>
           <div className="board-layout">
             {monsterSlots.map((slot) => <MonsterBoardStation slot={slot} key={`station-${slot}`} />)}
-            <div className="board-zone deck-zone">Mazo</div>
-            <div className="board-zone discard-zone">Descarte</div>
           </div>
         </div>
       </div>
