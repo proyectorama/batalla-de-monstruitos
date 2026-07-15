@@ -10,6 +10,8 @@ export const kindLabel = (kind: Card["kind"]): string => {
       return "Mejora defensa";
     case "boost_life":
       return "Mejora vida";
+    case "special":
+      return "Especial";
   }
 };
 

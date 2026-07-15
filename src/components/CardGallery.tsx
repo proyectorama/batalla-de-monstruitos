@@ -12,10 +12,11 @@ type CardGalleryProps = {
   onSelect: (card: Card) => void;
 };
 
-const filters: Filter[] = ["all", "monster", "boost_attack", "boost_defense", "boost_life"];
+const filters: Filter[] = ["all", "monster", "boost_attack", "boost_defense", "boost_life", "special"];
 
 export function CardGallery({ cards, selectedCardId, filter, onFilterChange, onSelect }: CardGalleryProps) {
   const filteredCards = filter === "all" ? cards : cards.filter((card) => card.kind === filter);
+  const availableFilters = filters.filter((option) => option === "all" || cards.some((card) => card.kind === option));
 
   return (
     <section className="panel gallery-panel" aria-labelledby="gallery-title">
@@ -25,7 +26,7 @@ export function CardGallery({ cards, selectedCardId, filter, onFilterChange, onS
           <h2 id="gallery-title">Cartas del juego</h2>
         </div>
         <div className="filters" aria-label="Filtros de cartas">
-          {filters.map((option) => (
+          {availableFilters.map((option) => (
             <button className={filter === option ? "active" : ""} type="button" key={option} onClick={() => onFilterChange(option)}>
               {option === "all" ? "Todas" : kindLabel(option)}
             </button>

@@ -1,4 +1,6 @@
 {
+  "name": "mat-ra",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

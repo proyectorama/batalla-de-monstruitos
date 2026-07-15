@@ -1,7 +1,7 @@
 import type { Card, StatKey } from "../types/cards";
 import { defaultCardSizeHeight, defaultCardSizeWidth, type CardPrintOptions } from "../types/print";
 import { statLabel } from "../utils/cards";
-import { BoostArtView, MonsterArt } from "./MonsterArt";
+import { BoostArtView, MonsterArt, SpecialArtView } from "./MonsterArt";
 import { StatIcon } from "./StatIcon";
 
 type CardFaceProps = {
@@ -37,13 +37,15 @@ const defaultCardPrintOptions: CardPrintOptions = {
 export function CardFace({ card, cardPrintOptions = defaultCardPrintOptions, selected = false, onSelect }: CardFaceProps) {
   const isInteractive = onSelect !== undefined;
   const cardBoostStat = boostStat(card);
+  const isBoost = card.kind === "boost_attack" || card.kind === "boost_defense" || card.kind === "boost_life";
   const showCustomArtSpace = card.kind === "monster" && cardPrintOptions.hideTitleAndArt;
   const hideStatValues = card.kind === "monster" && cardPrintOptions.showStatIconsOnly;
 
   return (
     <article className={`game-card ${card.kind} ${selected ? "is-selected" : ""}`}>
       <button className="card-button" type="button" disabled={!isInteractive} onClick={() => onSelect?.(card)} aria-label={`Ver ${card.name}`}>
-        {card.kind !== "monster" ? <div className="boost-band">{cardBoostStat ? <StatIcon stat={cardBoostStat} /> : null}<span className="boost-band-label">{boostBadge(card)}</span></div> : null}
+        {isBoost ? <div className="boost-band">{cardBoostStat ? <StatIcon stat={cardBoostStat} /> : null}<span className="boost-band-label">{boostBadge(card)}</span></div> : null}
+        {card.kind === "special" ? <div className="special-band">Poderes especiales</div> : null}
         <header className="card-header">
           <strong>{showCustomArtSpace ? "" : card.name.toUpperCase()}</strong>
         </header>
@@ -52,7 +54,8 @@ export function CardFace({ card, cardPrintOptions = defaultCardPrintOptions, sel
           <span className="card-print-id">{card.id}</span>
           {showCustomArtSpace ? <div className="custom-art-space" aria-label="Espacio para dibujo propio" /> : null}
           {!showCustomArtSpace && card.kind === "monster" ? <MonsterArt art={card.art} /> : null}
-          {card.kind !== "monster" ? <BoostArtView card={card} /> : null}
+          {isBoost ? <BoostArtView card={card} /> : null}
+          {card.kind === "special" ? <SpecialArtView card={card} /> : null}
         </div>
 
         {card.kind === "monster" ? (
@@ -64,12 +67,14 @@ export function CardFace({ card, cardPrintOptions = defaultCardPrintOptions, sel
               </div>
             ))}
           </dl>
-        ) : (
+        ) : isBoost ? (
           <div className="boost-rule">
             <span>{card.attackBonus > 0 ? <><StatIcon stat="attack" /> +{card.attackBonus}</> : null}</span>
             <span>{card.defenseBonus > 0 ? <><StatIcon stat="defense" /> +{card.defenseBonus}</> : null}</span>
             <span>{card.lifeBonus > 0 ? <><StatIcon stat="life" /> +{card.lifeBonus}</> : null}</span>
           </div>
+        ) : (
+          <div className="special-rule">{card.rule}</div>
         )}
 
       </button>

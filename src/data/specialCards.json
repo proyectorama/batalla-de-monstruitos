@@ -1,0 +1,13 @@
+[
+  { "id": "s001", "name": "Golpe certero", "kind": "special", "rule": "Hace 2 de dano verdadero a un monstruo enemigo.", "effect": { "type": "true_damage", "amount": 2 }, "art": "double_swords" },
+  { "id": "s002", "name": "Impacto doble", "kind": "special", "rule": "Hace 2 de dano verdadero a un monstruo enemigo.", "effect": { "type": "true_damage", "amount": 2 }, "art": "crossed_swords" },
+  { "id": "s003", "name": "Mano veloz", "kind": "special", "rule": "Roba 2 cartas.", "effect": { "type": "draw", "amount": 2 }, "art": "two_cards" },
+  { "id": "s004", "name": "Cambio de planes", "kind": "special", "rule": "Roba 3 cartas y luego descarta 1.", "effect": { "type": "draw_discard", "draw": 3, "discard": 1 }, "art": "three_cards_discard" },
+  { "id": "s005", "name": "Detector de monstruitos", "kind": "special", "rule": "Busca 1 monstruo en tu mazo, llevalo a tu mano y mezcla.", "effect": { "type": "search_monster" }, "art": "monster_search" },
+  { "id": "s006", "name": "Tres corazones", "kind": "special", "rule": "Recupera hasta 3 vidas de un monstruo propio o de tu jugador.", "effect": { "type": "heal", "amount": 3 }, "art": "three_hearts" },
+  { "id": "s007", "name": "Energia renovada", "kind": "special", "rule": "Recupera hasta 3 vidas de un monstruo propio o de tu jugador.", "effect": { "type": "heal", "amount": 3 }, "art": "three_hearts_spark" },
+  { "id": "s008", "name": "Cambio de mejora", "kind": "special", "rule": "Mueve 1 mejora propia de un monstruo a otro con espacio.", "effect": { "type": "move_boost" }, "art": "move_boost" },
+  { "id": "s009", "name": "Recuperacion", "kind": "special", "rule": "Devuelve 1 mejora de tu descarte a tu mano.", "effect": { "type": "recover_boost" }, "art": "recover_card" },
+  { "id": "s010", "name": "Red pegajosa", "kind": "special", "rule": "Un monstruo enemigo no ataca durante su proximo turno.", "effect": { "type": "skip_attack" }, "art": "web" },
+  { "id": "s011", "name": "Trampa de red", "kind": "special", "rule": "Un monstruo enemigo no ataca durante su proximo turno.", "effect": { "type": "skip_attack" }, "art": "web_trap" }
+]

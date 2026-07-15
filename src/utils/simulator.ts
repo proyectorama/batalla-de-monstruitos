@@ -1,4 +1,4 @@
-import type { BoostCard, Card, MonsterCard } from "../types/cards";
+import type { BoostCard, Card, MonsterCard, SpecialCard } from "../types/cards";
 
 type PlayerId = 1 | 2;
 
@@ -10,9 +10,11 @@ type BoardMonster = {
   damage: number;
   attack: number;
   defense: number;
+  defenseSpent: number;
   attackBoosts: BoostCard[];
   defenseBoosts: BoostCard[];
   lifeBoosts: BoostCard[];
+  skipNextAttack: boolean;
 };
 
 type PlayerState = {
@@ -50,6 +52,7 @@ export type SimulationMonster = {
   attackBoosts: number;
   defenseBoosts: number;
   lifeBoosts: number;
+  skipNextAttack: boolean;
 };
 
 export type SimulationBoard = {
@@ -95,7 +98,8 @@ export type SimulationStep = {
 type LogEvent = (message: string, attack?: SimulationAttack | null, discarded?: SimulationDiscard | null) => void;
 
 const isMonster = (card: Card): card is MonsterCard => card.kind === "monster";
-const isBoost = (card: Card): card is BoostCard => card.kind !== "monster";
+const isBoost = (card: Card): card is BoostCard => card.kind === "boost_attack" || card.kind === "boost_defense" || card.kind === "boost_life";
+const isSpecial = (card: Card): card is SpecialCard => card.kind === "special";
 
 const createMonster = (card: MonsterCard): BoardMonster => ({
   id: card.id,
@@ -105,15 +109,23 @@ const createMonster = (card: MonsterCard): BoardMonster => ({
   damage: 0,
   attack: card.attack,
   defense: card.defense,
+  defenseSpent: 0,
   attackBoosts: [],
   defenseBoosts: [],
   lifeBoosts: [],
+  skipNextAttack: false,
 });
 
 const totalLife = (monster: BoardMonster): number => monster.baseLife + monster.lifeBoosts.reduce((total, boost) => total + boost.lifeBonus, 0);
 const totalAttack = (monster: BoardMonster): number => monster.attack + monster.attackBoosts.reduce((total, boost) => total + boost.attackBonus, 0);
 const totalDefense = (monster: BoardMonster): number => monster.defense + monster.defenseBoosts.reduce((total, boost) => total + boost.defenseBonus, 0);
+const availableDefense = (monster: BoardMonster): number => Math.max(0, totalDefense(monster) - monster.defenseSpent);
 const remainingLife = (monster: BoardMonster): number => totalLife(monster) - monster.damage;
+
+export const resolveAttack = (attack: number, defense: number): { damage: number; spentDefense: number } => ({
+  damage: Math.max(0, attack - defense),
+  spentDefense: Math.min(attack, defense),
+});
 
 const boostPile = (monster: BoardMonster, boost: BoostCard): BoostCard[] => {
   if (boost.kind === "boost_attack") return monster.attackBoosts;
@@ -167,8 +179,10 @@ const preparePlayer = (id: PlayerId, cards: Card[], seed: number): PlayerState =
 
   draw(player, 5);
 
-  if (!player.hand.some(isMonster)) {
-    player.deck = shuffle([...player.deck, ...player.hand], seed + 7);
+  let redraw = 0;
+  while (!player.hand.some(isMonster)) {
+    redraw += 1;
+    player.deck = shuffle([...player.deck, ...player.hand], seed + redraw * 7);
     player.hand = [];
     draw(player, 5);
   }
@@ -219,6 +233,9 @@ const chooseAttacker = (player: PlayerState): BoardMonster | undefined =>
 const chooseTarget = (player: PlayerState): BoardMonster | undefined =>
   [...player.board].sort((left, right) => remainingLife(left) - remainingLife(right))[0];
 
+const chooseStrongestTarget = (player: PlayerState): BoardMonster | undefined =>
+  [...player.board].filter((monster) => !monster.skipNextAttack).sort((left, right) => totalAttack(right) - totalAttack(left))[0];
+
 const cleanupDefeated = (defender: PlayerState, target: BoardMonster, log: LogEvent): void => {
   if (remainingLife(target) > 0) {
     return;
@@ -234,6 +251,115 @@ const cleanupDefeated = (defender: PlayerState, target: BoardMonster, log: LogEv
 
 const monsterSlot = (player: PlayerState, monster: BoardMonster): number => player.board.findIndex((item) => item.id === monster.id) + 1;
 
+const movableBoost = (player: PlayerState): { source: BoardMonster; target: BoardMonster; boost: BoostCard } | null => {
+  for (const source of [...player.board].sort((left, right) => remainingLife(left) - remainingLife(right))) {
+    const sourceBoosts = [...source.attackBoosts, ...source.defenseBoosts, ...source.lifeBoosts];
+    for (const boost of sourceBoosts) {
+      const target = player.board.find((monster) => monster.id !== source.id && boostPile(monster, boost).length < 3);
+      if (target) return { source, target, boost };
+    }
+  }
+  return null;
+};
+
+const canPlaySpecial = (card: SpecialCard, active: PlayerState, rival: PlayerState): boolean => {
+  switch (card.effect.type) {
+    case "true_damage": return rival.board.length > 0;
+    case "draw":
+    case "draw_discard": return active.deck.length > 0;
+    case "search_monster": return active.deck.some(isMonster);
+    case "heal": return active.life < 20 || active.board.some((monster) => monster.damage > 0);
+    case "move_boost": return movableBoost(active) !== null;
+    case "recover_boost": return active.discard.some(isBoost);
+    case "skip_attack": return rival.board.some((monster) => !monster.skipNextAttack);
+  }
+};
+
+const playSpecial = (active: PlayerState, rival: PlayerState, turn: number, log: LogEvent): boolean => {
+  const specialIndex = active.hand.findIndex((card) => isSpecial(card) && canPlaySpecial(card, active, rival));
+  const card = active.hand[specialIndex];
+  if (!card || !isSpecial(card)) return false;
+
+  active.hand.splice(specialIndex, 1);
+  const effect = card.effect;
+
+  switch (effect.type) {
+    case "true_damage": {
+      const target = chooseTarget(rival);
+      if (target) {
+        target.damage += effect.amount;
+        log(`J${active.id} usa ${card.name.toUpperCase()}: ${target.name} recibe ${effect.amount} de dano verdadero.`);
+        cleanupDefeated(rival, target, log);
+      }
+      break;
+    }
+    case "draw": {
+      const drawn = draw(active, effect.amount);
+      log(`J${active.id} usa ${card.name.toUpperCase()} y roba ${drawn.length} cartas.`);
+      break;
+    }
+    case "draw_discard": {
+      const drawn = draw(active, effect.draw);
+      const discarded: Card[] = [];
+      for (let count = 0; count < effect.discard; count += 1) {
+        const discardIndex = active.hand.findIndex((item) => !isMonster(item));
+        const [discardedCard] = active.hand.splice(discardIndex >= 0 ? discardIndex : active.hand.length - 1, 1);
+        if (discardedCard) discarded.push(discardedCard);
+      }
+      active.discard.unshift(...discarded);
+      log(`J${active.id} usa ${card.name.toUpperCase()}, roba ${drawn.length} y descarta ${discarded.length}.`);
+      break;
+    }
+    case "search_monster": {
+      const monsterIndex = active.deck.findIndex(isMonster);
+      const [monster] = active.deck.splice(monsterIndex, 1);
+      if (monster) active.hand.push(monster);
+      active.deck = shuffle(active.deck, turn * 97 + active.id);
+      log(`J${active.id} usa ${card.name.toUpperCase()} y lleva ${monster?.name.toUpperCase() ?? "UN MONSTRUO"} a su mano.`);
+      break;
+    }
+    case "heal": {
+      const target = [...active.board].sort((left, right) => right.damage - left.damage)[0];
+      if (20 - active.life >= (target?.damage ?? 0)) {
+        const healed = Math.min(effect.amount, 20 - active.life);
+        active.life += healed;
+        log(`J${active.id} usa ${card.name.toUpperCase()} y recupera ${healed} vidas. Ahora tiene ${active.life}.`);
+      } else if (target) {
+        const healed = Math.min(effect.amount, target.damage);
+        target.damage -= healed;
+        log(`J${active.id} usa ${card.name.toUpperCase()}: ${target.name} recupera ${healed} vidas.`);
+      }
+      break;
+    }
+    case "move_boost": {
+      const movement = movableBoost(active);
+      if (movement) {
+        const sourcePile = boostPile(movement.source, movement.boost);
+        sourcePile.splice(sourcePile.indexOf(movement.boost), 1);
+        boostPile(movement.target, movement.boost).push(movement.boost);
+        log(`J${active.id} usa ${card.name.toUpperCase()} y mueve ${movement.boost.name.toUpperCase()} de ${movement.source.name} a ${movement.target.name}.`);
+      }
+      break;
+    }
+    case "recover_boost": {
+      const boostIndex = active.discard.findIndex(isBoost);
+      const [boost] = active.discard.splice(boostIndex, 1);
+      if (boost) active.hand.push(boost);
+      log(`J${active.id} usa ${card.name.toUpperCase()} y recupera ${boost?.name.toUpperCase() ?? "UNA MEJORA"}.`);
+      break;
+    }
+    case "skip_attack": {
+      const target = chooseStrongestTarget(rival);
+      if (target) target.skipNextAttack = true;
+      log(`J${active.id} usa ${card.name.toUpperCase()}: ${target?.name ?? "EL OBJETIVO"} queda atrapado y perdera su proximo ataque.`);
+      break;
+    }
+  }
+
+  active.discard.unshift(card);
+  return true;
+};
+
 const boardView = (player: PlayerState): SimulationBoard => ({
   player: player.id,
   life: player.life,
@@ -244,7 +370,7 @@ const boardView = (player: PlayerState): SimulationBoard => ({
     life: Math.max(0, remainingLife(monster)),
     totalLife: totalLife(monster),
     attack: totalAttack(monster),
-    defense: totalDefense(monster),
+    defense: availableDefense(monster),
     damage: monster.damage,
     attackCards: [...monster.attackBoosts],
     defenseCards: [...monster.defenseBoosts],
@@ -252,6 +378,7 @@ const boardView = (player: PlayerState): SimulationBoard => ({
     attackBoosts: monster.attackBoosts.length,
     defenseBoosts: monster.defenseBoosts.length,
     lifeBoosts: monster.lifeBoosts.length,
+    skipNextAttack: monster.skipNextAttack,
   })),
 });
 
@@ -272,11 +399,17 @@ const takeTurn = (active: PlayerState, rival: PlayerState, turn: number, log: Lo
   for (let count = 0; count < 3; count += 1) {
     if (!playBoost(active, log)) break;
   }
+  playSpecial(active, rival, turn, log);
 
   const attackers = [...active.board];
 
   for (const attacker of attackers) {
     if (!active.board.some((monster) => monster.id === attacker.id)) continue;
+    if (attacker.skipNextAttack) {
+      attacker.skipNextAttack = false;
+      log(`${attacker.name} esta atrapado en una red y no puede atacar este turno.`);
+      continue;
+    }
     const target = chooseTarget(rival);
 
     if (!target) {
@@ -289,15 +422,21 @@ const takeTurn = (active: PlayerState, rival: PlayerState, turn: number, log: Lo
       continue;
     }
 
-    const damage = Math.max(1, totalAttack(attacker) - totalDefense(target));
+    const attackPower = totalAttack(attacker);
+    const defense = availableDefense(target);
+    const { damage, spentDefense } = resolveAttack(attackPower, defense);
     const attackerSlot = monsterSlot(active, attacker);
     const targetSlot = monsterSlot(rival, target);
+    target.defenseSpent += spentDefense;
     target.damage += damage;
     const attack = { turn, player: active.id, attackerSlot, targetSlot, damage };
     attacks.push(attack);
-    log(`${attacker.name} ataca a ${target.name}: ${totalAttack(attacker)} espadas - ${totalDefense(target)} escudos = ${damage} dano. Le quedan ${Math.max(0, remainingLife(target))} vidas.`, attack);
+    log(`${attacker.name} ataca a ${target.name}: ${attackPower} espadas - ${defense} escudos = ${damage} dano. Le quedan ${Math.max(0, remainingLife(target))} vidas.`, attack);
     cleanupDefeated(rival, target, log);
   }
+
+  rival.board.forEach((monster) => { monster.defenseSpent = 0; });
+  log(`Los escudos de J${rival.id} se reponen al terminar el turno.`);
 };
 
 export const simulateGame = (cards: Card[], seed: number): SimulationResult => {
@@ -324,7 +463,7 @@ export const simulateGame = (cards: Card[], seed: number): SimulationResult => {
     });
   };
 
-  record("Cada jugador mezcla su copia del mazo de 45 cartas y roba 5.");
+  record(`Cada jugador mezcla su copia del mazo de ${cards.length} cartas y roba 5.`);
 
   while (playerOne.board.length < 3) {
     const before = playerOne.board.length;

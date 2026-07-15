@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import packageJson from "../package.json";
 import { CardDetail } from "./components/CardDetail";
 import { CardGallery, type Filter } from "./components/CardGallery";
 import { GameSimulator } from "./components/GameSimulator";
+import { ExpansionSelector } from "./components/ExpansionSelector";
 import { PrintArea } from "./components/PrintArea";
 import { RulesPanel } from "./components/RulesPanel";
-import { cardCounts, cards } from "./data/deck";
+import { baseCards, countsForCards, deckForMode, specialCards, type DeckMode } from "./data/deck";
 import type { Card } from "./types/cards";
 import {
   defaultCardSizeHeight,
@@ -19,7 +21,7 @@ import {
 type AppTab = "cards" | "simulator";
 
 const getInitialCard = (): Card => {
-  const firstCard = cards[0];
+  const firstCard = baseCards[0];
 
   if (!firstCard) {
     throw new Error("El mazo no tiene cartas cargadas");
@@ -33,6 +35,8 @@ export function App() {
   const [modalCard, setModalCard] = useState<Card | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
   const [activeTab, setActiveTab] = useState<AppTab>("cards");
+  const [deckMode, setDeckMode] = useState<DeckMode>("base");
+  const [printCards, setPrintCards] = useState<Card[]>(baseCards);
   const [hideCardTitleAndArt, setHideCardTitleAndArt] = useState(false);
   const [showStatIconsOnly, setShowStatIconsOnly] = useState(false);
   const [useSpanishCardSize, setUseSpanishCardSize] = useState(false);
@@ -49,10 +53,27 @@ export function App() {
     size: printBoardA3 ? "A3" : "A4",
   };
 
+  const activeCards = deckForMode(deckMode);
+  const cardCounts = countsForCards(activeCards);
+
+  useEffect(() => {
+    if (!activeCards.some((card) => card.id === selectedCard.id)) {
+      const firstCard = activeCards[0];
+      if (firstCard) setSelectedCard(firstCard);
+    }
+    if (deckMode === "base" && filter === "special") setFilter("all");
+    setModalCard(null);
+  }, [deckMode]);
+
   const handlePrint = (mode: PrintMode) => {
     document.body.dataset.printMode = mode;
     document.body.dataset.boardPrintSize = boardPrintOptions.size;
     window.setTimeout(() => window.print(), 0);
+  };
+
+  const handlePrintCards = (cardsToPrint: Card[]) => {
+    setPrintCards(cardsToPrint);
+    window.setTimeout(() => handlePrint("cards"), 0);
   };
 
   const handleSelectCard = (card: Card) => {
@@ -63,25 +84,25 @@ export function App() {
     }
   };
 
-  const cardsDownloadHref = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(cards, null, 2))}`;
+  const cardsDownloadHref = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(activeCards, null, 2))}`;
 
   return (
     <>
       <main className="app-shell">
         <section className="hero">
           <div className="hero-copy">
-            <p className="eyebrow">Mazo imprimible de 45 cartas</p>
+            <p className="eyebrow">Juego base + expansiones imprimibles</p>
             <h1>Batalla de monstruitos</h1>
             <p>
-              Un juego de cartas tipo Pokemon/Magic, simplificado para chicos. Cada jugador imprime su propia copia de este mazo de 45 cartas.
+              Jugá con el mazo clásico de 45 cartas o sumá nuevas aventuras. Poderes especiales reemplaza 6 monstruos por 11 cartas de acción y forma un mazo de 50.
             </p>
             <div className="hero-actions">
-              <button className="primary-action" type="button" onClick={() => handlePrint("cards")}>Imprimir mazo</button>
+              <button className="primary-action" type="button" onClick={() => handlePrintCards(activeCards)}>Imprimir mazo actual ({cardCounts.total})</button>
               <button type="button" onClick={() => handlePrint("backs")}>Imprimir dorsos</button>
               <button type="button" onClick={() => handlePrint("boards")}>Imprimir tablero</button>
               <button type="button" onClick={() => handlePrint("rules")}>Imprimir reglas</button>
               <button type="button" onClick={() => handlePrint("consumables")}>Imprimir consumibles</button>
-              <a href={cardsDownloadHref} download="batalla-de-monstruitos-mazo-45.json">Descargar JSON</a>
+              <a href={cardsDownloadHref} download={`batalla-de-monstruitos-${deckMode}-${cardCounts.total}.json`}>Descargar JSON</a>
               <details className="print-options">
                 <summary className="print-options-summary">
                   <span>
@@ -131,9 +152,11 @@ export function App() {
             <div><strong>{cardCounts.total}</strong><span>cartas por jugador</span></div>
             <div><strong>{cardCounts.monsters}</strong><span>monstruos</span></div>
             <div><strong>{cardCounts.boosts}</strong><span>mejoras</span></div>
-            <div><strong>160</strong><span>Consumibles</span></div>
+            <div><strong>{cardCounts.specials}</strong><span>especiales</span></div>
           </div>
         </section>
+
+        <ExpansionSelector mode={deckMode} onChange={setDeckMode} onPrintExpansion={() => handlePrintCards(specialCards)} />
 
         <nav className="app-tabs" aria-label="Secciones del juego">
           <button className={activeTab === "cards" ? "active" : ""} type="button" onClick={() => setActiveTab("cards")}>Cartas y reglas</button>
@@ -142,10 +165,10 @@ export function App() {
 
         {activeTab === "cards" ? (
           <>
-            <RulesPanel />
+            <RulesPanel mode={deckMode} />
 
             <section className="workspace">
-              <CardGallery cards={cards} selectedCardId={selectedCard.id} filter={filter} onFilterChange={setFilter} onSelect={handleSelectCard} />
+              <CardGallery cards={activeCards} selectedCardId={selectedCard.id} filter={filter} onFilterChange={setFilter} onSelect={handleSelectCard} />
               <CardDetail card={selectedCard} />
             </section>
 
@@ -159,11 +182,13 @@ export function App() {
             ) : null}
           </>
         ) : (
-          <GameSimulator />
+          <GameSimulator cards={activeCards} mode={deckMode} />
         )}
+
+        <footer className="app-footer">Versión {packageJson.version}</footer>
       </main>
 
-      <PrintArea cards={cards} cardPrintOptions={cardPrintOptions} boardPrintOptions={boardPrintOptions} />
+      <PrintArea cards={printCards} cardPrintOptions={cardPrintOptions} boardPrintOptions={boardPrintOptions} deckMode={deckMode} />
     </>
   );
 }

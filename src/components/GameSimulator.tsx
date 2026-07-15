@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { cards } from "../data/deck";
+import type { DeckMode } from "../data/deck";
 import type { BoostCard, Card, StatKey } from "../types/cards";
 import { simulateGame, type SimulationDiscard, type SimulationMonster, type SimulationPlayer } from "../utils/simulator";
 import { CardFace } from "./CardFace";
@@ -63,8 +63,9 @@ function LifeTrack({ value, max, className = "" }: { value: number; max: number;
 
 function MonsterStation({ monster, active, target, discardedCards }: { monster: SimulationMonster | undefined; active: boolean; target: boolean; discardedCards: Card[] }) {
   return (
-    <div className={`sim-station ${active ? "is-attacking" : ""} ${target ? "is-target" : ""} ${discardedCards.length > 0 ? "is-discarding" : ""}`}>
+    <div className={`sim-station ${active ? "is-attacking" : ""} ${target ? "is-target" : ""} ${monster?.skipNextAttack ? "is-trapped" : ""} ${discardedCards.length > 0 ? "is-discarding" : ""}`}>
       {discardedCards[0] ? <SimCard card={discardedCards[0]} className="sim-discard-ghost" size="ghost" /> : null}
+      {monster?.skipNextAttack ? <span className="sim-trapped-badge">Red</span> : null}
       <LifeTrack className="sim-monster-life-track" max={5} value={monster?.life ?? 0} />
       <TotalTrack stat="defense" value={monster?.defense ?? 0} />
       <TotalTrack stat="attack" value={monster?.attack ?? 0} />
@@ -134,7 +135,7 @@ function PlayerPanel({ player }: { player: SimulationPlayer }) {
   );
 }
 
-export function GameSimulator() {
+export function GameSimulator({ cards, mode }: { cards: Card[]; mode: DeckMode }) {
   const [seed, setSeed] = useState(11);
   const [step, setStep] = useState(0);
   const [started, setStarted] = useState(false);
@@ -150,6 +151,11 @@ export function GameSimulator() {
   const playerOneTarget = currentAttack?.player === 2 ? currentAttack.targetSlot ?? undefined : undefined;
   const playerTwoTarget = currentAttack?.player === 1 ? currentAttack.targetSlot ?? undefined : undefined;
   const isFinished = result ? step >= result.steps.length - 1 : false;
+
+  useEffect(() => {
+    setStarted(false);
+    setStep(0);
+  }, [mode]);
 
   useEffect(() => {
     if (!result || paused || isFinished) return;
@@ -175,7 +181,7 @@ export function GameSimulator() {
     <section className="panel simulator" aria-labelledby="simulator-title">
       <div className="panel-heading">
         <div>
-          <p className="eyebrow">Prueba de partida</p>
+          <p className="eyebrow">Prueba de partida · {mode === "base" ? "Juego base" : "Poderes especiales"}</p>
           <h2 id="simulator-title">Simulador</h2>
         </div>
         <button className="primary-action" type="button" onClick={startSimulation}>{started ? "Simular otra" : "Simular partida aleatoria"}</button>
