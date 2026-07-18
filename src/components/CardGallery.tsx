@@ -1,6 +1,7 @@
 import type { Card, CardKind } from "../types/cards";
 import { kindLabel } from "../utils/cards";
 import { CardFace } from "./CardFace";
+import type { CardPrintOptions } from "../types/print";
 
 type Filter = CardKind | "all";
 
@@ -10,11 +11,12 @@ type CardGalleryProps = {
   filter: Filter;
   onFilterChange: (filter: Filter) => void;
   onSelect: (card: Card) => void;
+  cardPrintOptions: CardPrintOptions;
 };
 
 const filters: Filter[] = ["all", "monster", "boost_attack", "boost_defense", "boost_life", "special"];
 
-export function CardGallery({ cards, selectedCardId, filter, onFilterChange, onSelect }: CardGalleryProps) {
+export function CardGallery({ cards, selectedCardId, filter, onFilterChange, onSelect, cardPrintOptions }: CardGalleryProps) {
   const filteredCards = filter === "all" ? cards : cards.filter((card) => card.kind === filter);
   const availableFilters = filters.filter((option) => option === "all" || cards.some((card) => card.kind === option));
 
@@ -35,7 +37,7 @@ export function CardGallery({ cards, selectedCardId, filter, onFilterChange, onS
       </div>
       <div className="card-grid">
         {filteredCards.map((card) => (
-          <CardFace card={card} key={card.id} selected={card.id === selectedCardId} onSelect={onSelect} />
+          <CardFace card={card} cardPrintOptions={cardPrintOptions} key={card.id} selected={card.id === selectedCardId} onSelect={onSelect} />
         ))}
       </div>
     </section>

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import type { DeckMode } from "../data/deck";
 import type { BoostCard, Card, StatKey } from "../types/cards";
 import { simulateGame, type SimulationDiscard, type SimulationMonster, type SimulationPlayer } from "../utils/simulator";
 import { CardFace } from "./CardFace";
@@ -135,7 +134,7 @@ function PlayerPanel({ player }: { player: SimulationPlayer }) {
   );
 }
 
-export function GameSimulator({ cards, mode }: { cards: Card[]; mode: DeckMode }) {
+export function GameSimulator({ cards }: { cards: Card[] }) {
   const [seed, setSeed] = useState(11);
   const [step, setStep] = useState(0);
   const [started, setStarted] = useState(false);
@@ -155,7 +154,7 @@ export function GameSimulator({ cards, mode }: { cards: Card[]; mode: DeckMode }
   useEffect(() => {
     setStarted(false);
     setStep(0);
-  }, [mode]);
+  }, [cards]);
 
   useEffect(() => {
     if (!result || paused || isFinished) return;
@@ -181,7 +180,7 @@ export function GameSimulator({ cards, mode }: { cards: Card[]; mode: DeckMode }
     <section className="panel simulator" aria-labelledby="simulator-title">
       <div className="panel-heading">
         <div>
-          <p className="eyebrow">Prueba de partida · {mode === "base" ? "Juego base" : "Poderes especiales"}</p>
+          <p className="eyebrow">Prueba de partida · Modo clásico</p>
           <h2 id="simulator-title">Simulador</h2>
         </div>
         <button className="primary-action" type="button" onClick={startSimulation}>{started ? "Simular otra" : "Simular partida aleatoria"}</button>

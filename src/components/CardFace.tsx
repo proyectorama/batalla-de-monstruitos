@@ -14,10 +14,10 @@ type CardFaceProps = {
 
 const stats: StatKey[] = ["defense", "life", "attack"];
 
-const boostBadge = (card: Card): string => {
-  if (card.kind === "boost_attack") return `+${card.attackBonus} ${card.name.toUpperCase()}`;
-  if (card.kind === "boost_defense") return `+${card.defenseBonus} ${card.name.toUpperCase()}`;
-  if (card.kind === "boost_life") return `+${card.lifeBonus} ${card.name.toUpperCase()}`;
+const boostBadge = (card: Card, hideValue: boolean): string => {
+  if (card.kind === "boost_attack") return `+${hideValue ? "" : card.attackBonus} ${card.name.toUpperCase()}`;
+  if (card.kind === "boost_defense") return `+${hideValue ? "" : card.defenseBonus} ${card.name.toUpperCase()}`;
+  if (card.kind === "boost_life") return `+${hideValue ? "" : card.lifeBonus} ${card.name.toUpperCase()}`;
   return "";
 };
 
@@ -31,6 +31,7 @@ const boostStat = (card: Card): StatKey | null => {
 const defaultCardPrintOptions: CardPrintOptions = {
   hideTitleAndArt: false,
   showStatIconsOnly: false,
+  hideBoostValues: false,
   width: defaultCardSizeWidth,
   height: defaultCardSizeHeight,
 };
@@ -45,7 +46,7 @@ export function CardFace({ card, cardPrintOptions = defaultCardPrintOptions, sel
   return (
     <article className={`game-card ${card.kind} ${selected ? "is-selected" : ""}`}>
       <button className="card-button" type="button" disabled={!isInteractive} onClick={() => onSelect?.(card)} aria-label={`Ver ${card.name}`}>
-        {isBoost ? <div className="boost-band">{cardBoostStat ? <StatIcon stat={cardBoostStat} /> : null}<span className="boost-band-label">{boostBadge(card)}</span></div> : null}
+        {isBoost ? <div className="boost-band">{cardBoostStat ? <StatIcon stat={cardBoostStat} /> : null}<span className="boost-band-label">{boostBadge(card, cardPrintOptions.hideBoostValues)}</span></div> : null}
         {card.kind === "special" ? <div className="special-band">Poderes especiales</div> : null}
         <header className="card-header">
           <strong>{showCustomArtSpace ? "" : card.name.toUpperCase()}</strong>
@@ -70,9 +71,9 @@ export function CardFace({ card, cardPrintOptions = defaultCardPrintOptions, sel
           </dl>
         ) : isBoost ? (
           <div className="boost-rule">
-            <span>{card.defenseBonus > 0 ? <><StatIcon stat="defense" /> +{card.defenseBonus}</> : null}</span>
-            <span>{card.lifeBonus > 0 ? <><StatIcon stat="life" /> +{card.lifeBonus}</> : null}</span>
-            <span>{card.attackBonus > 0 ? <><StatIcon stat="attack" /> +{card.attackBonus}</> : null}</span>
+            <span className={card.defenseBonus > 0 && cardPrintOptions.hideBoostValues ? "boost-write-in" : ""}>{card.defenseBonus > 0 ? <><StatIcon stat="defense" /> +{cardPrintOptions.hideBoostValues ? <i aria-label="Espacio para valor de defensa" /> : card.defenseBonus}</> : null}</span>
+            <span className={card.lifeBonus > 0 && cardPrintOptions.hideBoostValues ? "boost-write-in" : ""}>{card.lifeBonus > 0 ? <><StatIcon stat="life" /> +{cardPrintOptions.hideBoostValues ? <i aria-label="Espacio para valor de vida" /> : card.lifeBonus}</> : null}</span>
+            <span className={card.attackBonus > 0 && cardPrintOptions.hideBoostValues ? "boost-write-in" : ""}>{card.attackBonus > 0 ? <><StatIcon stat="attack" /> +{cardPrintOptions.hideBoostValues ? <i aria-label="Espacio para valor de ataque" /> : card.attackBonus}</> : null}</span>
           </div>
         ) : (
           <div className="special-rule">{card.rule}</div>

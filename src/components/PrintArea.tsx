@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
 import type { Card } from "../types/cards";
-import { expansionById, type DeckMode } from "../data/deck";
 import { spanishSizeHeight, spanishSizeWidth, type BoardPrintOptions, type CardPrintOptions } from "../types/print";
 import { chunkCards } from "../utils/cards";
 import { CardFace } from "./CardFace";
@@ -10,7 +9,6 @@ type PrintAreaProps = {
   cards: Card[];
   cardPrintOptions: CardPrintOptions;
   boardPrintOptions: BoardPrintOptions;
-  deckMode: DeckMode;
 };
 
 const monsterSlots = [1, 2, 3];
@@ -72,7 +70,7 @@ function ConsumablesPage() {
   );
 }
 
-export function PrintArea({ cards, cardPrintOptions, boardPrintOptions, deckMode }: PrintAreaProps) {
+export function PrintArea({ cards, cardPrintOptions, boardPrintOptions }: PrintAreaProps) {
   const pageWidth = 297;
   const pageHeight = 210;
   const columns = Math.floor(pageWidth / cardPrintOptions.width);
@@ -97,7 +95,6 @@ export function PrintArea({ cards, cardPrintOptions, boardPrintOptions, deckMode
     "--board-side-boost-width": `${usesSpanishCardSize ? 6.8 : 7.2}mm`,
   } as CSSProperties;
   const pages = chunkCards(cards, cardsPerPage);
-  const expansion = deckMode === "base" ? null : expansionById[deckMode];
   return (
     <section className="print-area" aria-label="Hojas listas para imprimir" data-board-size={boardPrintOptions.size} data-spanish-card-size={usesSpanishCardSize}>
       <div className="print-cards">
@@ -129,8 +126,8 @@ export function PrintArea({ cards, cardPrintOptions, boardPrintOptions, deckMode
       </div>
 
       <div className="print-rules">
-        <div className={`rules-page ${expansion ? "expanded-rules-page" : ""}`}>
-          <h1>Reglas de Batalla de monstruitos {expansion ? `· ${expansion.name}` : ""}</h1>
+        <div className="rules-page expanded-rules-page">
+          <h1>Reglas de Batalla de monstruitos</h1>
           <div className="rules-columns">
             <div>
               <section>
@@ -140,8 +137,7 @@ export function PrintArea({ cards, cardPrintOptions, boardPrintOptions, deckMode
               <section>
                 <h2>Preparacion</h2>
                 <ol>
-                  <li>Cada jugador imprime y usa su propia copia del mazo de {expansion ? 50 : 45} cartas.</li>
-                  {expansion ? <li>Retira Bubu, Fafa, Gugu, Nono, Luli y Boni del mazo base y agrega las 11 cartas especiales.</li> : null}
+                  <li>Cada jugador imprime y usa su propia copia del mazo de 50 cartas.</li>
                   <li>Cada jugador mezcla su mazo y roba 5 cartas.</li>
                   <li>Si no robaste monstruos, muestra la mano, mezcla y roba 5 otra vez.</li>
                   <li>Pone hasta 3 monstruos en juego. Si no tienes 3, puedes bajar mas en tus turnos.</li>
@@ -153,7 +149,7 @@ export function PrintArea({ cards, cardPrintOptions, boardPrintOptions, deckMode
                   <li>Roba 1 carta.</li>
                   <li>Puedes bajar 1 monstruo si tienes menos de 3 en juego.</li>
                   <li>Puedes jugar mejoras sobre tus monstruos.</li>
-                  {expansion ? <li>Puedes jugar 1 especial, resolver su efecto y mandarla al descarte.</li> : null}
+                  <li>Puedes jugar 1 especial, resolver su efecto y mandarla al descarte.</li>
                   <li>Atacan tus 3 monstruos, uno por uno.</li>
                   <li>Cada atacante elige cualquiera de los monstruos rivales como objetivo.</li>
                   <li>Los escudos gastados se reponen al terminar el turno.</li>
@@ -182,13 +178,11 @@ export function PrintArea({ cards, cardPrintOptions, boardPrintOptions, deckMode
                   <p>Si un jugador se queda sin monstruos para defenderse, el dano baja directamente de sus 20 vidas.</p>
                 </div>
               </section>
-              {expansion ? (
-                <section>
-                  <h2>Cartas especiales</h2>
-                  <p>Se juega como maximo 1 por turno, despues de monstruos y mejoras y antes de atacar. Debe tener un objetivo valido.</p>
-                  <p><b>Dano verdadero:</b> quita vida sin restar defensa. <b>Curacion:</b> recupera vida sin superar el maximo. <b>Red:</b> el monstruo elegido pierde su proximo ataque y las redes no se acumulan.</p>
-                </section>
-              ) : null}
+              <section>
+                <h2>Cartas especiales</h2>
+                <p>Se juega como maximo 1 por turno, despues de monstruos y mejoras y antes de atacar. Debe tener un objetivo valido.</p>
+                <p><b>Dano verdadero:</b> quita vida sin restar defensa. <b>Curacion:</b> recupera vida sin superar el maximo. <b>Red:</b> el monstruo elegido pierde su proximo ataque y las redes no se acumulan.</p>
+              </section>
             </div>
           </div>
         </div>

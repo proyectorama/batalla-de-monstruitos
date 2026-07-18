@@ -1,9 +1,8 @@
-import { countsForCards, deckForMode, expansionById, type DeckMode } from "../data/deck";
+import { cards, countsForCards } from "../data/deck";
 import { StatIcon } from "./StatIcon";
 
-export function RulesPanel({ mode }: { mode: DeckMode }) {
-  const counts = countsForCards(deckForMode(mode));
-  const expansion = mode === "base" ? null : expansionById[mode];
+export function RulesPanel() {
+  const counts = countsForCards(cards);
 
   return (
     <section className="rules panel" aria-labelledby="rules-title">
@@ -20,19 +19,18 @@ export function RulesPanel({ mode }: { mode: DeckMode }) {
         </div>
         <div>
           <h3>3. Turno</h3>
-          <p>Roba 1, baja 1 monstruo, juega mejoras{expansion ? ", usa hasta 1 especial" : ""} y atacan tus 3 monstruos, uno por uno.</p>
+          <p>Roba 1, baja 1 monstruo, juega mejoras, usa hasta 1 especial y atacan tus 3 monstruos, uno por uno.</p>
         </div>
         <div>
           <h3>4. Mejoras</h3>
           <p>Cada monstruo puede tener 3 de vida, 3 de ataque y 3 de defensa. Usa espadas y escudos para sumar facil.</p>
         </div>
       </div>
-      {expansion ? (
-        <div className="expansion-rules">
+      <div className="expansion-rules">
           <div>
-            <p className="eyebrow">Expansión activa</p>
-            <h3>{expansion.name}</h3>
-            <p>Retirá Bubu Saltarín, Fafa Flor, Gugu Charquito, Nono Estrella, Luli Caracol y Boni Brinco. Agregá las 11 especiales: el mazo queda en 50 cartas.</p>
+            <p className="eyebrow">Mazo clásico</p>
+            <h3>50 cartas para jugar</h3>
+            <p>El mazo incluye 12 monstruos, 27 mejoras y 11 cartas especiales.</p>
           </div>
           <div>
             <h3>Cómo usar especiales</h3>
@@ -43,7 +41,6 @@ export function RulesPanel({ mode }: { mode: DeckMode }) {
             <p>El daño verdadero ignora defensa. Curar nunca supera la vida máxima. Una red evita el próximo ataque del monstruo elegido y no se acumula con otra red.</p>
           </div>
         </div>
-      ) : null}
       <div className="icon-rules" aria-label="Iconos de las cartas">
         <span><b className="icon life-icon">♥</b> Vida</span>
         <span><b className="icon attack-icon"><StatIcon stat="attack" /></b> Ataque</span>

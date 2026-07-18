@@ -1,12 +1,19 @@
-import { baseCards, expansions, type DeckMode } from "../data/deck";
+import type { CardSizeMode } from "../types/print";
 
 type ExpansionSelectorProps = {
-  mode: DeckMode;
-  onChange: (mode: DeckMode) => void;
-  onPrintExpansion: () => void;
+  mode: "classic" | "creative";
+  onChange: (mode: "classic" | "creative") => void;
+  hideTitleAndArt: boolean;
+  showStatIconsOnly: boolean;
+  hideBoostValues: boolean;
+  cardSizeMode: CardSizeMode;
+  onHideTitleAndArtChange: (value: boolean) => void;
+  onShowStatIconsOnlyChange: (value: boolean) => void;
+  onHideBoostValuesChange: (value: boolean) => void;
+  onCardSizeModeChange: (value: CardSizeMode) => void;
 };
 
-export function ExpansionSelector({ mode, onChange, onPrintExpansion }: ExpansionSelectorProps) {
+export function ExpansionSelector({ mode, onChange, hideTitleAndArt, showStatIconsOnly, hideBoostValues, cardSizeMode, onHideTitleAndArtChange, onShowStatIconsOnlyChange, onHideBoostValuesChange, onCardSizeModeChange }: ExpansionSelectorProps) {
   return (
     <details className="expansion-library">
       <summary className="expansion-library-heading">
@@ -15,41 +22,48 @@ export function ExpansionSelector({ mode, onChange, onPrintExpansion }: Expansio
           <h2 id="expansion-title">Elegí tu aventura</h2>
         </div>
         <div className="expansion-heading-copy">
-          <p>Podés elegir expansiones o cambios estéticos.</p>
+          <p>Elegí cartas completas o personalizalas para crear las tuyas.</p>
         </div>
         <span className="expansion-chevron" aria-hidden="true" />
       </summary>
 
       <div className="expansion-library-body">
-        <div className="expansion-shelf" role="radiogroup" aria-label="Modalidad de mazo">
-          <button className={`expansion-tile base-expansion ${mode === "base" ? "active" : ""}`} type="button" role="radio" aria-checked={mode === "base"} onClick={() => onChange("base")}>
+        <div className="expansion-shelf" role="radiogroup" aria-label="Modo de juego">
+          <button className={`expansion-tile base-expansion ${mode === "classic" ? "active" : ""}`} type="button" role="radio" aria-checked={mode === "classic"} onClick={() => onChange("classic")}>
           <span className="expansion-number">00</span>
-          <span className="expansion-tile-copy"><small>Juego original</small><strong>Mazo clásico</strong><span>La forma original de jugar: 18 monstruos y 27 mejoras.</span></span>
-          <b>{baseCards.length} cartas</b>
-        </button>
-
-        {expansions.map((expansion, index) => {
-          const active = mode === expansion.id;
-          return (
-            <article className={`expansion-tile expansion-pack ${active ? "active" : ""}`} key={expansion.id}>
-              <button className="expansion-select" type="button" role="radio" aria-checked={active} onClick={() => onChange(expansion.id)}>
-                <span className="expansion-number">{String(index + 1).padStart(2, "0")}</span>
-                <span className="expansion-tile-copy"><small>Expansión</small><strong>{expansion.name}</strong><span>Cambia 6 monstruos por 11 poderes de acción. Mazo final: 50 cartas.</span></span>
-                <b>50 cartas</b>
-              </button>
-              <button className="expansion-print" type="button" onClick={onPrintExpansion}>Imprimir solo las {expansion.cards.length} nuevas</button>
-            </article>
-          );
-        })}
-
-        <div className="expansion-coming" aria-label="Espacio para próximas expansiones">
-          <span>+</span><strong>Próxima expansión</strong><small>Este estante está listo para crecer.</small>
-        </div>
+          <span className="expansion-tile-copy"><small>Modo de juego</small><strong>Clásico</strong><span>El mazo completo: 12 monstruos, 27 mejoras y 11 poderes especiales.</span></span>
+          <b>50 cartas</b>
+          </button>
+          <button className={`expansion-tile expansion-pack ${mode === "creative" ? "active" : ""}`} type="button" role="radio" aria-checked={mode === "creative"} onClick={() => onChange("creative")}>
+            <span className="expansion-number">01</span>
+            <span className="expansion-tile-copy"><small>Personalizá</small><strong>Creativo</strong><span>Creá monstruos propios: activa dibujo, título y estadísticas para completar a mano.</span></span>
+            <b>50 cartas</b>
+          </button>
         </div>
 
-        {mode !== "base" ? (
-          <div className="expansion-recipe">
-            <strong>45 base</strong><span>−</span><strong>6 monstruos</strong><span>+</span><strong>11 especiales</strong><span>=</span><strong>50 cartas</strong>
+        {mode === "creative" ? (
+          <div className="creative-options">
+            <p className="eyebrow">Opciones creativas</p>
+            <label className="print-option-switch">
+              <input type="checkbox" checked={hideTitleAndArt} onChange={(event) => onHideTitleAndArtChange(event.target.checked)} />
+              <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
+              <span className="switch-copy"><strong>Sin título y dibujo</strong><small>Deja espacio para crear o pegar tu propio dibujo.</small></span>
+            </label>
+            <label className="print-option-switch">
+              <input type="checkbox" checked={showStatIconsOnly} onChange={(event) => onShowStatIconsOnlyChange(event.target.checked)} />
+              <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
+              <span className="switch-copy"><strong>Cartas sin números de vida, defensa y ataque</strong><small>Conserva los iconos para escribir valores propios.</small></span>
+            </label>
+            <label className="print-option-switch">
+              <input type="checkbox" checked={hideBoostValues} onChange={(event) => onHideBoostValuesChange(event.target.checked)} />
+              <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
+              <span className="switch-copy"><strong>Mejoras sin números</strong><small>Conserva el signo + para completar el valor a mano.</small></span>
+            </label>
+            <fieldset className="card-size-options">
+              <legend>Formato de impresión</legend>
+              <label><input type="radio" name="card-size" checked={cardSizeMode === "spanish"} onChange={() => onCardSizeModeChange("spanish")} /> Cartas españolas (57 × 92 mm)</label>
+              <label><input type="radio" name="card-size" checked={cardSizeMode === "max-per-sheet"} onChange={() => onCardSizeModeChange("max-per-sheet")} /> Máxima cantidad por hoja (57 × 66 mm)</label>
+            </fieldset>
           </div>
         ) : null}
       </div>

@@ -6,7 +6,7 @@ import { GameSimulator } from "./components/GameSimulator";
 import { ExpansionSelector } from "./components/ExpansionSelector";
 import { PrintArea } from "./components/PrintArea";
 import { RulesPanel } from "./components/RulesPanel";
-import { baseCards, countsForCards, deckForMode, specialCards, type DeckMode } from "./data/deck";
+import { cards, countsForCards } from "./data/deck";
 import type { Card } from "./types/cards";
 import {
   defaultCardSizeHeight,
@@ -15,13 +15,15 @@ import {
   spanishSizeWidth,
   type BoardPrintOptions,
   type CardPrintOptions,
+  type CardSizeMode,
   type PrintMode,
 } from "./types/print";
 
 type AppTab = "cards" | "simulator";
+type AdventureMode = "classic" | "creative";
 
 const getInitialCard = (): Card => {
-  const firstCard = baseCards[0];
+  const firstCard = cards[0];
 
   if (!firstCard) {
     throw new Error("El mazo no tiene cartas cargadas");
@@ -35,35 +37,39 @@ export function App() {
   const [modalCard, setModalCard] = useState<Card | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
   const [activeTab, setActiveTab] = useState<AppTab>("cards");
-  const [deckMode, setDeckMode] = useState<DeckMode>("base");
-  const [printCards, setPrintCards] = useState<Card[]>(baseCards);
+  const [adventureMode, setAdventureMode] = useState<AdventureMode>("classic");
+  const [printCards, setPrintCards] = useState<Card[]>(cards);
   const [hideCardTitleAndArt, setHideCardTitleAndArt] = useState(false);
   const [showStatIconsOnly, setShowStatIconsOnly] = useState(false);
-  const [useSpanishCardSize, setUseSpanishCardSize] = useState(false);
+  const [hideBoostValues, setHideBoostValues] = useState(false);
+  const [cardSizeMode, setCardSizeMode] = useState<CardSizeMode>("spanish");
   const [printBoardA3, setPrintBoardA3] = useState(false);
 
   const cardPrintOptions: CardPrintOptions = {
     hideTitleAndArt: hideCardTitleAndArt,
     showStatIconsOnly,
-    width: useSpanishCardSize ? spanishSizeWidth : defaultCardSizeWidth,
-    height: useSpanishCardSize ? spanishSizeHeight : defaultCardSizeHeight,
+    hideBoostValues,
+    width: cardSizeMode === "spanish" ? spanishSizeWidth : defaultCardSizeWidth,
+    height: cardSizeMode === "spanish" ? spanishSizeHeight : defaultCardSizeHeight,
   };
 
   const boardPrintOptions: BoardPrintOptions = {
     size: printBoardA3 ? "A3" : "A4",
   };
 
-  const activeCards = deckForMode(deckMode);
-  const cardCounts = countsForCards(activeCards);
+  const cardCounts = countsForCards(cards);
 
   useEffect(() => {
-    if (!activeCards.some((card) => card.id === selectedCard.id)) {
-      const firstCard = activeCards[0];
-      if (firstCard) setSelectedCard(firstCard);
-    }
-    if (deckMode === "base" && filter === "special") setFilter("all");
     setModalCard(null);
-  }, [deckMode]);
+  }, [adventureMode]);
+
+  const handleAdventureModeChange = (mode: AdventureMode) => {
+    setAdventureMode(mode);
+    setHideCardTitleAndArt(mode === "creative");
+    setShowStatIconsOnly(mode === "creative");
+    setHideBoostValues(mode === "creative");
+    setCardSizeMode("spanish");
+  };
 
   const handlePrint = (mode: PrintMode) => {
     document.body.dataset.printMode = mode;
@@ -84,30 +90,30 @@ export function App() {
     }
   };
 
-  const cardsDownloadHref = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(activeCards, null, 2))}`;
+  const cardsDownloadHref = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(cards, null, 2))}`;
 
   return (
     <>
       <main className="app-shell">
         <section className="hero">
           <div className="hero-copy">
-            <p className="eyebrow">Juego base + expansiones imprimibles</p>
+            <p className="eyebrow">Juego de cartas imprimible</p>
             <h1>Batalla de monstruitos</h1>
             <p>
-              Jugá con el mazo clásico de 45 cartas o sumá nuevas aventuras. Poderes especiales reemplaza 6 monstruos por 11 cartas de acción y forma un mazo de 50.
+              Jugá con el mazo clásico de 50 cartas: 12 monstruos, 27 mejoras y 11 poderes especiales. También podés crear tus propios monstruos en modo creativo.
             </p>
             <div className="hero-actions">
-              <button className="primary-action" type="button" onClick={() => handlePrintCards(activeCards)}>Imprimir mazo actual ({cardCounts.total})</button>
+              <button className="primary-action" type="button" onClick={() => handlePrintCards(cards)}>Imprimir mazo actual ({cardCounts.total})</button>
               <button type="button" onClick={() => handlePrint("backs")}>Imprimir dorsos</button>
               <button type="button" onClick={() => handlePrint("boards")}>Imprimir tablero</button>
               <button type="button" onClick={() => handlePrint("rules")}>Imprimir reglas</button>
               <button type="button" onClick={() => handlePrint("consumables")}>Imprimir consumibles</button>
-              <a href={cardsDownloadHref} download={`batalla-de-monstruitos-${deckMode}-${cardCounts.total}.json`}>Descargar JSON</a>
+              <a href={cardsDownloadHref} download={`batalla-de-monstruitos-clasico-${cardCounts.total}.json`}>Descargar JSON</a>
               <details className="print-options">
                 <summary className="print-options-summary">
                   <span>
                     <strong>Personalizar impresión</strong>
-                    <small>Elegí qué mostrar en las cartas y el tamaño de impresión antes de imprimir.</small>
+                    <small>Elegí qué mostrar en las cartas y el formato antes de imprimir.</small>
                   </span>
                   <span className="print-options-chevron" aria-hidden="true" />
                 </summary>
@@ -117,25 +123,30 @@ export function App() {
                     <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
                     <span className="switch-copy">
                       <strong>Sin título y dibujo</strong>
-                      <small>Deja las cartas listas para completar o pegar dibujo propio</small>
+                      <small>Deja las cartas listas para completar o pegar dibujo propio.</small>
                     </span>
                   </label>
                   <label className="print-option-switch">
                     <input type="checkbox" checked={showStatIconsOnly} onChange={(event) => setShowStatIconsOnly(event.target.checked)} />
                     <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
                     <span className="switch-copy">
-                      <strong>Sin vida, defensa y ataque</strong>
-                      <small>Deja solo los iconos y vacía los valores para escribir los números propios a mano</small>
+                      <strong>Cartas sin números de vida, defensa y ataque</strong>
+                      <small>Deja los iconos y vacía los valores para escribir números propios a mano.</small>
                     </span>
                   </label>
                   <label className="print-option-switch">
-                    <input type="checkbox" checked={useSpanishCardSize} onChange={(event) => setUseSpanishCardSize(event.target.checked)} />
+                    <input type="checkbox" checked={hideBoostValues} onChange={(event) => setHideBoostValues(event.target.checked)} />
                     <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
                     <span className="switch-copy">
-                      <strong>Cartas españolas (57 × 92 mm)</strong>
-                      <small>Imprime 10 por hoja A4 horizontal; usa escala 100 % y sin márgenes</small>
+                      <strong>Mejoras sin números</strong>
+                      <small>Conserva el signo + y deja el valor listo para completar a mano.</small>
                     </span>
                   </label>
+                  <fieldset className="card-size-options">
+                    <legend>Formato de cartas</legend>
+                    <label><input type="radio" name="card-size-print" checked={cardSizeMode === "spanish"} onChange={() => setCardSizeMode("spanish")} /> Cartas españolas (57 × 92 mm)</label>
+                    <label><input type="radio" name="card-size-print" checked={cardSizeMode === "max-per-sheet"} onChange={() => setCardSizeMode("max-per-sheet")} /> Máxima cantidad por hoja (57 × 66 mm)</label>
+                  </fieldset>
                   <label className="print-option-switch">
                     <input type="checkbox" checked={printBoardA3} onChange={(event) => setPrintBoardA3(event.target.checked)} />
                     <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
@@ -156,7 +167,18 @@ export function App() {
           </div>
         </section>
 
-        <ExpansionSelector mode={deckMode} onChange={setDeckMode} onPrintExpansion={() => handlePrintCards(specialCards)} />
+        <ExpansionSelector
+          mode={adventureMode}
+          onChange={handleAdventureModeChange}
+          hideTitleAndArt={hideCardTitleAndArt}
+          showStatIconsOnly={showStatIconsOnly}
+          hideBoostValues={hideBoostValues}
+          cardSizeMode={cardSizeMode}
+          onHideTitleAndArtChange={setHideCardTitleAndArt}
+          onShowStatIconsOnlyChange={setShowStatIconsOnly}
+          onHideBoostValuesChange={setHideBoostValues}
+          onCardSizeModeChange={setCardSizeMode}
+        />
 
         <nav className="app-tabs" aria-label="Secciones del juego">
           <button className={activeTab === "cards" ? "active" : ""} type="button" onClick={() => setActiveTab("cards")}>Cartas y reglas</button>
@@ -165,30 +187,30 @@ export function App() {
 
         {activeTab === "cards" ? (
           <>
-            <RulesPanel mode={deckMode} />
+            <RulesPanel />
 
             <section className="workspace">
-              <CardGallery cards={activeCards} selectedCardId={selectedCard.id} filter={filter} onFilterChange={setFilter} onSelect={handleSelectCard} />
-              <CardDetail card={selectedCard} />
+              <CardGallery cards={cards} selectedCardId={selectedCard.id} filter={filter} onFilterChange={setFilter} onSelect={handleSelectCard} cardPrintOptions={cardPrintOptions} />
+              <CardDetail card={selectedCard} cardPrintOptions={cardPrintOptions} />
             </section>
 
             {modalCard ? (
               <div className="mobile-card-modal" role="dialog" aria-modal="true" aria-labelledby="mobile-detail-title" onClick={() => setModalCard(null)}>
                 <div className="mobile-card-modal-content" onClick={(event) => event.stopPropagation()}>
                   <button className="modal-close" type="button" aria-label="Cerrar carta" onClick={() => setModalCard(null)}>Cerrar</button>
-                  <CardDetail card={modalCard} titleId="mobile-detail-title" />
+                  <CardDetail card={modalCard} titleId="mobile-detail-title" cardPrintOptions={cardPrintOptions} />
                 </div>
               </div>
             ) : null}
           </>
         ) : (
-          <GameSimulator cards={activeCards} mode={deckMode} />
+          <GameSimulator cards={cards} />
         )}
 
         <footer className="app-footer">Versión {packageJson.version}</footer>
       </main>
 
-      <PrintArea cards={printCards} cardPrintOptions={cardPrintOptions} boardPrintOptions={boardPrintOptions} deckMode={deckMode} />
+      <PrintArea cards={printCards} cardPrintOptions={cardPrintOptions} boardPrintOptions={boardPrintOptions} />
     </>
   );
 }

@@ -399,7 +399,7 @@ h3 { margin-bottom: 6px; font-size: 1rem; }
 
 .expansion-shelf {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   align-items: stretch;
 }
@@ -528,6 +528,45 @@ button.expansion-tile, .expansion-select {
 }
 
 .expansion-recipe span { color: #e63946; font-size: 1.35rem; font-weight: 1000; }
+
+.creative-options {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+  padding: 20px;
+  border: 3px dashed var(--ink);
+  border-radius: 22px;
+  background: rgba(255, 253, 246, 0.86);
+}
+
+.creative-options .eyebrow { margin: 0; }
+
+.card-size-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 14px;
+  border: 3px solid var(--ink);
+  border-radius: 16px;
+}
+
+.card-size-options legend { padding: 0 6px; font-size: 0.72rem; font-weight: 1000; text-transform: uppercase; letter-spacing: 0.08em; }
+
+.card-size-options label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  background: #fffdf6;
+  font-size: 0.78rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.card-size-options input { accent-color: #36b5c9; }
 
 .expansion-rules {
   display: grid;
@@ -841,6 +880,18 @@ button.expansion-tile, .expansion-select {
 .boost-rule .stat-icon { width: 28px; height: 28px; }
 
 .boost-rule span:empty { display: none; }
+
+.boost-rule .boost-write-in {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.boost-rule .boost-write-in i {
+  display: block;
+  min-width: 0;
+  flex: 1;
+  height: 1.15em;
+}
 
 .special-rule {
   display: grid;
@@ -1808,6 +1859,7 @@ button.expansion-tile, .expansion-select {
   .expansion-chevron { position: absolute; top: 24px; right: 24px; margin: 0; }
   .expansion-shelf { display: flex; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; }
   .expansion-tile, .expansion-coming { min-width: min(82vw, 300px); scroll-snap-align: start; }
+  .card-size-options { grid-template-columns: 1fr; }
   .filters { justify-content: flex-start; }
   .card-grid { grid-template-columns: repeat(auto-fill, minmax(164px, 1fr)); gap: 10px; }
   .card-button { height: 248px; padding: 7px; border-width: 3px; border-radius: 18px; }
