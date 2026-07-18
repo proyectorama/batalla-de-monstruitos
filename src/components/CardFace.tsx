@@ -1,4 +1,5 @@
 import type { Card, StatKey } from "../types/cards";
+import packageJson from "../../package.json";
 import { defaultCardSizeHeight, defaultCardSizeWidth, type CardPrintOptions } from "../types/print";
 import { statLabel } from "../utils/cards";
 import { BoostArtView, MonsterArt, SpecialArtView } from "./MonsterArt";
@@ -11,7 +12,7 @@ type CardFaceProps = {
   onSelect?: (card: Card) => void;
 };
 
-const stats: StatKey[] = ["life", "attack", "defense"];
+const stats: StatKey[] = ["defense", "life", "attack"];
 
 const boostBadge = (card: Card): string => {
   if (card.kind === "boost_attack") return `+${card.attackBonus} ${card.name.toUpperCase()}`;
@@ -69,14 +70,15 @@ export function CardFace({ card, cardPrintOptions = defaultCardPrintOptions, sel
           </dl>
         ) : isBoost ? (
           <div className="boost-rule">
-            <span>{card.attackBonus > 0 ? <><StatIcon stat="attack" /> +{card.attackBonus}</> : null}</span>
             <span>{card.defenseBonus > 0 ? <><StatIcon stat="defense" /> +{card.defenseBonus}</> : null}</span>
             <span>{card.lifeBonus > 0 ? <><StatIcon stat="life" /> +{card.lifeBonus}</> : null}</span>
+            <span>{card.attackBonus > 0 ? <><StatIcon stat="attack" /> +{card.attackBonus}</> : null}</span>
           </div>
         ) : (
           <div className="special-rule">{card.rule}</div>
         )}
 
+        <span className="card-version">v{packageJson.version}</span>
       </button>
     </article>
   );

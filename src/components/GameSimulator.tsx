@@ -66,22 +66,22 @@ function MonsterStation({ monster, active, target, discardedCards }: { monster: 
     <div className={`sim-station ${active ? "is-attacking" : ""} ${target ? "is-target" : ""} ${monster?.skipNextAttack ? "is-trapped" : ""} ${discardedCards.length > 0 ? "is-discarding" : ""}`}>
       {discardedCards[0] ? <SimCard card={discardedCards[0]} className="sim-discard-ghost" size="ghost" /> : null}
       {monster?.skipNextAttack ? <span className="sim-trapped-badge">Red</span> : null}
-      <LifeTrack className="sim-monster-life-track" max={5} value={monster?.life ?? 0} />
       <TotalTrack stat="defense" value={monster?.defense ?? 0} />
+      <LifeTrack className="sim-monster-life-track" max={5} value={monster?.life ?? 0} />
       <TotalTrack stat="attack" value={monster?.attack ?? 0} />
-      <div className="sim-attack-stack" aria-label="Mejoras de ataque">
-        <BoostSlots cards={monster?.attackCards ?? []} stat="attack" />
+      <div className="sim-life-stack" aria-label="Mejoras de vida">
+        <BoostSlots cards={monster?.lifeCards ?? []} stat="life" />
       </div>
       <div className="sim-station-core">
-        <div className="sim-life-stack" aria-label="Mejoras de vida">
-          <BoostSlots cards={monster?.lifeCards ?? []} stat="life" />
+        <div className="sim-defense-stack" aria-label="Mejoras de defensa">
+          <BoostSlots cards={monster?.defenseCards ?? []} stat="defense" />
         </div>
         <div className="sim-card-zone">
           {monster ? <SimCard card={monster.card} size="board" /> : <strong>Carta</strong>}
-          {monster ? <span className="sim-card-stats">♥ {monster.life}/{monster.totalLife} · A{monster.attack} · D{monster.defense}</span> : null}
+          {monster ? <span className="sim-card-stats"><StatIcon stat="defense" /> {monster.defense} · <StatIcon stat="life" /> {monster.life}/{monster.totalLife} · <StatIcon stat="attack" /> {monster.attack}</span> : null}
         </div>
-        <div className="sim-defense-stack" aria-label="Mejoras de defensa">
-          <BoostSlots cards={monster?.defenseCards ?? []} stat="defense" />
+        <div className="sim-attack-stack" aria-label="Mejoras de ataque">
+          <BoostSlots cards={monster?.attackCards ?? []} stat="attack" />
         </div>
       </div>
     </div>

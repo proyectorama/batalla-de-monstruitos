@@ -31,21 +31,21 @@ function TotalTrack({ stat, label, slot }: { stat: "attack" | "defense"; label: 
 function MonsterBoardStation({ slot }: { slot: number }) {
   return (
     <div className="monster-station">
+      <TotalTrack stat="defense" label="Suma de escudos" slot={slot} />
       <div className="heart-track" aria-label="Contador de vida">
         {Array.from({ length: 5 }, (_, index) => <span key={`heart-${slot}-${index}`}>♡</span>)}
       </div>
-      <TotalTrack stat="defense" label="Suma de escudos" slot={slot} />
       <TotalTrack stat="attack" label="Suma de espadas" slot={slot} />
-      <div className="attack-stack" aria-label="Mejoras de ataque">
-        {boostSlots.map((boostSlot) => <div className="boost-slot attack-slot" key={`attack-${slot}-${boostSlot}`}><StatIcon stat="attack" /> Ataque</div>)}
+      <div className="life-stack" aria-label="Mejoras de vida">
+        {boostSlots.map((boostSlot) => <div className="boost-slot life-slot" key={`life-${slot}-${boostSlot}`}><StatIcon stat="life" /> Vida</div>)}
       </div>
       <div className="station-core">
-        <div className="life-stack" aria-label="Mejoras de vida">
-          {boostSlots.map((boostSlot) => <div className="boost-slot life-slot" key={`life-${slot}-${boostSlot}`}><StatIcon stat="life" /><span>Vida</span></div>)}
-        </div>
-        <div className="monster-card-zone">Carta</div>
         <div className="defense-stack" aria-label="Mejoras de defensa">
           {boostSlots.map((boostSlot) => <div className="boost-slot defense-slot" key={`defense-${slot}-${boostSlot}`}><StatIcon stat="defense" /><span>Defensa</span></div>)}
+        </div>
+        <div className="monster-card-zone">Carta</div>
+        <div className="attack-stack" aria-label="Mejoras de ataque">
+          {boostSlots.map((boostSlot) => <div className="boost-slot attack-slot" key={`attack-${slot}-${boostSlot}`}><StatIcon stat="attack" /><span>Ataque</span></div>)}
         </div>
       </div>
     </div>
