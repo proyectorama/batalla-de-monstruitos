@@ -20,8 +20,8 @@ import {
   type PrintMode,
 } from "./types/print";
 
-type AppTab = "cards" | "simulator" | "creatures";
-type AdventureMode = "classic" | "creative";
+type AppTab = "cards" | "simulator";
+type AdventureMode = "classic" | "creative" | "special_creatures";
 
 const getInitialCard = (): Card => {
   const firstCard = cards[0];
@@ -58,7 +58,9 @@ export function App() {
     size: printBoardA3 ? "A3" : "A4",
   };
 
+  const activeCards = adventureMode === "special_creatures" ? specialCreatureCards : cards;
   const cardCounts = countsForCards(cards);
+  const activeCardCounts = countsForCards(activeCards);
 
   useEffect(() => {
     setModalCard(null);
@@ -70,6 +72,8 @@ export function App() {
     setShowStatIconsOnly(mode === "creative");
     setHideBoostValues(mode === "creative");
     setCardSizeMode("spanish");
+    const firstCard = (mode === "special_creatures" ? specialCreatureCards : cards)[0];
+    if (firstCard) setSelectedCard(firstCard);
   };
 
   const handlePrint = (mode: PrintMode) => {
@@ -91,7 +95,7 @@ export function App() {
     }
   };
 
-  const cardsDownloadHref = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(cards, null, 2))}`;
+  const cardsDownloadHref = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(activeCards, null, 2))}`;
 
   return (
     <>
@@ -104,13 +108,12 @@ export function App() {
               Jugá con el mazo clásico de 50 cartas: 12 monstruos, 27 mejoras y 11 poderes especiales. También podés crear tus propios monstruos en modo creativo.
             </p>
             <div className="hero-actions">
-              <button className="primary-action" type="button" onClick={() => handlePrintCards(cards)}>Imprimir mazo actual ({cardCounts.total})</button>
-              <button type="button" onClick={() => handlePrintCards(specialCreatureCards)}>Imprimir criaturas especiales ({specialCreatureCards.length})</button>
+              <button className="primary-action" type="button" onClick={() => handlePrintCards(activeCards)}>Imprimir aventura actual ({activeCardCounts.total})</button>
               <button type="button" onClick={() => handlePrint("backs")}>Imprimir dorsos</button>
               <button type="button" onClick={() => handlePrint("boards")}>Imprimir tablero</button>
               <button type="button" onClick={() => handlePrint("rules")}>Imprimir reglas</button>
               <button type="button" onClick={() => handlePrint("consumables")}>Imprimir consumibles</button>
-              <a href={cardsDownloadHref} download={`batalla-de-monstruitos-clasico-${cardCounts.total}.json`}>Descargar JSON</a>
+              <a href={cardsDownloadHref} download={`batalla-de-monstruitos-${adventureMode}-${activeCardCounts.total}.json`}>Descargar JSON</a>
               <details className="print-options">
                 <summary className="print-options-summary">
                   <span>
@@ -184,8 +187,7 @@ export function App() {
 
         <nav className="app-tabs" aria-label="Secciones del juego">
           <button className={activeTab === "cards" ? "active" : ""} type="button" onClick={() => setActiveTab("cards")}>Cartas y reglas</button>
-          <button className={activeTab === "simulator" ? "active" : ""} type="button" onClick={() => setActiveTab("simulator")}>Simulador clásico</button>
-          <button className={activeTab === "creatures" ? "active" : ""} type="button" onClick={() => setActiveTab("creatures")}>Criaturas especiales</button>
+          <button className={activeTab === "simulator" ? "active" : ""} type="button" onClick={() => setActiveTab("simulator")}>Simulador</button>
         </nav>
 
         {activeTab === "cards" ? (
@@ -193,7 +195,7 @@ export function App() {
             <RulesPanel />
 
             <section className="workspace">
-              <CardGallery cards={cards} selectedCardId={selectedCard.id} filter={filter} onFilterChange={setFilter} onSelect={handleSelectCard} cardPrintOptions={cardPrintOptions} />
+              <CardGallery cards={activeCards} selectedCardId={selectedCard.id} filter={filter} onFilterChange={setFilter} onSelect={handleSelectCard} cardPrintOptions={cardPrintOptions} />
               <CardDetail card={selectedCard} cardPrintOptions={cardPrintOptions} />
             </section>
 
@@ -206,10 +208,10 @@ export function App() {
               </div>
             ) : null}
           </>
-        ) : activeTab === "simulator" ? (
-          <GameSimulator cards={cards} />
-        ) : (
+        ) : adventureMode === "special_creatures" ? (
           <NpcBossSimulator />
+        ) : (
+          <GameSimulator cards={cards} />
         )}
 
         <footer className="app-footer">Versión {packageJson.version}</footer>

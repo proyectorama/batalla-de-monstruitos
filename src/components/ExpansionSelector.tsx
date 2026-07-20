@@ -1,8 +1,8 @@
 import type { CardSizeMode } from "../types/print";
 
 type ExpansionSelectorProps = {
-  mode: "classic" | "creative";
-  onChange: (mode: "classic" | "creative") => void;
+  mode: "classic" | "creative" | "special_creatures";
+  onChange: (mode: "classic" | "creative" | "special_creatures") => void;
   hideTitleAndArt: boolean;
   showStatIconsOnly: boolean;
   hideBoostValues: boolean;
@@ -38,6 +38,11 @@ export function ExpansionSelector({ mode, onChange, hideTitleAndArt, showStatIco
             <span className="expansion-number">01</span>
             <span className="expansion-tile-copy"><small>Personalizá</small><strong>Creativo</strong><span>Creá monstruos propios: activa dibujo, título y estadísticas para completar a mano.</span></span>
             <b>50 cartas</b>
+          </button>
+          <button className={`expansion-tile expansion-pack ${mode === "special_creatures" ? "active" : ""}`} type="button" role="radio" aria-checked={mode === "special_creatures"} onClick={() => onChange("special_creatures")}>
+            <span className="expansion-number">02</span>
+            <span className="expansion-tile-copy"><small>Cooperativo</small><strong>Criaturas especiales</strong><span>Dragón y Monstruo Gigante contra un mazo NPC público de 3 amenazas.</span></span>
+            <b>20 cartas</b>
           </button>
         </div>
 
