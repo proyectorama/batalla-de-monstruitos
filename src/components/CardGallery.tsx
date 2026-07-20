@@ -14,7 +14,7 @@ type CardGalleryProps = {
   cardPrintOptions: CardPrintOptions;
 };
 
-const filters: Filter[] = ["all", "monster", "boost_attack", "boost_defense", "boost_life", "special"];
+const filters: Filter[] = ["all", "monster", "boost_attack", "boost_defense", "boost_life", "special", "npc_boss", "npc_action", "npc_minion"];
 
 export function CardGallery({ cards, selectedCardId, filter, onFilterChange, onSelect, cardPrintOptions }: CardGalleryProps) {
   const filteredCards = filter === "all" ? cards : cards.filter((card) => card.kind === filter);

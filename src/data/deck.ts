@@ -1,6 +1,7 @@
 import rawCards from "./cards.json";
 import rawSpecialCards from "./specialCards.json";
 import type { Card, SpecialCard } from "../types/cards";
+export { specialCreatureCards, specialCreatures, getSpecialCreature } from "./specialCreatures";
 
 export const baseCards = rawCards as Card[];
 export const specialCards = rawSpecialCards as SpecialCard[];

@@ -5,6 +5,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "check:simulation": "tsx src/scripts/checkSimulation.ts",
+    "check:npc-simulation": "tsx src/scripts/checkNpcSimulation.ts",
     "preview": "vite preview"
   },
   "dependencies": {

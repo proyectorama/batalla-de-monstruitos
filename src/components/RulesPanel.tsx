@@ -33,6 +33,10 @@ export function RulesPanel() {
             <p>El mazo incluye 12 monstruos, 27 mejoras y 11 cartas especiales.</p>
           </div>
           <div>
+            <h3>Criaturas especiales</h3>
+            <p>Modo cooperativo contra un mazo NPC público. Elegí Dragón del Volcán o Monstruo Gigante Ancestral, revelá 3 cartas de amenaza y resolvé siempre la carta de la izquierda.</p>
+          </div>
+          <div>
             <h3>Cómo usar especiales</h3>
             <p>Jugá como máximo 1 por turno, después de monstruos y mejoras y antes de atacar. Resolvé el efecto y mandala al descarte. Si no hay un objetivo válido, no se puede jugar.</p>
           </div>

@@ -1,4 +1,4 @@
-export type CardKind = "monster" | "boost_attack" | "boost_defense" | "boost_life" | "special";
+export type CardKind = "monster" | "boost_attack" | "boost_defense" | "boost_life" | "special" | "npc_boss" | "npc_action" | "npc_minion";
 
 export type BodyShape = "blob" | "round" | "drop" | "cloud" | "star" | "jelly" | "shell" | "sprout";
 
@@ -71,6 +71,53 @@ export type SpecialCard = {
   art: SpecialArt;
 };
 
-export type Card = MonsterCard | BoostCard | SpecialCard;
+
+export type NpcCreatureId = "dragon-volcan" | "monstruo-gigante";
+
+export type NpcActionEffect =
+  | { type: "direct_damage"; amount: number; target: "all_players" | "lowest_life_player" }
+  | { type: "monster_damage"; amount: number; target: "highest_attack_monster" | "lowest_life_monster" }
+  | { type: "shield"; amount: number }
+  | { type: "fury"; amount: number }
+  | { type: "summon"; minionId: string }
+  | { type: "discard"; amount: number };
+
+export type NpcBossCard = {
+  id: string;
+  name: string;
+  kind: "npc_boss";
+  creatureId: NpcCreatureId;
+  difficulty: "normal" | "hard";
+  soloLife: number;
+  twoPlayerLife: number;
+  extraPlayerLife: number;
+  maxFury: number;
+  passiveRule: string;
+  rule: string;
+};
+
+export type NpcActionCard = {
+  id: string;
+  name: string;
+  kind: "npc_action";
+  creatureId: NpcCreatureId | "shared";
+  phase: "attack" | "defense" | "control" | "summon" | "reward";
+  furyBonusAt?: number;
+  rule: string;
+  priority: string;
+  effect: NpcActionEffect;
+};
+
+export type NpcMinionCard = {
+  id: string;
+  name: string;
+  kind: "npc_minion";
+  creatureId: NpcCreatureId;
+  life: number;
+  attack: number;
+  rule: string;
+};
+
+export type Card = MonsterCard | BoostCard | SpecialCard | NpcBossCard | NpcActionCard | NpcMinionCard;
 
 export type StatKey = "life" | "attack" | "defense";

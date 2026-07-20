@@ -12,6 +12,12 @@ export const kindLabel = (kind: Card["kind"]): string => {
       return "Mejora vida";
     case "special":
       return "Especial";
+    case "npc_boss":
+      return "Criatura especial";
+    case "npc_action":
+      return "Acción NPC";
+    case "npc_minion":
+      return "Amenaza NPC";
   }
 };
 

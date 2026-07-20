@@ -3,10 +3,11 @@ import packageJson from "../package.json";
 import { CardDetail } from "./components/CardDetail";
 import { CardGallery, type Filter } from "./components/CardGallery";
 import { GameSimulator } from "./components/GameSimulator";
+import { NpcBossSimulator } from "./components/NpcBossSimulator";
 import { ExpansionSelector } from "./components/ExpansionSelector";
 import { PrintArea } from "./components/PrintArea";
 import { RulesPanel } from "./components/RulesPanel";
-import { cards, countsForCards } from "./data/deck";
+import { cards, countsForCards, specialCreatureCards } from "./data/deck";
 import type { Card } from "./types/cards";
 import {
   defaultCardSizeHeight,
@@ -19,7 +20,7 @@ import {
   type PrintMode,
 } from "./types/print";
 
-type AppTab = "cards" | "simulator";
+type AppTab = "cards" | "simulator" | "creatures";
 type AdventureMode = "classic" | "creative";
 
 const getInitialCard = (): Card => {
@@ -104,6 +105,7 @@ export function App() {
             </p>
             <div className="hero-actions">
               <button className="primary-action" type="button" onClick={() => handlePrintCards(cards)}>Imprimir mazo actual ({cardCounts.total})</button>
+              <button type="button" onClick={() => handlePrintCards(specialCreatureCards)}>Imprimir criaturas especiales ({specialCreatureCards.length})</button>
               <button type="button" onClick={() => handlePrint("backs")}>Imprimir dorsos</button>
               <button type="button" onClick={() => handlePrint("boards")}>Imprimir tablero</button>
               <button type="button" onClick={() => handlePrint("rules")}>Imprimir reglas</button>
@@ -182,7 +184,8 @@ export function App() {
 
         <nav className="app-tabs" aria-label="Secciones del juego">
           <button className={activeTab === "cards" ? "active" : ""} type="button" onClick={() => setActiveTab("cards")}>Cartas y reglas</button>
-          <button className={activeTab === "simulator" ? "active" : ""} type="button" onClick={() => setActiveTab("simulator")}>Simulador</button>
+          <button className={activeTab === "simulator" ? "active" : ""} type="button" onClick={() => setActiveTab("simulator")}>Simulador clásico</button>
+          <button className={activeTab === "creatures" ? "active" : ""} type="button" onClick={() => setActiveTab("creatures")}>Criaturas especiales</button>
         </nav>
 
         {activeTab === "cards" ? (
@@ -203,8 +206,10 @@ export function App() {
               </div>
             ) : null}
           </>
-        ) : (
+        ) : activeTab === "simulator" ? (
           <GameSimulator cards={cards} />
+        ) : (
+          <NpcBossSimulator />
         )}
 
         <footer className="app-footer">Versión {packageJson.version}</footer>

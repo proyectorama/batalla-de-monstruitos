@@ -2428,3 +2428,31 @@ button.expansion-tile, .expansion-select {
   .stat-token-defense { background: #e2ffe5; }
   .stat-token-life { background: #fffdf6; }
 }
+
+/* Criaturas especiales */
+.npc-band { background: linear-gradient(135deg, #4b1f12, #ef7d22); color: #fff7dc; }
+.game-card.npc_boss, .game-card.npc_action, .game-card.npc_minion { --card-accent: #ef7d22; }
+.game-card.npc_boss .card-button, .game-card.npc_action .card-button, .game-card.npc_minion .card-button { background: linear-gradient(180deg, #fff7e3, #f6ddba); border-color: #512414; }
+.npc-art { display: grid; place-items: center; width: 100%; height: 100%; font-size: 3.4rem; background: radial-gradient(circle, #ffd36e, #c74a1d 55%, #37160d); border-radius: 18px; color: white; text-shadow: 0 3px 0 #321; }
+.npc-art.minion-art { background: radial-gradient(circle, #ccd39a, #6f7d36 60%, #2b3018); }
+.npc-art.action-art.defense { background: radial-gradient(circle, #ffe7a3, #527f69 60%, #1d332d); }
+.npc-art.action-art.control { background: radial-gradient(circle, #f4bbff, #684f9f 60%, #281d3e); }
+.npc-simulator { display: grid; gap: 1rem; }
+.npc-controls { display: flex; flex-wrap: wrap; gap: .75rem; align-items: end; }
+.npc-controls label { display: grid; gap: .25rem; font-weight: 800; }
+.npc-controls select { border: 2px solid #2f2522; border-radius: 12px; padding: .55rem .75rem; background: #fffdf6; font-weight: 800; }
+.npc-boss-panel { display: grid; grid-template-columns: minmax(140px, 190px) 1fr; gap: 1rem; align-items: center; padding: 1rem; border: 3px solid #4b1f12; border-radius: 22px; background: linear-gradient(135deg, #fff3d4, #ffd1a3); }
+.npc-boss-panel.hard { background: linear-gradient(135deg, #eee3c9, #b8aa82); border-color: #33301f; }
+.npc-boss-card-wrap { max-width: 150px; }
+.npc-boss-status { display: grid; gap: .35rem; font-weight: 900; }
+.npc-boss-status strong { font-size: clamp(1.4rem, 3vw, 2.3rem); }
+.npc-threat-row { border: 2px dashed #9b4b1f; border-radius: 18px; padding: 1rem; background: #fff7e8; }
+.npc-threat-row header { display: flex; justify-content: space-between; margin-bottom: .75rem; font-weight: 900; }
+.npc-threat-cards { display: grid; grid-template-columns: repeat(3, minmax(120px, 1fr)); gap: .75rem; }
+.npc-player-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: .75rem; }
+.npc-player-card { border: 2px solid #2f2522; border-radius: 16px; padding: .75rem; background: #fffdf6; }
+.npc-player-card header { display: flex; justify-content: space-between; gap: .5rem; font-weight: 900; margin-bottom: .5rem; }
+.npc-monster-row { display: grid; gap: .4rem; }
+.npc-monster-pill { display: flex; justify-content: space-between; gap: .5rem; border-radius: 999px; background: #f2e6cf; padding: .45rem .65rem; font-size: .85rem; }
+.npc-log { max-height: 18rem; overflow: auto; }
+@media (max-width: 760px) { .npc-boss-panel { grid-template-columns: 1fr; } .npc-threat-cards { grid-template-columns: 1fr; } }
